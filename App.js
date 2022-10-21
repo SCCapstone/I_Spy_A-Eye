@@ -5,6 +5,7 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Text>I Spy Shopper</Text>
+      <Text>Enjoy your time using our app!</Text>
       <StatusBar style="auto" />
     </View>
   );
