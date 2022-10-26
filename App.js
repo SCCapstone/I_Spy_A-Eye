@@ -5,7 +5,10 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Text>I Spy Shopper</Text>
+<<<<<<< HEAD
       <Text>Enjoy your time using our app!</Text>
+=======
+>>>>>>> origin/Mark
       <Text>Test</Text>
       <StatusBar style="auto" />
     </View>
