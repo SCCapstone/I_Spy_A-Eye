@@ -28,7 +28,7 @@ expo start --android            // starts the app with a specific emulator on yo
 
 ## Authors
 - Claude G. Reid III , cgreid@email.sc.edu
-- Jackson Sevyyyy       , jsevy@email.sc.edu
+- Jackson Sevy       , jsevy@email.sc.edu
 - Zack Young         , ztyoung@email.sc.edu
 - Mark Valentino     , markav@email.sc.edu
 - Danny Higgins      , ddh1@email.sc.edu
