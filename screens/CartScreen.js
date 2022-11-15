@@ -6,6 +6,9 @@ import globalStyle from "../globalStyle";
   TODOS:
     Set up warnings on out-of-stock products before ordering
     Store cart data locally on device
+    Grab each product by id and add/remove them
+    Simulate a checkout
+    Add the total prices of each product
 */
 
 export default class CartScreen extends React.Component {
@@ -41,13 +44,13 @@ export default class CartScreen extends React.Component {
           {/*Header*/}
           <Text style={style.header}>Cart</Text>
 
-          {/*The charges will depend on the prices of the products*/}
+          {/*TODO: Total the prices*/}
           <Text style={{fontSize: 23, marginHorizontal: 20, marginBottom: 17}}>Grocery Total: $0.00</Text>
 
           <View style={{flexDirection: 'row'}}>
             <Text style={{fontSize: 23, marginHorizontal: 20, marginRight: 30}}>Delivery Price:$0.00</Text>
 
-            {/*Buy button which will simulate the checkout*/}
+            {/*TODO: simulate the checkout process*/}
             <Pressable style={style.button}>
               <Text style={style.buttonText}>Buy</Text>
             </Pressable>
@@ -71,11 +74,12 @@ export default class CartScreen extends React.Component {
           />
 
           <FlatList
-            keyExtractor={(item, index) => index.toString}
+            keyExtractor={item => item.id}
             data={[
               {
+                id: '1',
                 name: 'Product Item Title'
-              },
+              }
             ]}
             renderItem={({ item }) => (
               <View>
