@@ -1,7 +1,35 @@
 import * as React from "react";
 import { Text, View, StyleSheet, TouchableOpacity, Image } from "react-native";
+import {useState} from 'react'
 import { SafeAreaView } from "react-native";
 import globalStyle from "../globalStyle";
+import { Buffer } from 'buffer';
+import base64 from 'react-native-base64';
+
+
+  var settings = {
+    "async": true,
+    "crossDomain": true,
+    "url": "https://api.kroger.com/v1/products?filter.term=milk",
+    "method": "GET",
+    "headers": {
+      "Accept": "application/json",
+      "Authorization": `Bearer ${token}`
+    }
+  }
+  
+  var answer = fetch(settings.url, {
+    method: settings.method,
+    headers: settings.headers
+  })
+  .then((response) => response.json())
+  .then((body) => {
+    //console.log('Success:', data);
+    console.log(body.data.map(function(item) {var item1={}; item1["brand"] = item.brand; return item1}).filter(item=>item.brand=="Kroger"));
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+  });
 
 export default class Page1 extends React.Component {
   render() {
