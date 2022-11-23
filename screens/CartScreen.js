@@ -11,53 +11,10 @@ import globalStyle from "../globalStyle";
     Add the total prices of each product
 */
 
-const products = [
-  {
-    id: 1,
-    name: 'Product Item Title 1',
-    price: '$0.00'
-  },
-  {
-    id: 2,
-    name: 'Product Item Title 2',
-    price: '$20.00'
-  },
-  {
-    id: 3,
-    name: 'Product Item Title 3',
-    price: '$50.00'
-  },
-]
-
 class ListItem extends React.Component {
-  constructor () {
-    super();
-    this.state = {
-      value: 1
-    }
-  }
-
-  decrementValue = () => {
-    this.setState({
-      value: this.state.value - 1
-    })
-
-    if(this.state.value == 1) {
-      this.setState({
-        value: 1
-      })
-    }
-  }
-
-  incrementValue = () => {
-    this.setState({
-      value: this.state.value + 1
-    })
-  }
 
   render() {
     const {item} = this.props
-    const {value} = this.state
     
     return(
       <View>
@@ -70,17 +27,18 @@ class ListItem extends React.Component {
         <View style={{flexDirection: 'row', marginTop: 20, alignItems: 'center', justifyContent: 'space-between'}}>
           <Text style={{backgroundColor: 'black', color: 'white', fontSize: 25, marginHorizontal: 20}}>{item.price}</Text>
 
-          <Pressable onPress={this.decrementValue}>
+          <Pressable onPress={this.props.decrementValue}>
             <Text style={{fontWeight: 'bold', fontSize: 30}}>{'<'}</Text>
           </Pressable>
 
-          <TextInput style={{fontSize: 25}} keyboardType='numeric'>{value}</TextInput>
+          {/*No longer pulling quantity off of the state*/}
+          <TextInput style={{fontSize: 25}} keyboardType='numeric'>{item.quantity}</TextInput>
 
-          <Pressable onPress={this.incrementValue}>
+          <Pressable onPress={this.props.incrementValue}>
             <Text style={{fontWeight: 'bold', fontSize: 30, marginRight: 70}}>{'>'}</Text>
           </Pressable>
 
-          <Pressable style={style.remove}>
+          <Pressable style={style.remove} onPress={this.props.removeProduct}>
             <Text style={{color: 'white', fontSize: 19, fontWeight:'bold'}}>Remove</Text>
           </Pressable>
         </View>
@@ -99,6 +57,52 @@ class ListItem extends React.Component {
 }
 
 export default class CartScreen extends React.Component {
+  state = {
+    products: [
+      {
+        id: 1,
+        name: 'Product Item Title 1',
+        price: '$0.00',
+        quantity: 1
+      },
+      {
+        id: 2,
+        name: 'Product Item Title 2',
+        price: '$20.00',
+        quantity: 1
+      },
+      {
+        id: 3,
+        name: 'Product Item Title 3',
+        price: '$50.00',
+        quantity: 1
+      },
+    ]
+  }
+
+  decrementValue = (item, index) => {
+    const products = [...this.state.products]
+    products[index].quantity = products[index].quantity - 1
+    if(products[index].quantity <= 1) { // if less than or equal to 1
+      products[index].quantity = 1 // set to 1
+    }
+    this.setState({products})
+  }
+
+  incrementValue = (item, index) => {
+    const products = [...this.state.products] // empty array and copy everything over
+    products[index].quantity = products[index].quantity + 1 // modify specific index quantity
+    this.setState({products}) // update products
+  }
+
+  removeProduct(productID) {
+    let remove = this.state.products.filter((value, i) => {
+      if(value.id !== productID) {
+        return value
+      }
+    })
+    this.setState({products: remove})
+  }
 
   render() {
     return (
@@ -137,8 +141,15 @@ export default class CartScreen extends React.Component {
           />
 
           <FlatList
-            data={products}
-            renderItem={({item}) => <ListItem item={item}/>}
+            data={this.state.products}
+            renderItem={({item, index}) => 
+              <ListItem 
+                item={item}
+                decrementValue={() => this.decrementValue(item, index)}
+                incrementValue={() => this.incrementValue(item, index)}
+                removeProduct={() => this.removeProduct(item.id)}
+              />
+            }
             keyExtractor={item => item.id}
           />
         </View>
