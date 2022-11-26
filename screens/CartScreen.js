@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Text, StyleSheet, View, Pressable, FlatList, TextInput } from 'react-native'
-
 /*
   TODOS:
     Set up warnings on out-of-stock products before ordering

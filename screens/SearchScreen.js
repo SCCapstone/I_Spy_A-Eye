@@ -7,7 +7,7 @@ import { Buffer } from 'buffer';
 import base64 from 'react-native-base64';
 
 
-  var settings = {
+ /* var settings = {
     "async": true,
     "crossDomain": true,
     "url": "https://api.kroger.com/v1/products?filter.term=milk",
@@ -30,7 +30,7 @@ import base64 from 'react-native-base64';
   .catch((error) => {
     console.error('Error:', error);
   });
-
+*/
 export default class Page1 extends React.Component {
   render() {
     return (

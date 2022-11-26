@@ -6,17 +6,22 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "postinstall": "node_modules/.bin/rn-nodeify --install crypto,fs,https --hack"
   },
   "dependencies": {
     "expo": "~46.0.16",
     "expo-status-bar": "~1.4.0",
+    "node": "^19.1.0",
     "react": "18.0.0",
     "react-native": "0.69.6",
-    "react-native-base64": "^0.2.1"
+    "react-native-base64": "^0.2.1",
+    "react-native-fs": "^2.20.0",
+    "rn-nodeify": "^10.3.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.9"
+    "@babel/core": "^7.12.9",
+    "react-native-dotenv": "^3.4.2"
   },
   "private": true
 }

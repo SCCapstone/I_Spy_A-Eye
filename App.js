@@ -5,10 +5,11 @@ import Page1 from './screens/SearchScreen';
 import Page2 from './screens/Page2';
 import Page3 from './screens/Page3';
 import Page4 from './screens/SettingsScreen';
-
+import base64 from 'react-native-base64';
+import {CLIENT_SECRET,CLIENT_ID,TOKEN} from 'react-native-dotenv'
+import 'node'
 global.token = 0;
 
-var token = '';
 var settings = {
   "async": true,
   "crossDomain": true,
@@ -16,7 +17,7 @@ var settings = {
   "method": "POST",
   "headers": {
     "Content-Type": "application/x-www-form-urlencoded",
-    "Authorization": `Basic ${base64.encode('clientID:ClientSecret')}`
+    "Authorization": `Basic ${base64.encode(CLIENT_ID + ":" + CLIENT_SECRET)}`
   },
   "data": {
     "grant_type": "client_credentials",
@@ -41,8 +42,8 @@ fetch(settings.url, {
   .then((response) => response.json())
   .then((data) => {
     console.log('Success:', JSON.stringify(data));
-    token=data.access_token;
-    console.log(token)
+    TOKEN=data.access_token;
+    console.log(TOKEN)
   })
   .catch((error) => {
     console.error('Error:', error);
