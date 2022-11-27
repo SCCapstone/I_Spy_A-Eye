@@ -8,7 +8,7 @@ import globalStyle from "../globalStyle";
 // Holds data of all items
 var itemList = []
 
-const Item = ({ title, price, unitPrice, stock }) => (
+const Item = ({id, title, price, unitPrice, stock, quantity }) => (
   <View style={styles.item}>
     <Text style={styles.title}>{title}</Text>
     {/* TODO: make price and stock align to edges of Item view */}
@@ -17,12 +17,46 @@ const Item = ({ title, price, unitPrice, stock }) => (
       <Text style={{fontSize: 25}}>{unitPrice}</Text>
       <Text style={{fontSize: 25}}>Stock: {stock}</Text>
     </View>
+              {/*Price, quantity, and remove button*/}
+              <View style={{flexDirection: 'row', marginTop: 20, alignItems: 'center', justifyContent: 'space-between'}}>
+          <Pressable onPress={()=> decrementQuantity(id) }>
+            <Text style={{fontWeight: 'bold', fontSize: 30}}>{'<'}</Text>
+          </Pressable>
+
+          {/*No longer pulling quantity off of the state*/}
+          <TextInput style={{fontSize: 25}} keyboardType='numeric'>{quantity}</TextInput>
+
+          <Pressable>
+            <Text onPress={()=> incrementQuantity(id)} style={{fontWeight: 'bold', fontSize: 30, marginRight: 70}}>{'>'}</Text>
+          </Pressable>
+
+          <Pressable style={styles.remove} >
+            <Text style={{color: 'white', fontSize: 19, fontWeight:'bold'}}>Add to Cart</Text>
+          </Pressable>
+        </View>
+    
   </View>
 );
 
-const renderItem = ({ item, price }) => (
-  <><Item title={item.title} price={item.price} unitPrice={item.unitPrice} stock={item.stock}/></>
+const renderItem = ({id, item, price, unitPrice, stock, quantity }) => (
+  <><Item id={item.id} title={item.title} price={item.price} unitPrice={item.unitPrice} stock={item.stock} quantity={item.quantity}/></>
 );
+
+function decrementQuantity(itemID) {
+  for (let i = 0; i < itemList.length; i++) {
+    if (itemList[i].id == itemID && itemList[i].quantity > 1) {
+      itemList[i].quantity--;
+    }
+  }
+}
+
+function incrementQuantity(itemID) {
+  for (let i = 0; i < itemList.length; i++) {
+    if (itemList[i].id == itemID && itemList[i].quantity < 10) {
+      itemList[i].quantity++;
+    }
+  }
+}
 
 export default class Page1 extends React.Component {
   constructor(props) {
@@ -39,6 +73,7 @@ export default class Page1 extends React.Component {
 
   render() {
     
+
     return (
       <SafeAreaView style={globalStyle.wholeScreen}>
         {/* Search Header */}
@@ -98,6 +133,7 @@ export default class Page1 extends React.Component {
         data={itemList}
         renderItem={renderItem}
         keyExtractor={item => item.id}
+        extraData={this.state}
       />
 
         <View style={globalStyle.container}>
@@ -199,6 +235,7 @@ async function searchProducts(state) {
       unitPrice: 0,
       // TODO: remove placeholder
       stock: "Low",
+      quantity: 1,
     }
   }
 
@@ -250,4 +287,28 @@ const styles = StyleSheet.create({
       color: 'white',
       fontSize: 25,
     },
+  header: {
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize: '45',
+    marginTop: 25,
+  },
+  button: {
+    backgroundColor: 'black',
+    borderRadius: 18,
+    paddingVertical: 10,
+    paddingHorizontal: 40,
+  },
+  buttonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 20,
+  },
+  remove: {
+    backgroundColor: 'black',
+    borderRadius: 18,
+    paddingVertical: 5,
+    paddingHorizontal: 20,
+    marginRight: 15
+  }
 })
