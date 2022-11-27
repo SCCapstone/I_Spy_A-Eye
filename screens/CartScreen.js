@@ -4,10 +4,8 @@ import globalStyle from "../globalStyle";
 
 /*
   TODOS:
-    Set up warnings on out-of-stock products before ordering
     Store cart data locally on device
     Grab each product by id and add
-    Simulate a checkout
     Add the total prices of each product
 */
 
@@ -95,10 +93,6 @@ export default class CartScreen extends React.Component {
     this.setState({products}) // update products
   }
 
-  buyButton = () => {
-
-  }
-
   removeProduct(productID) {
     let remove = this.state.products.filter((value, i) => {
       if(value.id !== productID) {
@@ -122,7 +116,7 @@ export default class CartScreen extends React.Component {
             <Text style={{fontSize: 23, marginHorizontal: 20, marginRight: 30}}>Delivery Price:$0.00</Text>
 
             {/*Takes user to the checkout screen*/}
-            <Pressable style={style.button} onPress={this.buyButton}>
+            <Pressable style={style.button} onPress={() => this.props.pageChange(5)}>
               <Text style={style.buttonText}>Buy</Text>
             </Pressable>
           </View>
