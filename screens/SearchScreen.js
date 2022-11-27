@@ -1,8 +1,23 @@
 import * as React from "react";
-import { Alert, Image, Pressable, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Alert, Image, Pressable, StyleSheet, Text, TextInput, TouchableOpacity, View, FlatList } from "react-native";
+import base64 from 'react-native-base64'
 import { SafeAreaView } from "react-native";
 import globalStyle from "../globalStyle";
 
+
+// Holds data of all items
+var itemList = []
+
+const Item = ({ title, price }) => (
+  <View style={styles.item}>
+    <Text style={styles.title}>{title}</Text>
+    <Text style={styles.title}>{price}</Text>
+  </View>
+);
+
+const renderItem = ({ item, price }) => (
+  <><Item title={item.title}  price={item.price} /></>
+);
 
 export default class Page1 extends React.Component {
   constructor(props) {
@@ -10,7 +25,7 @@ export default class Page1 extends React.Component {
     // Set up default state for search bar input
     this.state = {
       input: "",
-      location: "LOCATION_ID_PLACEHOLDER",
+      location: "01400376",
       filters: {country: null, inStock: true, onSale: false, favorited: false},
       sort: null,
       latestResults: null,
@@ -18,6 +33,8 @@ export default class Page1 extends React.Component {
   }
 
   render() {
+    
+
     return (
       <SafeAreaView style={globalStyle.wholeScreen}>
         {/* Search Header */}
@@ -71,6 +88,12 @@ export default class Page1 extends React.Component {
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <View style={{flex: 1, height: 1, borderColor: '#cccccc', borderBottomWidth: 3}} />
         </View>
+
+        <FlatList
+        data={itemList}
+        renderItem={renderItem}
+        keyExtractor={item => item.id}
+      />
 
         <View style={globalStyle.container}>
           <View style={globalStyle.buttons}>
@@ -137,14 +160,14 @@ async function searchProducts(state) {
   }
 
   // Build query
-  let callURL = `https://api.kroger.com/v1/products?filter.term=${state.input}&filter.locationId=${state.location}$filter.fulfillment=dth`;
+  let callURL = `https://api.kroger.com/v1/products?filter.term=${state.input}&filter.locationId=${state.location}&filter.fulfillment=dth`;
 
   // Fetch results
   let options = {
     method: 'GET',
     headers: {
       'Accept': 'application/json',
-      'Authorization': `Bearer AUTH_TOKEN_PLACEHOLDER`
+      'Authorization': 'Bearer ' + TOKEN
     }
   }
 
@@ -153,9 +176,22 @@ async function searchProducts(state) {
 
   // If failed request, Alert the user and return null
   if(!response.ok) {
-    showAlert('Error: ' + response.status.toString(), responseJSON.error_description);
+    let errorHeader = 'Error ' + response.status.toString() + ': ' + responseJSON.code
+    showAlert(errorHeader, responseJSON.errors.reason);
     return null;
   }
+  console.log(responseJSON)
+
+  // Iterates through JSON file and stores items into itemList
+  for (let i = 0; i < responseJSON.data.length; i++) {
+    // Add to array by index
+    itemList[i] = {
+      id: responseJSON.data[i].productId,
+      title: responseJSON.data[i].description,
+      price: responseJSON.data[i].items[0].price.promo
+    }
+  }
+
   return responseJSON;
 
 
@@ -183,5 +219,17 @@ const styles = StyleSheet.create({
       fontWeight: 'bold',
       fontSize: 20,
       textAlign: 'center',
+    },
+    container: {
+      flex: 1,
+    },
+    item: {
+      backgroundColor: '#fff',
+      padding: 20,
+      marginVertical: 8,
+      marginHorizontal: 16,
+    },
+    title: {
+      fontSize: 24,
     },
 })
