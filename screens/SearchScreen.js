@@ -8,15 +8,20 @@ import globalStyle from "../globalStyle";
 // Holds data of all items
 var itemList = []
 
-const Item = ({ title, price }) => (
+const Item = ({ title, price, unitPrice, stock }) => (
   <View style={styles.item}>
     <Text style={styles.title}>{title}</Text>
-    <Text style={styles.title}>{price}</Text>
+    {/* TODO: make price and stock align to edges of Item view */}
+    <View style={{ flexDirection: 'row', justifyContent: 'space-evenly',}} >
+      <Text style={styles.price}>${price}</Text>
+      <Text style={{fontSize: 25}}>{unitPrice}</Text>
+      <Text style={{fontSize: 25}}>Stock: {stock}</Text>
+    </View>
   </View>
 );
 
 const renderItem = ({ item, price }) => (
-  <><Item title={item.title}  price={item.price} /></>
+  <><Item title={item.title} price={item.price} unitPrice={item.unitPrice} stock={item.stock}/></>
 );
 
 export default class Page1 extends React.Component {
@@ -34,7 +39,6 @@ export default class Page1 extends React.Component {
 
   render() {
     
-
     return (
       <SafeAreaView style={globalStyle.wholeScreen}>
         {/* Search Header */}
@@ -88,7 +92,8 @@ export default class Page1 extends React.Component {
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <View style={{flex: 1, height: 1, borderColor: '#cccccc', borderBottomWidth: 3}} />
         </View>
-
+        
+        {/* Holds all results of searched items. TODO: make flatlist view shorter. */}
         <FlatList
         data={itemList}
         renderItem={renderItem}
@@ -188,7 +193,12 @@ async function searchProducts(state) {
     itemList[i] = {
       id: responseJSON.data[i].productId,
       title: responseJSON.data[i].description,
-      price: responseJSON.data[i].items[0].price.promo
+      // TODO: figure out how to better parse JSON array so that price is not 0
+      price: responseJSON.data[i].items[0].price.promo,
+      // TODO: remove placeholder
+      unitPrice: 0,
+      // TODO: remove placeholder
+      stock: "Low",
     }
   }
 
@@ -225,11 +235,19 @@ const styles = StyleSheet.create({
     },
     item: {
       backgroundColor: '#fff',
-      padding: 20,
-      marginVertical: 8,
-      marginHorizontal: 16,
+      marginVertical: 10,
+      paddingHorizontal: 10,
+      paddingBottom: 10,
+      borderBottomColor: '#000',
+      borderBottomWidth: 10,
     },
     title: {
-      fontSize: 24,
+      fontSize: 28,
+      fontWeight: 'bold',
+    },
+    price: {
+      backgroundColor: 'black',
+      color: 'white',
+      fontSize: 25,
     },
 })
