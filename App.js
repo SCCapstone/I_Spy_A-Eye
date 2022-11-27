@@ -2,8 +2,8 @@ import * as React from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import Constants from 'expo-constants';
 import Page1 from './screens/SearchScreen';
-import Page2 from './screens/Page2';
-import Page3 from './screens/Page3';
+import Page2 from './screens/CartScreen';
+import Page3 from './screens/OrdersScreen';
 import Page4 from './screens/SettingsScreen';
 
 
