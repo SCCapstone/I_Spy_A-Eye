@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Alert, Image, Pressable, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import base64 from 'react-native-base64'
 import { SafeAreaView } from "react-native";
 import globalStyle from "../globalStyle";
 
@@ -10,7 +11,7 @@ export default class Page1 extends React.Component {
     // Set up default state for search bar input
     this.state = {
       input: "",
-      location: "LOCATION_ID_PLACEHOLDER",
+      location: "01400376",
       filters: {country: null, inStock: true, onSale: false, favorited: false},
       sort: null,
       latestResults: null,
@@ -137,14 +138,14 @@ async function searchProducts(state) {
   }
 
   // Build query
-  let callURL = `https://api.kroger.com/v1/products?filter.term=${state.input}&filter.locationId=${state.location}$filter.fulfillment=dth`;
+  let callURL = `https://api.kroger.com/v1/products?filter.term=${state.input}&filter.locationId=${state.location}&filter.fulfillment=dth`;
 
   // Fetch results
   let options = {
     method: 'GET',
     headers: {
       'Accept': 'application/json',
-      'Authorization': `Bearer AUTH_TOKEN_PLACEHOLDER`
+      'Authorization': 'Bearer ' + AUTH_TOKEN
     }
   }
 
@@ -153,11 +154,12 @@ async function searchProducts(state) {
 
   // If failed request, Alert the user and return null
   if(!response.ok) {
-    showAlert('Error: ' + response.status.toString(), responseJSON.error_description);
+    let errorHeader = 'Error ' + response.status.toString() + ': ' + responseJSON.code
+    showAlert(errorHeader, responseJSON.errors.reason);
     return null;
   }
+  console.log(responseJSON)
   return responseJSON;
-
 
   // Input: Strings for the alert's title and alert's message. Displays a simple, cancellable alert with the given title and message
   function showAlert(alertTitle, alertMsg) {
