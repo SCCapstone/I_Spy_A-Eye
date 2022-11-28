@@ -39,7 +39,7 @@ const Item = ({id, title, price, unitPrice, stock, quantity }) => (
 );
 
 const renderItem = ({id, item, price, unitPrice, stock, quantity }) => (
-  <><Item id={item.id} title={item.title} price={item.price} unitPrice={item.unitPrice} stock={item.stock} quantity={item.quantity}/></>
+  <><Item id={item.id} title={item.title} price={item.price} unitPrice={item.unitPrice} stock={item.stock} quantity={item.quantity} inCart={item.inCart}/></>
 );
 
 function decrementQuantity(itemID) {
@@ -236,6 +236,7 @@ async function searchProducts(state) {
       // TODO: remove placeholder
       stock: "Low",
       quantity: 1,
+      inCart: false,
     }
   }
 
