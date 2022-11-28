@@ -12,10 +12,12 @@
   "dependencies": {
     "expo": "~46.0.16",
     "expo-status-bar": "~1.4.0",
+    "fs-extra": "^10.1.0",
     "node": "^19.1.0",
     "react": "18.0.0",
     "react-native": "0.69.6",
     "react-native-base64": "^0.2.1",
+    "react-native-config": "^1.4.11",
     "react-native-fs": "^2.20.0",
     "rn-nodeify": "^10.3.0"
   },

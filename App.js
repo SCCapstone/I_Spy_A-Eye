@@ -6,10 +6,9 @@ import Page2 from './screens/Page2';
 import Page3 from './screens/Page3';
 import Page4 from './screens/SettingsScreen';
 import base64 from 'react-native-base64';
-import {CLIENT_SECRET,CLIENT_ID,TOKEN} from 'react-native-dotenv'
-import 'node'
-global.token = 0;
+import {CLIENT_ID, CLIENT_SECRET} from "@env";
 
+global.token=0;
 var settings = {
   "async": true,
   "crossDomain": true,
@@ -42,8 +41,8 @@ fetch(settings.url, {
   .then((response) => response.json())
   .then((data) => {
     console.log('Success:', JSON.stringify(data));
-    TOKEN=data.access_token;
-    console.log(TOKEN)
+    token=data.access_token;
+    console.log(token)
   })
   .catch((error) => {
     console.error('Error:', error);
