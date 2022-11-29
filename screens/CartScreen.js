@@ -6,7 +6,6 @@ import globalStyle from "../globalStyle";
   TODOS:
     Store cart data locally on device
     Grab each product by id and add
-    Add the total prices of each product
 */
 
 class ListItem extends React.Component {
@@ -23,7 +22,7 @@ class ListItem extends React.Component {
 
         {/*Price, quantity, and remove button*/}
         <View style={{flexDirection: 'row', marginTop: 20, alignItems: 'center', justifyContent: 'space-between'}}>
-          <Text style={{backgroundColor: 'black', color: 'white', fontSize: 25, marginHorizontal: 20}}>{item.price}</Text>
+          <Text style={{backgroundColor: 'black', color: 'white', fontSize: 25, marginHorizontal: 20}}>${item.price}</Text>
 
           <Pressable onPress={this.props.decrementValue}>
             <Text style={{fontWeight: 'bold', fontSize: 30}}>{'<'}</Text>
@@ -60,19 +59,19 @@ export default class CartScreen extends React.Component {
       {
         id: 1,
         name: 'Product Item Title 1',
-        price: '$0.00',
+        price: '0.00',
         quantity: 1
       },
       {
         id: 2,
         name: 'Product Item Title 2',
-        price: '$20.00',
+        price: '20.00',
         quantity: 1
       },
       {
         id: 3,
         name: 'Product Item Title 3',
-        price: '$50.00',
+        price: '50.00',
         quantity: 1
       },
     ]
@@ -103,14 +102,19 @@ export default class CartScreen extends React.Component {
   }
 
   render() {
+    // Add the total prices of each product
+    let totalPrice = 0
+    this.state.products.forEach((item) => {
+      totalPrice += item.quantity * item.price
+    })
+
     return (
       <SafeAreaView style={globalStyle.wholeScreen}>
         <View style={style.container}>
           {/*Header*/}
           <Text style={style.header}>Cart</Text>
 
-          {/*TODO: Total the prices*/}
-          <Text style={{fontSize: 23, marginHorizontal: 20, marginBottom: 17}}>Grocery Total: $0.00</Text>
+          <Text style={{fontSize: 23, marginHorizontal: 20, marginBottom: 17}}>Grocery Total: ${totalPrice}</Text>
 
           <View style={{flexDirection: 'row'}}>
             <Text style={{fontSize: 23, marginHorizontal: 20, marginRight: 30}}>Delivery Price:$0.00</Text>
