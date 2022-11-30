@@ -1,10 +1,90 @@
 import * as React from "react";
-import { Alert, Image, Pressable, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Alert, Image, Pressable, StyleSheet, Text, TextInput, TouchableOpacity, View, FlatList } from "react-native";
 import base64 from 'react-native-base64'
 import { SafeAreaView } from "react-native";
 import globalStyle from "../globalStyle";
+import { Buffer } from 'buffer';
+import base64 from 'react-native-base64';
 
 
+
+// Holds data of all items
+var itemList = []
+
+const Item = ({id, title, price, unitPrice, stock, quantity }) => (
+  <View style={styles.item}>
+    <Text style={styles.title}>{title}</Text>
+    {/* TODO: make price and stock align to edges of Item view */}
+    <View style={{ flexDirection: 'row', justifyContent: 'space-evenly',}} >
+      <Text style={styles.price}>${price}</Text>
+      <Text style={{fontSize: 25}}>{unitPrice}</Text>
+      <Text style={{fontSize: 25}}>Stock: {stock}</Text>
+    </View>
+              {/*Price, quantity, and remove button*/}
+              <View style={{flexDirection: 'row', marginTop: 20, alignItems: 'center', justifyContent: 'space-between'}}>
+          <Pressable onPress={()=> decrementQuantity(id) }>
+            <Text style={{fontWeight: 'bold', fontSize: 30}}>{'<'}</Text>
+          </Pressable>
+
+          {/*No longer pulling quantity off of the state*/}
+          <TextInput style={{fontSize: 25}} keyboardType='numeric'>{quantity}</TextInput>
+
+          <Pressable>
+            <Text onPress={()=> incrementQuantity(id)} style={{fontWeight: 'bold', fontSize: 30, marginRight: 70}}>{'>'}</Text>
+          </Pressable>
+
+          <Pressable style={styles.remove} >
+            <Text style={{color: 'white', fontSize: 19, fontWeight:'bold'}}>Add to Cart</Text>
+          </Pressable>
+        </View>
+    
+  </View>
+);
+
+const renderItem = ({id, item, price, unitPrice, stock, quantity }) => (
+  <><Item id={item.id} title={item.title} price={item.price} unitPrice={item.unitPrice} stock={item.stock} quantity={item.quantity} inCart={item.inCart}/></>
+);
+
+function decrementQuantity(itemID) {
+  for (let i = 0; i < itemList.length; i++) {
+    if (itemList[i].id == itemID && itemList[i].quantity > 1) {
+      itemList[i].quantity--;
+    }
+  }
+}
+
+function incrementQuantity(itemID) {
+  for (let i = 0; i < itemList.length; i++) {
+    if (itemList[i].id == itemID && itemList[i].quantity < 10) {
+      itemList[i].quantity++;
+    }
+  }
+}
+
+ /* var settings = {
+    "async": true,
+    "crossDomain": true,
+    "url": "https://api.kroger.com/v1/products?filter.term=milk",
+    "method": "GET",
+    "headers": {
+      "Accept": "application/json",
+      "Authorization": `Bearer ${token}`
+    }
+  }
+  
+  var answer = fetch(settings.url, {
+    method: settings.method,
+    headers: settings.headers
+  })
+  .then((response) => response.json())
+  .then((body) => {
+    //console.log('Success:', data);
+    console.log(body.data.map(function(item) {var item1={}; item1["brand"] = item.brand; return item1}).filter(item=>item.brand=="Kroger"));
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+  });
+*/
 export default class Page1 extends React.Component {
   constructor(props) {
     super(props);
@@ -19,6 +99,8 @@ export default class Page1 extends React.Component {
   }
 
   render() {
+    
+
     return (
       <SafeAreaView style={globalStyle.wholeScreen}>
         {/* Search Header */}
@@ -72,6 +154,14 @@ export default class Page1 extends React.Component {
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <View style={{flex: 1, height: 1, borderColor: '#cccccc', borderBottomWidth: 3}} />
         </View>
+        
+        {/* Holds all results of searched items. TODO: make flatlist view shorter. */}
+        <FlatList
+        data={itemList}
+        renderItem={renderItem}
+        keyExtractor={item => item.id}
+        extraData={this.state}
+      />
 
         <View style={globalStyle.container}>
           <View style={globalStyle.buttons}>
@@ -145,7 +235,7 @@ async function searchProducts(state) {
     method: 'GET',
     headers: {
       'Accept': 'application/json',
-      'Authorization': 'Bearer ' + AUTH_TOKEN
+      'Authorization': 'Bearer ' + TOKEN
     }
   }
 
@@ -159,6 +249,24 @@ async function searchProducts(state) {
     return null;
   }
   console.log(responseJSON)
+
+  // Iterates through JSON file and stores items into itemList
+  for (let i = 0; i < responseJSON.data.length; i++) {
+    // Add to array by index
+    itemList[i] = {
+      id: responseJSON.data[i].productId,
+      title: responseJSON.data[i].description,
+      // TODO: figure out how to better parse JSON array so that price is not 0
+      price: responseJSON.data[i].items[0].price.promo,
+      // TODO: remove placeholder
+      unitPrice: 0,
+      // TODO: remove placeholder
+      stock: "Low",
+      quantity: 1,
+      inCart: false,
+    }
+  }
+
   return responseJSON;
 
   // Input: Strings for the alert's title and alert's message. Displays a simple, cancellable alert with the given title and message
@@ -186,4 +294,48 @@ const styles = StyleSheet.create({
       fontSize: 20,
       textAlign: 'center',
     },
+    container: {
+      flex: 1,
+    },
+    item: {
+      backgroundColor: '#fff',
+      marginVertical: 10,
+      paddingHorizontal: 10,
+      paddingBottom: 10,
+      borderBottomColor: '#000',
+      borderBottomWidth: 10,
+    },
+    title: {
+      fontSize: 28,
+      fontWeight: 'bold',
+    },
+    price: {
+      backgroundColor: 'black',
+      color: 'white',
+      fontSize: 25,
+    },
+  header: {
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize: '45',
+    marginTop: 25,
+  },
+  button: {
+    backgroundColor: 'black',
+    borderRadius: 18,
+    paddingVertical: 10,
+    paddingHorizontal: 40,
+  },
+  buttonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 20,
+  },
+  remove: {
+    backgroundColor: 'black',
+    borderRadius: 18,
+    paddingVertical: 5,
+    paddingHorizontal: 20,
+    marginRight: 15
+  }
 })
