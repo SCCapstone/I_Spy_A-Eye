@@ -59,7 +59,7 @@ export default class CartScreen extends React.Component {
       {
         id: 1,
         name: 'Product Item Title 1',
-        price: '0.00',
+        price: '5.00',
         quantity: 1
       },
       {
@@ -101,12 +101,19 @@ export default class CartScreen extends React.Component {
     this.setState({products: remove})
   }
 
+  addProduct = () => {
+
+  }
+
   render() {
     // Add the total prices of each product
+    let deliveryPrice = 5
     let totalPrice = 0
     this.state.products.forEach((item) => {
       totalPrice += item.quantity * item.price
     })
+    let grandTotal = totalPrice + deliveryPrice
+    Math.round(totalPrice * 100) / 100
 
     return (
       <SafeAreaView style={globalStyle.wholeScreen}>
@@ -117,7 +124,7 @@ export default class CartScreen extends React.Component {
           <Text style={{fontSize: 23, marginHorizontal: 20, marginBottom: 17}}>Grocery Total: ${totalPrice}</Text>
 
           <View style={{flexDirection: 'row'}}>
-            <Text style={{fontSize: 23, marginHorizontal: 20, marginRight: 30}}>Delivery Price:$0.00</Text>
+            <Text style={{fontSize: 23, marginHorizontal: 20, marginRight: 30}}>Delivery Price:${deliveryPrice}.00</Text>
 
             {/*Takes user to the checkout screen*/}
             <Pressable style={style.button} onPress={() => this.props.pageChange(5)}>
@@ -125,7 +132,7 @@ export default class CartScreen extends React.Component {
             </Pressable>
           </View>
 
-          <Text style={{fontSize: 23, marginHorizontal: 20}}>Grand Total:     $0.00</Text>
+          <Text style={{fontSize: 23, marginHorizontal: 20}}>Grand Total:     ${grandTotal}</Text>
 
           {/*Horizontal line*/}
           <View
