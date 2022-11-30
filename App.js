@@ -5,6 +5,7 @@ import Page1 from './screens/SearchScreen';
 import Page2 from './screens/CartScreen';
 import Page3 from './screens/OrdersScreen';
 import Page4 from './screens/SettingsScreen';
+import Page5 from './screens/CheckoutScreen';
 import base64 from 'react-native-base64';
 import {CLIENT_ID, CLIENT_SECRET} from "@env";
 
@@ -66,6 +67,9 @@ export default class App extends React.Component {
         break;
       case 4:
         return (<Page4 pageChange={(pageNum) => this.setState({page: pageNum})}/>);
+        break;
+      case 5:
+        return (<Page5 pageChange={(pageNum) => this.setState({page: pageNum})}/>);
         break;
     } 
   }

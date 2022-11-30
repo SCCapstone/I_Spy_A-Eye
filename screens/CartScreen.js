@@ -4,11 +4,8 @@ import globalStyle from "../globalStyle"
 
 /*
   TODOS:
-    Set up warnings on out-of-stock products before ordering
     Store cart data locally on device
     Grab each product by id and add
-    Simulate a checkout
-    Add the total prices of each product
 */
 
 class ListItem extends React.Component {
@@ -25,7 +22,7 @@ class ListItem extends React.Component {
 
         {/*Price, quantity, and remove button*/}
         <View style={{flexDirection: 'row', marginTop: 20, alignItems: 'center', justifyContent: 'space-between'}}>
-          <Text style={{backgroundColor: 'black', color: 'white', fontSize: 25, marginHorizontal: 20}}>{item.price}</Text>
+          <Text style={{backgroundColor: 'black', color: 'white', fontSize: 25, marginHorizontal: 20}}>${item.price}</Text>
 
           <Pressable onPress={this.props.decrementValue}>
             <Text style={{fontWeight: 'bold', fontSize: 30}}>{'<'}</Text>
@@ -62,19 +59,19 @@ export default class CartScreen extends React.Component {
       {
         id: 1,
         name: 'Product Item Title 1',
-        price: '$0.00',
+        price: '5.00',
         quantity: 1
       },
       {
         id: 2,
         name: 'Product Item Title 2',
-        price: '$20.00',
+        price: '20.00',
         quantity: 1
       },
       {
         id: 3,
         name: 'Product Item Title 3',
-        price: '$50.00',
+        price: '50.00',
         quantity: 1
       },
     ]
@@ -95,10 +92,6 @@ export default class CartScreen extends React.Component {
     this.setState({products}) // update products
   }
 
-  buyButton = () => {
-
-  }
-
   removeProduct(productID) {
     let remove = this.state.products.filter((value, i) => {
       if(value.id !== productID) {
@@ -108,26 +101,38 @@ export default class CartScreen extends React.Component {
     this.setState({products: remove})
   }
 
+  addProduct = () => {
+
+  }
+
   render() {
+    // Add the total prices of each product
+    let deliveryPrice = 5
+    let totalPrice = 0
+    this.state.products.forEach((item) => {
+      totalPrice += item.quantity * item.price
+    })
+    let grandTotal = totalPrice + deliveryPrice
+    Math.round(totalPrice * 100) / 100
+
     return (
       <SafeAreaView style={globalStyle.wholeScreen}>
         <View style={style.container}>
           {/*Header*/}
           <Text style={style.header}>Cart</Text>
 
-          {/*TODO: Total the prices*/}
-          <Text style={{fontSize: 23, marginHorizontal: 20, marginBottom: 17}}>Grocery Total: $0.00</Text>
+          <Text style={{fontSize: 23, marginHorizontal: 20, marginBottom: 17}}>Grocery Total: ${totalPrice}</Text>
 
           <View style={{flexDirection: 'row'}}>
-            <Text style={{fontSize: 23, marginHorizontal: 20, marginRight: 30}}>Delivery Price:$0.00</Text>
+            <Text style={{fontSize: 23, marginHorizontal: 20, marginRight: 30}}>Delivery Price:${deliveryPrice}.00</Text>
 
             {/*Takes user to the checkout screen*/}
-            <Pressable style={style.button} onPress={this.buyButton}>
+            <Pressable style={style.button} onPress={() => this.props.pageChange(5)}>
               <Text style={style.buttonText}>Buy</Text>
             </Pressable>
           </View>
 
-          <Text style={{fontSize: 23, marginHorizontal: 20}}>Grand Total:     $0.00</Text>
+          <Text style={{fontSize: 23, marginHorizontal: 20}}>Grand Total:     ${grandTotal}</Text>
 
           {/*Horizontal line*/}
           <View
