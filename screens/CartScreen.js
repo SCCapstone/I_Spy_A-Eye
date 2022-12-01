@@ -58,22 +58,34 @@ export default class CartScreen extends React.Component {
     products: [
       {
         id: 1,
-        name: 'Product Item Title 1',
+        name: 'Deluxe Mint Chocolate Chip Ice Cream',
         price: '5.00',
         quantity: 1
       },
       {
         id: 2,
-        name: 'Product Item Title 2',
-        price: '20.00',
+        name: '1% Lowfat Milk',
+        price: '2.00',
         quantity: 1
       },
       {
         id: 3,
-        name: 'Product Item Title 3',
-        price: '50.00',
+        name: 'Barbecue Flavored Potato Chips',
+        price: '10.00',
         quantity: 1
       },
+      {
+        id: 4,
+        name: "Bakery Fresh Goodness Peanut Butter Cookies",
+        price: "3.00",
+        quantity: 1
+      },
+      {
+        id: 5,
+        name: "Kellogg's Club Original Crackers Snack Stacks",
+        price: "2.50",
+        quantity: 1
+      }
     ]
   }
 

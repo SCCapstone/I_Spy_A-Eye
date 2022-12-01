@@ -4,9 +4,6 @@ import base64 from 'react-native-base64'
 import { SafeAreaView } from "react-native";
 import globalStyle from "../globalStyle";
 import { Buffer } from 'buffer';
-import base64 from 'react-native-base64';
-
-
 
 // Holds data of all items
 var itemList = []
