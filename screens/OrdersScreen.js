@@ -119,7 +119,7 @@ const style = StyleSheet.create({
   header: {
     textAlign: 'center',
     fontWeight: 'bold',
-    fontSize: '45',
+    fontSize: 45,
     marginTop: 25,
   },
 })
