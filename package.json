@@ -13,17 +13,31 @@
     "expo": "~46.0.16",
     "expo-status-bar": "~1.4.0",
     "fs-extra": "^10.1.0",
+    "https-browserify": "^0.0.1",
     "node": "^19.1.0",
     "react": "18.0.0",
     "react-native": "0.69.6",
     "react-native-base64": "^0.2.1",
     "react-native-config": "^1.4.11",
+    "react-native-crypto": "^2.2.0",
     "react-native-fs": "^2.20.0",
+    "react-native-level-fs": "^3.0.1",
+    "react-native-randombytes": "^3.6.1",
     "rn-nodeify": "^10.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
     "react-native-dotenv": "^3.4.2"
   },
-  "private": true
+  "private": true,
+  "react-native": {
+    "crypto": "react-native-crypto",
+    "https": "https-browserify",
+    "fs": "react-native-level-fs"
+  },
+  "browser": {
+    "crypto": "react-native-crypto",
+    "https": "https-browserify",
+    "fs": "react-native-level-fs"
+  }
 }

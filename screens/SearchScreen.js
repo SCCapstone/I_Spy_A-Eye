@@ -1,12 +1,34 @@
+import { token } from "../App.js";
 import * as React from "react";
 import { Alert, Image, Pressable, StyleSheet, Text, TextInput, TouchableOpacity, View, FlatList } from "react-native";
-import base64 from 'react-native-base64'
 import { SafeAreaView } from "react-native";
 import globalStyle from "../globalStyle";
-import { Buffer } from 'buffer';
 
 // Holds data of all items
 var itemList = []
+
+const produce = require('./produce.json');
+var itemIndex = 0;
+for (let i = 0; i < produce.data.length; i++) {
+  if (produce.data[i].items[0].price.promo == 0) {
+    continue;
+  }
+  // Add to array by index
+  itemList[itemIndex] = {
+    id: produce.data[i].productId,
+    title: produce.data[i].description,
+    // TODO: figure out how to better parse JSON array so that price is not 0
+    price: produce.data[i].items[0].price.promo,
+    // TODO: remove placeholder
+    unitPrice: 0,
+    // TODO: remove placeholder
+    stock: "Low",
+    quantity: 1,
+    inCart: false,
+  }
+  itemIndex++;
+}
+itemIndex = 0;
 
 const Item = ({id, title, price, unitPrice, stock, quantity }) => (
   <View style={styles.item}>
@@ -30,9 +52,9 @@ const Item = ({id, title, price, unitPrice, stock, quantity }) => (
             <Text onPress={()=> incrementQuantity(id)} style={{fontWeight: 'bold', fontSize: 30, marginRight: 70}}>{'>'}</Text>
           </Pressable>
 
-          <Pressable style={styles.remove} >
+          {/*<Pressable style={styles.remove} >
             <Text style={{color: 'white', fontSize: 19, fontWeight:'bold'}}>Add to Cart</Text>
-          </Pressable>
+          </Pressable>*/}
         </View>
     
   </View>
@@ -225,14 +247,14 @@ async function searchProducts(state) {
   }
 
   // Build query
-  let callURL = `https://api.kroger.com/v1/products?filter.term=${state.input}&filter.locationId=${state.location}&filter.fulfillment=dth`;
+    let callURL = `https://api.kroger.com/v1/products?filter.term=${state.input}&filter.locationId=${state.location}&filter.fulfillment=dth`;
 
   // Fetch results
   let options = {
     method: 'GET',
     headers: {
       'Accept': 'application/json',
-      'Authorization': 'Bearer ' + TOKEN
+      'Authorization': 'Bearer ' + token
     }
   }
 
@@ -249,8 +271,11 @@ async function searchProducts(state) {
 
   // Iterates through JSON file and stores items into itemList
   for (let i = 0; i < responseJSON.data.length; i++) {
+    if (responseJSON.data[i].items[0].price.promo === 0) {
+      continue;
+    }
     // Add to array by index
-    itemList[i] = {
+    itemList[itemIndex] = {
       id: responseJSON.data[i].productId,
       title: responseJSON.data[i].description,
       // TODO: figure out how to better parse JSON array so that price is not 0
@@ -262,6 +287,7 @@ async function searchProducts(state) {
       quantity: 1,
       inCart: false,
     }
+    itemIndex++;
   }
 
   return responseJSON;

@@ -9,7 +9,7 @@ import Page5 from './screens/CheckoutScreen';
 import base64 from 'react-native-base64';
 import {CLIENT_ID, CLIENT_SECRET} from "@env";
 
-global.token=0;
+let token = 0;
 var settings = {
   "async": true,
   "crossDomain": true,
@@ -39,6 +39,7 @@ fetch(settings.url, {
   headers: settings.headers,
   body: formBody
 }) 
+
   .then((response) => response.json())
   .then((data) => {
     console.log('Success:', JSON.stringify(data));
@@ -48,7 +49,7 @@ fetch(settings.url, {
   .catch((error) => {
     console.error('Error:', error);
   }); 
-
+  export {token}
 export default class App extends React.Component {
   state = {
     page: 1,

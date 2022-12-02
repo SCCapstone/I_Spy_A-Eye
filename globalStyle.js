@@ -17,6 +17,7 @@ const globalStyle=StyleSheet.create({
         width: "100%",
         borderWidth: 5,
         borderRadius: 999,
+        backgroundColor: '#fff',
         padding: 2,
       },
       icon: {
