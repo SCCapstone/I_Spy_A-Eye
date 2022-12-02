@@ -1,15 +1,28 @@
 import { token } from "../App.js";
 import * as React from "react";
-import { Alert, Image, Pressable, StyleSheet, Text, TextInput, TouchableOpacity, View, FlatList } from "react-native";
+import {
+  Alert,
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+  FlatList,
+} from "react-native";
 import { SafeAreaView } from "react-native";
 import globalStyle from "../globalStyle";
 
 // Holds data of all items
-var itemList = []
-
-const produce = require('./produce.json');
+var itemList = [];
+// Json file that holds respose query for produce. Is shown automatically without the user searching. 
+const produce = require("./produce.json");
+// Used for indexing itemList array when items are added to it.
 var itemIndex = 0;
+// Add items to itemList from produce.json.
 for (let i = 0; i < produce.data.length; i++) {
+  // If price cannot be parsed from json item, it will not be added to itemList.
   if (produce.data[i].items[0].price.promo == 0) {
     continue;
   }
@@ -25,45 +38,73 @@ for (let i = 0; i < produce.data.length; i++) {
     stock: "Low",
     quantity: 1,
     inCart: false,
-  }
+  };
   itemIndex++;
 }
+// Reset to 0 so this var can be used again in adding different items to itemList when user searches.
 itemIndex = 0;
 
-const Item = ({id, title, price, unitPrice, stock, quantity }) => (
+// Template view for each item in flatlist.
+const Item = ({ id, title, price, unitPrice, stock, quantity }) => (
   <View style={styles.item}>
     <Text style={styles.title}>{title}</Text>
     {/* TODO: make price and stock align to edges of Item view */}
-    <View style={{ flexDirection: 'row', justifyContent: 'space-evenly',}} >
+    <View style={{ flexDirection: "row", justifyContent: "space-evenly" }}>
       <Text style={styles.price}>${price}</Text>
-      <Text style={{fontSize: 25}}>{unitPrice}</Text>
-      <Text style={{fontSize: 25}}>Stock: {stock}</Text>
+      <Text style={{ fontSize: 25 }}>{unitPrice}</Text>
+      <Text style={{ fontSize: 25 }}>Stock: {stock}</Text>
     </View>
-              {/*Price, quantity, and remove button*/}
-              <View style={{flexDirection: 'row', marginTop: 20, alignItems: 'center', justifyContent: 'space-between'}}>
-          <Pressable onPress={()=> decrementQuantity(id) }>
-            <Text style={{fontWeight: 'bold', fontSize: 30}}>{'<'}</Text>
-          </Pressable>
+    {/*Price, quantity, and remove button*/}
+    <View
+      style={{
+        flexDirection: "row",
+        marginTop: 20,
+        alignItems: "center",
+        justifyContent: "space-between",
+      }}
+    >
+      {/* Decrement quantity button*/}
+      <Pressable onPress={() => decrementQuantity(id)}>
+        <Text style={{ fontWeight: "bold", fontSize: 30 }}>{"<"}</Text>
+      </Pressable>
 
-          {/*No longer pulling quantity off of the state*/}
-          <TextInput style={{fontSize: 25}} keyboardType='numeric'>{quantity}</TextInput>
+      {/*No longer pulling quantity off of the state*/}
+      <TextInput style={{ fontSize: 25 }} keyboardType="numeric">
+        {quantity}
+      </TextInput>
+      
+      {/* Increment quantity button*/}
+      <Pressable>
+        <Text
+          onPress={() => incrementQuantity(id)}
+          style={{ fontWeight: "bold", fontSize: 30, marginRight: 70 }}
+        >
+          {">"}
+        </Text>
+      </Pressable>
 
-          <Pressable>
-            <Text onPress={()=> incrementQuantity(id)} style={{fontWeight: 'bold', fontSize: 30, marginRight: 70}}>{'>'}</Text>
-          </Pressable>
-
-          {/*<Pressable style={styles.remove} >
+      {/*<Pressable style={styles.remove} >
             <Text style={{color: 'white', fontSize: 19, fontWeight:'bold'}}>Add to Cart</Text>
           </Pressable>*/}
-        </View>
-    
+    </View>
   </View>
 );
 
-const renderItem = ({id, item, price, unitPrice, stock, quantity }) => (
-  <><Item id={item.id} title={item.title} price={item.price} unitPrice={item.unitPrice} stock={item.stock} quantity={item.quantity} inCart={item.inCart}/></>
+const renderItem = ({ id, item, price, unitPrice, stock, quantity }) => (
+  <>
+    <Item
+      id={item.id}
+      title={item.title}
+      price={item.price}
+      unitPrice={item.unitPrice}
+      stock={item.stock}
+      quantity={item.quantity}
+      inCart={item.inCart}
+    />
+  </>
 );
 
+// For future functionality of decrementing the quantity of an item to add to cart.
 function decrementQuantity(itemID) {
   for (let i = 0; i < itemList.length; i++) {
     if (itemList[i].id == itemID && itemList[i].quantity > 1) {
@@ -72,6 +113,7 @@ function decrementQuantity(itemID) {
   }
 }
 
+// For future functionality of incrementing the quantity of an item to add to cart.
 function incrementQuantity(itemID) {
   for (let i = 0; i < itemList.length; i++) {
     if (itemList[i].id == itemID && itemList[i].quantity < 10) {
@@ -80,30 +122,6 @@ function incrementQuantity(itemID) {
   }
 }
 
- /* var settings = {
-    "async": true,
-    "crossDomain": true,
-    "url": "https://api.kroger.com/v1/products?filter.term=milk",
-    "method": "GET",
-    "headers": {
-      "Accept": "application/json",
-      "Authorization": `Bearer ${token}`
-    }
-  }
-  
-  var answer = fetch(settings.url, {
-    method: settings.method,
-    headers: settings.headers
-  })
-  .then((response) => response.json())
-  .then((body) => {
-    //console.log('Success:', data);
-    console.log(body.data.map(function(item) {var item1={}; item1["brand"] = item.brand; return item1}).filter(item=>item.brand=="Kroger"));
-  })
-  .catch((error) => {
-    console.error('Error:', error);
-  });
-*/
 export default class Page1 extends React.Component {
   constructor(props) {
     super(props);
@@ -111,44 +129,63 @@ export default class Page1 extends React.Component {
     this.state = {
       input: "",
       location: "01400376",
-      filters: {country: null, inStock: true, onSale: false, favorited: false},
+      filters: {
+        country: null,
+        inStock: true,
+        onSale: false,
+        favorited: false,
+      },
       sort: null,
       latestResults: null,
     };
   }
 
   render() {
-    
-
     return (
       <SafeAreaView style={globalStyle.wholeScreen}>
         {/* Search Header */}
-        <View style={{marginHorizontal:15}}>
+        <View style={{ marginHorizontal: 15 }}>
           <Text style={globalStyle.headerText}>Search</Text>
 
           {/* Row 1: Text Input and Search Button */}
           <View style={globalStyle.headerButtonRow}>
             {/* Search Bar Input */}
-            <TextInput 
-              style={[globalStyle.inputContainer, {flex: 3.2, marginRight: 10, fontWeight: 'bold', fontSize: 18}]}
+            <TextInput
+              style={[
+                globalStyle.inputContainer,
+                {
+                  flex: 3.2,
+                  marginRight: 10,
+                  fontWeight: "bold",
+                  fontSize: 18,
+                },
+              ]}
               placeholder="I'm looking for..."
-              placeholderTextColor={'#000000'}
-              onChangeText={newInput => this.setState({input: newInput.trim()})}
-              />
+              placeholderTextColor={"#000000"}
+              onChangeText={(newInput) =>
+                this.setState({ input: newInput.trim() })
+              }
+            />
             {/* Search Button */}
-            <Pressable style={styles.searchButtonStyle}
+            <Pressable
+              style={styles.searchButtonStyle}
               onPress={() => {
-                  let searchResults = searchProducts(this.state);
-                  if(searchResults != null) this.setState({latestResults: searchResults});
-                }
-                }
-              >
+                let searchResults = searchProducts(this.state);
+                if (searchResults != null)
+                  this.setState({ latestResults: searchResults });
+              }}
+            >
               <Text style={styles.searchButtonText}>Search</Text>
             </Pressable>
           </View>
 
           {/* Row 2: Filter, Sort, and Scan Buttons (TODO: Add functionality and relevant popup menus) */}
-          <View style={[globalStyle.headerButtonRow, {marginVertical: 10, marginHorizontal:-5}]}>
+          <View
+            style={[
+              globalStyle.headerButtonRow,
+              { marginVertical: 10, marginHorizontal: -5 },
+            ]}
+          >
             {/* Filter Button */}
             <Pressable style={globalStyle.headerButtonStyle}>
               <Text style={globalStyle.headerButtonText}>Filter</Text>
@@ -165,22 +202,36 @@ export default class Page1 extends React.Component {
         </View>
 
         {/* Horizontal line separator */}
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <View style={{flex: 1, height: 1, borderColor: 'black', borderBottomWidth: 10}} />
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <View
+            style={{
+              flex: 1,
+              height: 1,
+              borderColor: "black",
+              borderBottomWidth: 10,
+            }}
+          />
         </View>
 
         {/* Horizontal line separator's drop shadow */}
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <View style={{flex: 1, height: 1, borderColor: '#cccccc', borderBottomWidth: 3}} />
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <View
+            style={{
+              flex: 1,
+              height: 1,
+              borderColor: "#cccccc",
+              borderBottomWidth: 3,
+            }}
+          />
         </View>
-        
+
         {/* Holds all results of searched items. TODO: make flatlist view shorter. */}
         <FlatList
-        data={itemList}
-        renderItem={renderItem}
-        keyExtractor={item => item.id}
-        extraData={this.state}
-      />
+          data={itemList}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
+          extraData={this.state}
+        />
 
         <View style={globalStyle.container}>
           <View style={globalStyle.buttons}>
@@ -230,10 +281,10 @@ export default class Page1 extends React.Component {
 // Returns true if the input string meets the API's filter.term paramater requirements.
 function validInput(inputText) {
   // Search terms limited to max of 8 words (separated by spaces). Must also be >= 3 characters
-  if(inputText.length<3) return false;
+  if (inputText.length < 3) return false;
 
   const terms = inputText.split(/\s+/); // Split inputText into separate terms using regex
-  if(terms.length>8) return false;
+  if (terms.length > 8) return false;
 
   return true;
 }
@@ -241,36 +292,42 @@ function validInput(inputText) {
 // Input: class state. Returns JSON response if the API call is successful, null otherwise. TO-DO: Filter/sort results after fetch
 async function searchProducts(state) {
   // Confirm input is valid before querying
-  if(!validInput(state.input)) {
-    showAlert("Invalid Input", "Input must be 3 characters or more, and have at most 8 words.");
+  if (!validInput(state.input)) {
+    showAlert(
+      "Invalid Input",
+      "Input must be 3 characters or more, and have at most 8 words."
+    );
     return null;
   }
 
   // Build query
-    let callURL = `https://api.kroger.com/v1/products?filter.term=${state.input}&filter.locationId=${state.location}&filter.fulfillment=dth`;
+  let callURL = `https://api.kroger.com/v1/products?filter.term=${state.input}&filter.locationId=${state.location}&filter.fulfillment=dth`;
 
   // Fetch results
   let options = {
-    method: 'GET',
+    method: "GET",
     headers: {
-      'Accept': 'application/json',
-      'Authorization': 'Bearer ' + token
-    }
-  }
+      Accept: "application/json",
+      Authorization: "Bearer " + token,
+    },
+  };
 
   let response = await fetch(callURL, options);
+  // Variable to hold the response from the Kroger API in a string
   let responseJSON = await response.json();
 
   // If failed request, Alert the user and return null
-  if(!response.ok) {
-    let errorHeader = 'Error ' + response.status.toString() + ': ' + responseJSON.code
+  if (!response.ok) {
+    let errorHeader =
+      "Error " + response.status.toString() + ": " + responseJSON.code;
     showAlert(errorHeader, responseJSON.errors.reason);
     return null;
   }
-  console.log(responseJSON)
+  console.log(responseJSON);
 
-  // Iterates through JSON file and stores items into itemList
+  // Iterates through responseJSON and stores items into itemList
   for (let i = 0; i < responseJSON.data.length; i++) {
+    // Skip adding item if price accont be parsed.
     if (responseJSON.data[i].items[0].price.promo === 0) {
       continue;
     }
@@ -286,7 +343,7 @@ async function searchProducts(state) {
       stock: "Low",
       quantity: 1,
       inCart: false,
-    }
+    };
     itemIndex++;
   }
   itemIndex = 0;
@@ -295,71 +352,66 @@ async function searchProducts(state) {
 
   // Input: Strings for the alert's title and alert's message. Displays a simple, cancellable alert with the given title and message
   function showAlert(alertTitle, alertMsg) {
-    Alert.alert(
-      alertTitle,
-      alertMsg,
-      [{text: "OK"}],
-      {cancelable: true}
-    )
+    Alert.alert(alertTitle, alertMsg, [{ text: "OK" }], { cancelable: true });
   }
 }
 
 const styles = StyleSheet.create({
-    searchButtonStyle: {
-      flex: 1,
-      backgroundColor: 'black',
-      borderRadius: 20,
-      paddingVertical: 17,
-      paddingHorizontal: 10,
-    },
-    searchButtonText:{
-      color: 'white',
-      fontWeight: 'bold',
-      fontSize: 20,
-      textAlign: 'center',
-    },
-    container: {
-      flex: 1,
-    },
-    item: {
-      backgroundColor: '#fff',
-      marginVertical: 10,
-      paddingHorizontal: 10,
-      paddingBottom: 10,
-      borderBottomColor: '#000',
-      borderBottomWidth: 10,
-    },
-    title: {
-      fontSize: 28,
-      fontWeight: 'bold',
-    },
-    price: {
-      backgroundColor: 'black',
-      color: 'white',
-      fontSize: 25,
-    },
+  searchButtonStyle: {
+    flex: 1,
+    backgroundColor: "black",
+    borderRadius: 20,
+    paddingVertical: 17,
+    paddingHorizontal: 10,
+  },
+  searchButtonText: {
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 20,
+    textAlign: "center",
+  },
+  container: {
+    flex: 1,
+  },
+  item: {
+    backgroundColor: "#fff",
+    marginVertical: 10,
+    paddingHorizontal: 10,
+    paddingBottom: 10,
+    borderBottomColor: "#000",
+    borderBottomWidth: 10,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: "bold",
+  },
+  price: {
+    backgroundColor: "black",
+    color: "white",
+    fontSize: 25,
+  },
   header: {
-    textAlign: 'center',
-    fontWeight: 'bold',
-    fontSize: '45',
+    textAlign: "center",
+    fontWeight: "bold",
+    fontSize: "45",
     marginTop: 25,
   },
   button: {
-    backgroundColor: 'black',
+    backgroundColor: "black",
     borderRadius: 18,
     paddingVertical: 10,
     paddingHorizontal: 40,
   },
   buttonText: {
-    color: 'white',
-    fontWeight: 'bold',
+    color: "white",
+    fontWeight: "bold",
     fontSize: 20,
   },
   remove: {
-    backgroundColor: 'black',
+    backgroundColor: "black",
     borderRadius: 18,
     paddingVertical: 5,
     paddingHorizontal: 20,
-    marginRight: 15
-  }
-})
+    marginRight: 15,
+  },
+});

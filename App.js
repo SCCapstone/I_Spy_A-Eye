@@ -55,6 +55,7 @@ export default class App extends React.Component {
     page: 1,
   };
 
+  // Updates the state of which screen the user is currently on.
   pickPageToRender = () => {
     switch(this.state.page) {
       case 1:
