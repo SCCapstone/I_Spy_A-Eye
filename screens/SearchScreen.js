@@ -289,6 +289,7 @@ async function searchProducts(state) {
     }
     itemIndex++;
   }
+  itemIndex = 0;
 
   return responseJSON;
 
