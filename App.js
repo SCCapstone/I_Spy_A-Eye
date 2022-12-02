@@ -8,6 +8,7 @@ import Page4 from './screens/SettingsScreen';
 import Page5 from './screens/CheckoutScreen';
 import base64 from 'react-native-base64';
 import {CLIENT_ID, CLIENT_SECRET} from "@env";
+// I Spy Shopper v0.1
 
 let token = 0;
 var settings = {
