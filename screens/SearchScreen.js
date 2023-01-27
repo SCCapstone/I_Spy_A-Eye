@@ -145,7 +145,7 @@ export default class Page1 extends React.Component {
       <SafeAreaView style={globalStyle.wholeScreen}>
         {/* Search Header */}
         <View style={{ marginHorizontal: 15 }}>
-          <Text style={globalStyle.headerText}>Search</Text>
+          <Text style={globalStyle.headerText} testID="Test_SearchTextHeader">Search</Text>
 
           {/* Row 1: Text Input and Search Button */}
           <View style={globalStyle.headerButtonRow}>
@@ -165,6 +165,7 @@ export default class Page1 extends React.Component {
               onChangeText={(newInput) =>
                 this.setState({ input: newInput.trim() })
               }
+              testID="Test_SearchBar"
             />
             {/* Search Button */}
             <Pressable
@@ -174,6 +175,7 @@ export default class Page1 extends React.Component {
                 if (searchResults != null)
                   this.setState({ latestResults: searchResults });
               }}
+              testID="Test_SearchButton"
             >
               <Text style={styles.searchButtonText}>Search</Text>
             </Pressable>
@@ -187,15 +189,15 @@ export default class Page1 extends React.Component {
             ]}
           >
             {/* Filter Button */}
-            <Pressable style={globalStyle.headerButtonStyle}>
+            <Pressable style={globalStyle.headerButtonStyle} testID="Test_FilterButton">
               <Text style={globalStyle.headerButtonText}>Filter</Text>
             </Pressable>
             {/* Sort Button */}
-            <Pressable style={globalStyle.headerButtonStyle}>
+            <Pressable style={globalStyle.headerButtonStyle} testID="Test_SortButton">
               <Text style={globalStyle.headerButtonText}>Sort</Text>
             </Pressable>
             {/* Scan Button */}
-            <Pressable style={globalStyle.headerButtonStyle}>
+            <Pressable style={globalStyle.headerButtonStyle} testID="Test_ScanButton">
               <Text style={globalStyle.headerButtonText}>Scan</Text>
             </Pressable>
           </View>
@@ -231,10 +233,11 @@ export default class Page1 extends React.Component {
           renderItem={renderItem}
           keyExtractor={(item) => item.id}
           extraData={this.state}
+          testID="Test_SearchResults"
         />
 
         <View style={globalStyle.container}>
-          <View style={globalStyle.buttons}>
+          <View style={globalStyle.buttons} testID="Test_NavigationBar">
             <TouchableOpacity onPress={() => this.props.pageChange(1)}>
               <Image
                 style={globalStyle.icon}
