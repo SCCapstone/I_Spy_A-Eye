@@ -21,9 +21,45 @@ expo start --android            // starts the app with a specific emulator on yo
 ## Deployment
 
 ## Testing
+### - General Set Up -
+The testing technologies used require React Native CLI and a properly set up Android development enviroment. Running the command 
+```
+npm install
+```
+will handle installing the correct version React Native, which has its CLI built-in, in addition to other required packages to run and test the application. To ensure your environment/emulator is set up correctly, follow [the React Native Environment Setup guide](https://reactnative.dev/docs/next/environment-setup).
+
+### - Unit Testing -
+Unit testing, handled by [Jest](https://jestjs.io/), can be done nearly out of the box once the repository is cloned and the general set up is done. After using
+```
+npm install                     # if you haven't installed the packages already
+```
+to obtain the necessary packages for the application (including the testing technologies), you can run the following command in the central directory to run the unit tests suite:
+```
+npm test --findRelatedTests __unit__
+```
+
+### - End-to-end Testing -
+End-to-end testing, handled through [Detox](https://wix.github.io/Detox/), requires additional set-up. First, ensure that the general set up has been done prior. Then you need to create a debug build for the application by using the following command in the **/android/** directory. This will usually take a few minutes the first time its created:
+```
+cd ./android                        # if not already in the android directory
+./gradlew assembleRelease assembleAndroidTest -DtestBuildType=release
+```
+
+ Once the build is complete, follow [Step 3 of the Detox Project Setup guide](https://wix.github.io/Detox/docs/introduction/project-setup#step-3-device-configs) to configure the project for your desired Android emulator or Android device. Once your device/emulator is properly set up, you just need to run the end-to-end testing. Run the command
+```
+npx react-native start
+```
+to start up the Metro server; leave this running until you are done testing. Afterwards, in another terminal, use the following command to run the end-to-end testing suite:
+```
+detox test --configuration android.emu.debug
+```
+
+### - Notes -
+The unit tests can be found in the **\_\_unit\_\_** directory, and the end-to-end tests can be found in the **e2e** directory. These tests require a sufficient .env file to be present in the top level of the directory; the application itself can't run without it, so if it's not present, the tests can't run either. The output of both unit and end-to-end testing will display in the terminal the tests are conducted in.
 
 ## Testing Technologies
-
+ - [Jest (Unit Testing)](https://jestjs.io/)
+ - [Detox (End-to-end Testing)](https://wix.github.io/Detox/)
 ## Running Tests
 
 ## Authors
