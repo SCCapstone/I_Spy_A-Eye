@@ -104,7 +104,7 @@ export default class CartScreen extends React.Component {
     this.setState({products}) // update products
   }
 
-  removeProduct(productID) {
+  removeProduct = (productID) => {
     let remove = this.state.products.filter((value, i) => {
       if(value.id !== productID) {
         return value
@@ -113,19 +113,23 @@ export default class CartScreen extends React.Component {
     this.setState({products: remove})
   }
 
-  addProduct = () => {
-
+  addProduct = (x) => {
+    return x * 10
   }
 
-  render() {
-    // Add the total prices of each product
-    let deliveryPrice = 5
+  // Add the total prices of each product
+  addPrices = () => {
     let totalPrice = 0
     this.state.products.forEach((item) => {
       totalPrice += item.quantity * item.price
     })
-    let grandTotal = totalPrice + deliveryPrice
     Math.round(totalPrice * 100) / 100
+    return totalPrice
+  }
+
+  render() {
+    let deliveryPrice = 5
+    let grandTotal = this.addPrices() + deliveryPrice
 
     return (
       <SafeAreaView style={globalStyle.wholeScreen}>
@@ -133,13 +137,13 @@ export default class CartScreen extends React.Component {
           {/*Header*/}
           <Text style={style.header}>Cart</Text>
 
-          <Text style={{fontSize: 23, marginHorizontal: 20, marginBottom: 17}}>Grocery Total: ${totalPrice}</Text>
+          <Text style={{fontSize: 23, marginHorizontal: 20, marginBottom: 17}}>Grocery Total: ${this.addPrices()}</Text>
 
           <View style={{flexDirection: 'row'}}>
             <Text style={{fontSize: 23, marginHorizontal: 20, marginRight: 30}}>Delivery Price:${deliveryPrice}.00</Text>
 
             {/*Takes user to the checkout screen*/}
-            <Pressable style={style.button} onPress={() => this.props.pageChange(5)}>
+            <Pressable testID="buyButton" style={style.button} onPress={() => this.props.pageChange(5)}>
               <Text style={style.buttonText}>Buy</Text>
             </Pressable>
           </View>
