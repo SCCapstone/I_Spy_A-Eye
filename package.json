@@ -8,6 +8,10 @@
     "web": "expo start --web",
     "test": "jest"
   },
+  "detox": {
+    "test-runner": "jest",
+    "runner-config": "__e2e__/config.json"
+  },
   "jest": {
     "preset": "react-native"
   },
