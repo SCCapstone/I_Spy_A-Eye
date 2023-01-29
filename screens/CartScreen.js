@@ -184,27 +184,27 @@ export default class CartScreen extends React.Component {
             <TouchableOpacity onPress={() => this.props.pageChange(1)}>
               <Image
                 style={globalStyle.icon}
-                source={require("../assets/gear.png")}
+                source={require("../assets/search.png")}
                 accessible={true}
-                accessibilityLabel={"Gear Icon"}
+                accessibilityLabel={"Magnifying Glass Icon"}
               />
               <Text>Search</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => this.props.pageChange(2)}>
               <Image
                 style={globalStyle.icon}
-                source={require("../assets/gear.png")}
+                source={require("../assets/cart.png")}
                 accessible={true}
-                accessibilityLabel={"Gear Icon"}
+                accessibilityLabel={"Shopping Cart Icon"}
               />
               <Text>My Cart</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => this.props.pageChange(3)}>
               <Image
                 style={globalStyle.icon}
-                source={require("../assets/gear.png")}
+                source={require("../assets/orders.png")}
                 accessible={true}
-                accessibilityLabel={"Gear Icon"}
+                accessibilityLabel={"Reciept Icon"}
               />
               <Text>Orders</Text>
             </TouchableOpacity>
