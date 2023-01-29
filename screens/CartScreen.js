@@ -184,7 +184,7 @@ export default class CartScreen extends React.Component {
             <TouchableOpacity onPress={() => this.props.pageChange(1)}>
               <Image
                 style={globalStyle.icon}
-                source={require("./gear.png")}
+                source={require("../assets/gear.png")}
                 accessible={true}
                 accessibilityLabel={"Gear Icon"}
               />
@@ -193,7 +193,7 @@ export default class CartScreen extends React.Component {
             <TouchableOpacity onPress={() => this.props.pageChange(2)}>
               <Image
                 style={globalStyle.icon}
-                source={require("./gear.png")}
+                source={require("../assets/gear.png")}
                 accessible={true}
                 accessibilityLabel={"Gear Icon"}
               />
@@ -202,7 +202,7 @@ export default class CartScreen extends React.Component {
             <TouchableOpacity onPress={() => this.props.pageChange(3)}>
               <Image
                 style={globalStyle.icon}
-                source={require("./gear.png")}
+                source={require("../assets/gear.png")}
                 accessible={true}
                 accessibilityLabel={"Gear Icon"}
               />
@@ -211,7 +211,7 @@ export default class CartScreen extends React.Component {
             <TouchableOpacity onPress={() => this.props.pageChange(4)}>
               <Image
                 style={globalStyle.icon}
-                source={require("./gear.png")}
+                source={require("../assets/gear.png")}
                 accessible={true}
                 accessibilityLabel={"Gear Icon"}
               />
