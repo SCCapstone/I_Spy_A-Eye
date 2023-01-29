@@ -42,7 +42,7 @@ npm test --findRelatedTests __unit__
 End-to-end testing, handled through [Detox](https://wix.github.io/Detox/), requires additional set-up. First, ensure that the general set up has been done prior. Then you need to create a debug build for the application by using the following command in the **/android/** directory. This will usually take a few minutes the first time its created:
 ```
 cd ./android                        # if not already in the android directory
-./gradlew assembleRelease assembleAndroidTest -DtestBuildType=release
+./gradlew assembleRelease assembleAndroidTest -DtestBuildType=debug
 ```
 
  Once the build is complete, follow [Step 3 of the Detox Project Setup guide](https://wix.github.io/Detox/docs/introduction/project-setup#step-3-device-configs) to configure the project for your desired Android emulator or Android device. Once your device/emulator is properly set up, you just need to run the end-to-end testing. Run the command
