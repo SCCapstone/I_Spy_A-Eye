@@ -36,11 +36,10 @@ formBody = formBody.join("&");
 //POST TOKEN
 
 fetch(settings.url, {
-  method: settings.method,
-  headers: settings.headers,
-  body: formBody
-}) 
-
+    method: settings.method,
+    headers: settings.headers,
+    body: formBody
+  }) 
   .then((response) => response.json())
   .then((data) => {
     console.log('Success:', JSON.stringify(data));
@@ -51,6 +50,7 @@ fetch(settings.url, {
     console.error('Error:', error);
   }); 
   export {token}
+
 export default class App extends React.Component {
   state = {
     page: 1,
@@ -61,19 +61,14 @@ export default class App extends React.Component {
     switch(this.state.page) {
       case 1:
         return (<Page1 pageChange={(pageNum) => this.setState({page: pageNum})} />);
-        break;
       case 2:
         return (<Page2 pageChange={(pageNum) => this.setState({page: pageNum})}/>);
-        break;
       case 3:
         return (<Page3 pageChange={(pageNum) => this.setState({page: pageNum})}/>);
-        break;
       case 4:
         return (<Page4 pageChange={(pageNum) => this.setState({page: pageNum})}/>);
-        break;
       case 5:
         return (<Page5 pageChange={(pageNum) => this.setState({page: pageNum})}/>);
-        break;
     } 
   }
 
