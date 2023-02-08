@@ -47,7 +47,7 @@ cd ./android                        # if not already in the android directory
 
  Once the build is complete, follow [Step 3 of the Detox Project Setup guide](https://wix.github.io/Detox/docs/introduction/project-setup#step-3-device-configs) to configure the project for your desired Android emulator or Android device. Once your device/emulator is properly set up, you just need to run the end-to-end testing. Run the command
 ```
-npx react-native start
+npx react-native run-android
 ```
 to start up the Metro server; leave this running until you are done testing. Afterwards, in another terminal, use the following command to run the end-to-end testing suite:
 ```
