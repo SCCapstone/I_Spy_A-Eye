@@ -54,39 +54,42 @@ class ListItem extends React.Component {
 }
 
 export default class CartScreen extends React.Component {
-  state = {
-    products: [
-      {
-        id: 1,
-        name: 'Deluxe Mint Chocolate Chip Ice Cream',
-        price: '5.00',
-        quantity: 1
-      },
-      {
-        id: 2,
-        name: '1% Lowfat Milk',
-        price: '2.00',
-        quantity: 1
-      },
-      {
-        id: 3,
-        name: 'Barbecue Flavored Potato Chips',
-        price: '10.00',
-        quantity: 1
-      },
-      {
-        id: 4,
-        name: "Bakery Fresh Goodness Peanut Butter Cookies",
-        price: "3.00",
-        quantity: 1
-      },
-      {
-        id: 5,
-        name: "Kellogg's Club Original Crackers Snack Stacks",
-        price: "2.50",
-        quantity: 1
-      }
-    ]
+  constructor() {
+    super()
+    this.state = {
+      products: [
+        {
+          id: 1,
+          name: 'Deluxe Mint Chocolate Chip Ice Cream',
+          price: '5.00',
+          quantity: 1
+        },
+        {
+          id: 2,
+          name: '1% Lowfat Milk',
+          price: '2.00',
+          quantity: 1
+        },
+        {
+          id: 3,
+          name: 'Barbecue Flavored Potato Chips',
+          price: '10.00',
+          quantity: 1
+        },
+        {
+          id: 4,
+          name: "Bakery Fresh Goodness Peanut Butter Cookies",
+          price: "3.00",
+          quantity: 1
+        },
+        {
+          id: 5,
+          name: "Kellogg's Club Original Crackers Snack Stacks",
+          price: "2.50",
+          quantity: 1
+        }
+      ]
+    }
   }
 
   decrementValue = (item, index) => {
@@ -105,11 +108,7 @@ export default class CartScreen extends React.Component {
   }
 
   removeProduct = (productID) => {
-    let remove = this.state.products.filter((value, i) => {
-      if(value.id !== productID) {
-        return value
-      }
-    })
+    const remove = this.state.products.filter((value, i) => value.id !== productID)
     this.setState({products: remove})
   }
 
@@ -166,6 +165,7 @@ export default class CartScreen extends React.Component {
           />
 
           <FlatList
+            contentContainerStyle={{paddingBottom: 75}}
             data={this.state.products}
             renderItem={({item, index}) => 
               <ListItem 
