@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   View,
   FlatList,
+  Modal
 } from "react-native";
 import { SafeAreaView } from "react-native";
 import globalStyle from "../globalStyle";
@@ -136,6 +137,7 @@ export default class Page1 extends React.Component {
         favorited: false,
       },
       sort: null,
+      isSortMenuOpen: false,
       latestResults: null,
     };
   }
@@ -192,10 +194,60 @@ export default class Page1 extends React.Component {
             <Pressable style={globalStyle.headerButtonStyle} testID="Test_FilterButton">
               <Text style={globalStyle.headerButtonText}>Filter</Text>
             </Pressable>
-            {/* Sort Button */}
-            <Pressable style={globalStyle.headerButtonStyle} testID="Test_SortButton">
+
+            {/* Sort Button and Sort Submenu */}
+            <Pressable 
+              style={globalStyle.headerButtonStyle}
+              testID="Test_SortButton"
+              onPress={() => {this.setState({ isSortMenuOpen : !this.state.isSortMenuOpen }); {/* Toggle sort submenu on press */} }} 
+            >
               <Text style={globalStyle.headerButtonText}>Sort</Text>
             </Pressable>
+            <Modal
+              visible={this.state.isSortMenuOpen}
+              animationType="fade"
+              transparent={true}
+              testID="Test_SortSubmenu"
+              style={{flex: 0}}
+            >
+              {/* Handles closing menu when interacting outside of the submenu; also houses subbuttons */}
+              <TouchableOpacity
+                  style={{flex:1, alignItems: "center", justifyContent: "center"}}
+                  onPress={() => { this.setState({ isSortMenuOpen : false})}}
+                  testID="Test_SortSubmenuOpacity"
+              >
+                <View style={styles.sortSubmenuDesign} testID="Test_SortSubmenu">
+                  {/* Sorting Option Buttons */}
+                  <View style={[globalStyle.headerButtonText,{flex: 0, flexWrap: "wrap", flexDirection: "row"}]}>
+                    {/* Sort Lowest Price */}
+                    <Pressable style={styles.sortSubmenuButton} testID="Test_SortLowestPriceButton">
+                      <Text style={styles.buttonText}>Lowest Price</Text>
+                    </Pressable>
+
+                    {/* Sort Highest Price */}
+                    <Pressable style={styles.sortSubmenuButton} testID="Test_SortHighestPriceButton">
+                      <Text style={styles.buttonText}>Highest Price</Text>
+                    </Pressable>
+
+                    {/* Sort A-Z (Alphabetically) */}
+                    <Pressable style={styles.sortSubmenuButton} testID="Test_SortA-ZButton">
+                      <Text style={styles.buttonText}>A-Z</Text>
+                    </Pressable>
+
+                    {/* Sort Z-A (Reverse Alphabetically) */}
+                    <Pressable style={styles.sortSubmenuButton} testID="Test_SortZ-AButton">
+                      <Text style={styles.buttonText}>Z-A</Text>
+                    </Pressable>
+
+                     {/* Sort Unit Price */}
+                     <Pressable style={[styles.sortSubmenuButton]} testID="Test_SortUnitPriceButton">
+                      <Text style={styles.buttonText}>Unit Price</Text>
+                    </Pressable>
+
+                  </View>
+                </View>
+              </TouchableOpacity>
+            </Modal>
             {/* Scan Button */}
             <Pressable style={globalStyle.headerButtonStyle} testID="Test_ScanButton">
               <Text style={globalStyle.headerButtonText}>Scan</Text>
@@ -326,7 +378,6 @@ async function searchProducts(state) {
     showAlert(errorHeader, responseJSON.errors.reason);
     return null;
   }
-  console.log(responseJSON);
 
   // Iterates through responseJSON and stores items into itemList
   for (let i = 0; i < responseJSON.data.length; i++) {
@@ -409,6 +460,7 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "bold",
     fontSize: 20,
+    textAlign: "center"
   },
   remove: {
     backgroundColor: "black",
@@ -417,4 +469,24 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     marginRight: 15,
   },
+  sortSubmenuDesign: {
+    alignContent: "space-between",
+    alignItems: "center",
+    backgroundColor: "white",
+    borderColor: "black",
+    borderWidth: 10,
+    justifyContent: "center",
+    height: "25%",
+    width: "90%",
+    flexWrap: "wrap",
+  },
+  sortSubmenuButton: {
+    backgroundColor: "black",
+    borderRadius: 18,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    margin: 8,
+    flex: 1,
+    flexBasis: "33%",
+  }
 });
