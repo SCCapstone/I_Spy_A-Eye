@@ -2,11 +2,16 @@ import * as React from "react";
 import { Text, View, StyleSheet, Pressable, SafeAreaView, TextInput } from "react-native";
 import globalStyle from '../globalStyle';
 
-export default class Login extends React.Component {
+export default class SignUp extends React.Component {
   render() {
     return (
       <SafeAreaView style={globalStyle.wholeScreen}>
-        <Text style={globalStyle.headerText}>I Spy Shopper</Text>
+        <Text style={globalStyle.headerText}>Create an Account</Text>
+        <TextInput
+          style={globalStyle.loginSignUpInputContainer}
+          placeholder="Name"
+          placeholderTextColor={"#000"}
+        />
         <TextInput
           style={globalStyle.loginSignUpInputContainer}
           placeholder="Email"
@@ -17,15 +22,14 @@ export default class Login extends React.Component {
           placeholder="Password"
           placeholderTextColor={"#000"}
         />
+        <TextInput
+          style={globalStyle.loginSignUpInputContainer}
+          placeholder="Confirm Password"
+          placeholderTextColor={"#000"}
+        />
 
         <Pressable
           style={styles.loginButtonStyle}
-        >
-          <Text style={styles.logInText}>Log In</Text>
-        </Pressable>
-        <Pressable
-          style={styles.loginButtonStyle}
-          onPress={() => this.props.pageChange(6)}
         >
           <Text style={styles.logInText}>Sign Up</Text>
         </Pressable>

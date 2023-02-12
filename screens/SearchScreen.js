@@ -265,7 +265,7 @@ export default class Page1 extends React.Component {
               />
               <Text>Orders</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.props.pageChange(4)}>
+            <TouchableOpacity onPress={() => this.props.pageChange(6)}>
               <Image
                 style={globalStyle.icon}
                 source={require("../assets/gear.png")}

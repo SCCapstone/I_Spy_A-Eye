@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import Constants from 'expo-constants';
-import Page0 from './screens/LogInScreen';
+import Login from './screens/LogInScreen';
+import SignUp from './screens/SignUpScreen';
 import Page1 from './screens/SearchScreen';
 import Page2 from './screens/CartScreen';
 import Page3 from './screens/OrdersScreen';
@@ -62,10 +63,12 @@ export default class App extends React.Component {
   // Updates the state of which screen the user is currently on.
   pickPageToRender = () => {
     switch(this.state.page) {
+      case 6:
+        return (<SignUp pageChange={(pageNum) => this.setState({page: pageNum})}/>);
       case 0:
-        return (<Page0 pageChange={(pageNum) => this.setState({page: pageNum})} />);
+        return (<Login pageChange={(pageNum) => this.setState({page: pageNum})}/>);
       case 1:
-        return (<Page1 pageChange={(pageNum) => this.setState({page: pageNum})} />);
+        return (<Page1 pageChange={(pageNum) => this.setState({page: pageNum})}/>);
       case 2:
         return (<Page2 pageChange={(pageNum) => this.setState({page: pageNum})}/>);
       case 3:
