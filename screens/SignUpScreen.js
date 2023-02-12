@@ -4,6 +4,7 @@ import globalStyle from '../globalStyle';
 import {firebaseAuth} from '../firebase'
 
 export default class SignUp extends React.Component {
+  // Holds the values of the text input fields on this screen.
   constructor(props) {
     super(props);
     this.state = {
@@ -13,9 +14,14 @@ export default class SignUp extends React.Component {
     };
   }
 
-
+  /**
+   * Function to create user accounts through firebase. It makes sure the "Password" and 
+   * "Confrim Password" fields match. 
+   * @param {*} state the values of the text fields on this page.
+   */
   signUp(state) {
-    if (state.passwordInput === state.confirmPasswordInput && state.passwordInput.length !== 0) {
+    // Firebase requires passwords to be at least 6 characters but we are going a step beyond.
+    if (state.passwordInput === state.confirmPasswordInput && state.passwordInput.length >= 8) {
       firebaseAuth
         .createUserWithEmailAndPassword(state.emailInput, state.passwordInput)
         .then((userCredentials) => {
