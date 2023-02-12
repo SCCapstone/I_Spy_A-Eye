@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Text, View, StyleSheet, Pressable, SafeAreaView, TextInput } from "react-native";
+import { Text, StyleSheet, Pressable, SafeAreaView, TextInput } from "react-native";
 import globalStyle from '../globalStyle';
 import {firebaseAuth} from '../firebase'
 
