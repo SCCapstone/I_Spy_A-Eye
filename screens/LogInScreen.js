@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Text, View, StyleSheet, Pressable, SafeAreaView, TextInput } from "react-native";
+import { Text, StyleSheet, Pressable, SafeAreaView, TextInput } from "react-native";
 import globalStyle from '../globalStyle';
 
 export default class Login extends React.Component {
@@ -16,6 +16,7 @@ export default class Login extends React.Component {
           style={globalStyle.loginSignUpInputContainer}
           placeholder="Password"
           placeholderTextColor={"#000"}
+          secureTextEntry={true}
         />
 
         <Pressable

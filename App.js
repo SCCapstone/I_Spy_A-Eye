@@ -10,7 +10,6 @@ import Page4 from './screens/SettingsScreen';
 import Page5 from './screens/CheckoutScreen';
 import base64 from 'react-native-base64';
 import {CLIENT_ID, CLIENT_SECRET} from "@env";
-import { auth } from './firebase.js';
 
 // I Spy Shopper v0.1
 

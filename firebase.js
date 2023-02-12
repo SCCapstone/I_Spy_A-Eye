@@ -30,6 +30,7 @@ if (!firebase.apps.length) {
 } else {
     firebaseApp = firebase.app()
 }
-const auth = firebase.auth()
+// Allows firebase to be used across the app.
+const firebaseAuth = firebase.auth()
 
-export { auth };
+export { firebaseAuth };
