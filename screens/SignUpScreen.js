@@ -16,12 +16,13 @@ export default class SignUp extends React.Component {
 
   /**
    * Function to create user accounts through firebase. It makes sure the "Password" and 
-   * "Confrim Password" fields match. 
+   * "Confrim Password" fields match. Firebase requires passwords to be at least 6
+   * characters but we are going a step beyond.
    * @param {*} state the values of the text fields on this page.
    */
   signUp(state) {
-    // Firebase requires passwords to be at least 6 characters but we are going a step beyond.
-    if (state.passwordInput === state.confirmPasswordInput && state.passwordInput.length >= 8) {
+    // If user entered password information meets the requirements.
+    if (state.passwordInput === state.confirmPasswordInput && state.passwordInput >= 8) {
       firebaseAuth
         .createUserWithEmailAndPassword(state.emailInput, state.passwordInput)
         .then((userCredentials) => {
@@ -29,8 +30,10 @@ export default class SignUp extends React.Component {
           console.log(user.email, " successfully registered.");
         })
         .catch((error) => alert(error.message));
-    } else {
+    } else if (state.passwordInput !== state.confirmPasswordInput) {
       alert("Passwords don't match.");
+    } else if (state.passwordInput.length < 8 && state.confirmPasswordInput.length < 8) {
+      alert("Passwords must be 8 or more characters long.");
     }
   };
 
