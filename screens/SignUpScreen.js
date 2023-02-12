@@ -61,11 +61,6 @@ export default class SignUp extends React.Component {
         <Text style={globalStyle.headerText}>Create an Account</Text>
         <TextInput
           style={globalStyle.loginSignUpInputContainer}
-          placeholder="Name"
-          placeholderTextColor={"#000"}
-        />
-        <TextInput
-          style={globalStyle.loginSignUpInputContainer}
           placeholder="Email"
           placeholderTextColor={"#000"}
           onChangeText={(newEmailInput) =>
