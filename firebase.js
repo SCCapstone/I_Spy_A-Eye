@@ -9,6 +9,12 @@ import {
   FIREBASE_MEASUREMENT_ID
 } from "@env";
 
+/**
+ * This file allows the use of Firebase accross the app. For security purposes,
+ * firebaseConfig values are stored in an env file. firebaseAuth is called in 
+ * LoginScreen.js, SignUpScreen.js, and SettingsScreen.js.
+ */
+
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 // Your web app's Firebase configuration
