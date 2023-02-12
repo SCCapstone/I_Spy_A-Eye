@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import Constants from 'expo-constants';
+import Page0 from './screens/LogInScreen';
 import Page1 from './screens/SearchScreen';
 import Page2 from './screens/CartScreen';
 import Page3 from './screens/OrdersScreen';
@@ -8,6 +9,8 @@ import Page4 from './screens/SettingsScreen';
 import Page5 from './screens/CheckoutScreen';
 import base64 from 'react-native-base64';
 import {CLIENT_ID, CLIENT_SECRET} from "@env";
+import { auth } from './firebase.js';
+
 // I Spy Shopper v0.1
 
 let token = 0;
@@ -53,12 +56,14 @@ fetch(settings.url, {
 
 export default class App extends React.Component {
   state = {
-    page: 1,
+    page: 0,
   };
 
   // Updates the state of which screen the user is currently on.
   pickPageToRender = () => {
     switch(this.state.page) {
+      case 0:
+        return (<Page0 pageChange={(pageNum) => this.setState({page: pageNum})} />);
       case 1:
         return (<Page1 pageChange={(pageNum) => this.setState({page: pageNum})} />);
       case 2:
