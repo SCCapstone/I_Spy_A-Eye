@@ -70,6 +70,20 @@ const globalStyle = StyleSheet.create({
     minHeight: 50,
     marginTop: 20,
   },
+  backButtonStyle: {
+    backgroundColor: "#000",
+    borderRadius: 20,
+    paddingHorizontal: 8,
+    maxHeight: 30,
+    minHeight: 30,
+    maxWidth: 110,
+  },
+  backButtonText: {
+    textAlignVertical: "center",
+    color: "#fff",
+    fontSize: 20,
+    textAlign: "center",
+  },
 })
 
 export default globalStyle;

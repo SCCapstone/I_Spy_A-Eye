@@ -59,6 +59,12 @@ export default class SignUp extends React.Component {
     return (
       <SafeAreaView style={globalStyle.wholeScreen}>
         <Text style={globalStyle.headerText}>Create an Account</Text>
+        <Pressable
+          style={globalStyle.backButtonStyle}
+          onPress={() => this.props.pageChange(0)}
+        >
+          <Text style={globalStyle.backButtonText}>&lt; Back</Text>
+        </Pressable>
         <TextInput
           style={globalStyle.loginSignUpInputContainer}
           placeholder="Email"
@@ -114,5 +120,4 @@ const styles = StyleSheet.create({
     maxHeight: 50,
     minHeight: 50,
   },
-
 });
