@@ -78,6 +78,10 @@ export default class SignUp extends React.Component {
         >
           <Text style={styles.logInText}>Sign Up</Text>
         </Pressable>
+        <Text style={styles.passwordRequirements}>
+          Your password must be at least 8 characters long. it must contain an uppercase
+          letter, a lowercase letter, a number, and a non-alphanumeric character.
+        </Text>
       </SafeAreaView>
     )
   }
@@ -100,4 +104,7 @@ const styles = StyleSheet.create({
     maxHeight: 50,
     minHeight: 50,
   },
+  passwordRequirements: {
+    marginTop: 25,
+  }
 });
