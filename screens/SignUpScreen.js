@@ -2,6 +2,7 @@ import * as React from "react";
 import { Text, StyleSheet, Pressable, SafeAreaView, TextInput } from "react-native";
 import globalStyle from '../globalStyle';
 import {firebaseAuth} from '../firebase';
+import { newPasswordIsValid } from "../functions/SignUpScreenFunctions";
 
 export default class SignUp extends React.Component {
   // Holds the values of the text input fields on this screen.
@@ -15,34 +16,13 @@ export default class SignUp extends React.Component {
   }
 
   /**
-   * Function to check if user entered in a valid new password. It makes sure the "Password" and 
-   * "Confrim Password" fields match. Firebase requires passwords to be at least 6 characters,
-   * but we are going a step beyond and requiring 8. Users will be alerted as to why passwords
-   * aren't considered valid.
-   * @param {*} state the values of the text fields on this page.
-   * @returns true if password and confirm password are valid, else false.
-   */
-  newPasswordIsValid(state) {
-    if (state.passwordInput === state.confirmPasswordInput && state.passwordInput.length >= 8) {
-      return true;
-    } else if (state.passwordInput !== state.confirmPasswordInput) {
-      alert("Passwords don't match.");
-      return false;
-    } else if (state.passwordInput.length < 8 && state.confirmPasswordInput.length < 8) {
-      alert("Passwords must be 8 or more characters long.");
-      return false;
-    }
-    return false;
-  }
-
-  /**
    * Function to create user accounts through Firebase if the user enters valid info. After the
    * user signs up, the user is alerted and then redirected to the Log In screen.
    * @param {*} state the values of the text fields on this page.
    */
   signUp(state) {
     // If user entered password information meets the requirements.
-    if (this.newPasswordIsValid(state)) {
+    if (newPasswordIsValid(state.passwordInput, state.confirmPasswordInput)) {
       firebaseAuth
         .createUserWithEmailAndPassword(state.emailInput, state.passwordInput)
         .then((userCredentials) => {
