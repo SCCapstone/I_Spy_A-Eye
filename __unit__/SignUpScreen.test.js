@@ -36,3 +36,8 @@ test("This password should be accepted: ßpaSsword1", () => {
   const validPasswordChoice = newPasswordIsValid("ßpaSsword1", "ßpaSsword1");
   expect(validPasswordChoice).toBe(true); 
 })
+
+test("This password should be accepted: ßpaS8wOrd1", () => {
+  const validPasswordChoice = newPasswordIsValid("ßpaS8wOrd1", "ßpaS8wOrd1");
+  expect(validPasswordChoice).toBe(true); 
+})
