@@ -9,6 +9,9 @@ import Page4 from './screens/SettingsScreen';
 import Page5 from './screens/CheckoutScreen';
 import base64 from 'react-native-base64';
 import {CLIENT_ID, CLIENT_SECRET} from "@env";
+import firebase from 'firebase';
+import NotSignedInSettings from './screens/NotSignedInSettingsScreen';
+require('firebase/auth');
 
 // I Spy Shopper v0.1
 
@@ -51,13 +54,29 @@ fetch(settings.url, {
   }); 
   export {token}
 
+
 export default class App extends React.Component {
   state = {
     page: 0,
+    userLoggedIn: false,
   };
+
+
 
   // Updates the state of which screen the user is currently on.
   pickPageToRender = () => {
+
+      firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+          console.log("User is logged in.");
+          this.state.userLoggedIn = true;
+        } else {
+          console.log("No user is logged in.");
+          this.state.userLoggedIn = false;
+        }
+      });
+    
+
     switch(this.state.page) {
       case 6:
         return (<SignUp pageChange={(pageNum) => this.setState({page: pageNum})}/>);
@@ -70,7 +89,11 @@ export default class App extends React.Component {
       case 3:
         return (<Page3 pageChange={(pageNum) => this.setState({page: pageNum})}/>);
       case 4:
-        return (<Page4 pageChange={(pageNum) => this.setState({page: pageNum})}/>);
+        if (this.state.userLoggedIn) {
+          return (<Page4 pageChange={(pageNum) => this.setState({page: pageNum})}/>);
+        } else {
+          return (<NotSignedInSettings pageChange={(pageNum) => this.setState({page: pageNum})}/>);
+        }
       case 5:
         return (<Page5 pageChange={(pageNum) => this.setState({page: pageNum})}/>);
     } 

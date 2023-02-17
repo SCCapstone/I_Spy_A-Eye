@@ -84,6 +84,16 @@ const globalStyle = StyleSheet.create({
     fontSize: 20,
     textAlign: "center",
   },
+  wideButtonStyle: {
+    flex: 1,
+    backgroundColor: '#000',
+    borderRadius: 20,
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    marginTop: 20,
+    maxHeight: 50,
+    minHeight: 50,
+  },
 })
 
 export default globalStyle;
