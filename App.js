@@ -1,16 +1,16 @@
 import * as React from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import View from 'react-native';
 import Login from './screens/LogInScreen';
 import SignUp from './screens/SignUpScreen';
 import Page1 from './screens/SearchScreen';
 import Page2 from './screens/CartScreen';
 import Page3 from './screens/OrdersScreen';
 import Page4 from './screens/SettingsScreen';
+import NotSignedInSettings from './screens/NotSignedInSettingsScreen';
 import Page5 from './screens/CheckoutScreen';
 import base64 from 'react-native-base64';
-import {CLIENT_ID, CLIENT_SECRET} from "@env";
+import { CLIENT_ID, CLIENT_SECRET } from "@env";
 import firebase from 'firebase';
-import NotSignedInSettings from './screens/NotSignedInSettingsScreen';
 require('firebase/auth');
 
 // I Spy Shopper v0.1
@@ -41,18 +41,18 @@ formBody = formBody.join("&");
 //POST TOKEN
 
 fetch(settings.url, {
-    method: settings.method,
-    headers: settings.headers,
-    body: formBody
-  }) 
+  method: settings.method,
+  headers: settings.headers,
+  body: formBody
+})
   .then((response) => response.json())
   .then((data) => {
-    token=data.access_token;
+    token = data.access_token;
   })
   .catch((error) => {
     console.error('Error:', error);
-  }); 
-  export {token}
+  });
+export { token }
 
 
 export default class App extends React.Component {
@@ -64,40 +64,40 @@ export default class App extends React.Component {
 
   // Updates the state of which screen the user is currently on.
   pickPageToRender = () => {
-      // Determines if user is logged in or not.
-      firebase.auth().onAuthStateChanged((user) => {
-        if (user) {
-          console.log("User is logged in.");
-          this.state.userLoggedIn = true;
-        } else {
-          console.log("No user is logged in.");
-          this.state.userLoggedIn = false;
-        }
-      });
-    
+    // Determines if user is logged in or not.
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        console.log("User is logged in.");
+        this.state.userLoggedIn = true;
+      } else {
+        console.log("No user is logged in.");
+        this.state.userLoggedIn = false;
+      }
+    });
 
-    switch(this.state.page) {
+
+    switch (this.state.page) {
       case 6:
-        return (<SignUp pageChange={(pageNum) => this.setState({page: pageNum})}/>);
+        return (<SignUp pageChange={(pageNum) => this.setState({ page: pageNum })} />);
       case 0:
-        return (<Login pageChange={(pageNum) => this.setState({page: pageNum})}/>);
+        return (<Login pageChange={(pageNum) => this.setState({ page: pageNum })} />);
       case 1:
-        return (<Page1 pageChange={(pageNum) => this.setState({page: pageNum})}/>);
+        return (<Page1 pageChange={(pageNum) => this.setState({ page: pageNum })} />);
       case 2:
-        return (<Page2 pageChange={(pageNum) => this.setState({page: pageNum})}/>);
+        return (<Page2 pageChange={(pageNum) => this.setState({ page: pageNum })} />);
       case 3:
-        return (<Page3 pageChange={(pageNum) => this.setState({page: pageNum})}/>);
+        return (<Page3 pageChange={(pageNum) => this.setState({ page: pageNum })} />);
       case 4:
         if (this.state.userLoggedIn) {
           // Users logged in will be returned this page when clicking the settings button.
-          return (<Page4 pageChange={(pageNum) => this.setState({page: pageNum})}/>);
+          return (<Page4 pageChange={(pageNum) => this.setState({ page: pageNum })} />);
         } else {
           // Users not logged in will be returned this page when clicking the settings button.
-          return (<NotSignedInSettings pageChange={(pageNum) => this.setState({page: pageNum})}/>);
+          return (<NotSignedInSettings pageChange={(pageNum) => this.setState({ page: pageNum })} />);
         }
       case 5:
-        return (<Page5 pageChange={(pageNum) => this.setState({page: pageNum})}/>);
-    } 
+        return (<Page5 pageChange={(pageNum) => this.setState({ page: pageNum })} />);
+    }
   }
 
   render() {
@@ -108,13 +108,3 @@ export default class App extends React.Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  paragraph: {
-    margin: 24,
-    fontSize: 18,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-
-});
