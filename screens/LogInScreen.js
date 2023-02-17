@@ -47,6 +47,7 @@ export default class Login extends React.Component {
           onChangeText={(newEmailInput) =>
             this.setState({ emailInput: newEmailInput.trim() })
           }
+          testID="Test_EmailTextBar"
         />
         <TextInput
           style={globalStyle.loginSignUpInputContainer}
@@ -56,17 +57,20 @@ export default class Login extends React.Component {
           onChangeText={(newPasswordInput) =>
             this.setState({ passwordInput: newPasswordInput })
           }
+          testID="Test_PasswordTextBar"
         />
 
         <Pressable
           style={styles.loginButtonStyle}
           onPress={() => this.login(this.state)}
+          testID="Test_LogInButton"
         >
           <Text style={styles.logInText}>Log In</Text>
         </Pressable>
         <Pressable
           style={styles.loginButtonStyle}
           onPress={() => this.props.pageChange(6)}
+          testID="Test_SignUpButton"
         >
           <Text style={styles.logInText}>Sign Up</Text>
         </Pressable>
