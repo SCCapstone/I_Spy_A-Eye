@@ -59,16 +59,22 @@ export default class Login extends React.Component {
         />
 
         <Pressable
-          style={styles.loginButtonStyle}
+          style={globalStyle.wideButtonStyle}
           onPress={() => this.login(this.state)}
         >
           <Text style={styles.logInText}>Log In</Text>
         </Pressable>
         <Pressable
-          style={styles.loginButtonStyle}
+          style={globalStyle.wideButtonStyle}
           onPress={() => this.props.pageChange(6)}
         >
           <Text style={styles.logInText}>Sign Up</Text>
+        </Pressable>
+        <Pressable
+          style={globalStyle.wideButtonStyle}
+          onPress={() => this.props.pageChange(1)}
+        >
+          <Text style={styles.logInText}>Continue Without Signing in</Text>
         </Pressable>
       </SafeAreaView>
     )
@@ -82,15 +88,4 @@ const styles = StyleSheet.create({
     fontSize: 24,
     textAlign: 'center',
   },
-  loginButtonStyle: {
-    flex: 1,
-    backgroundColor: 'black',
-    borderRadius: 20,
-    paddingVertical: 8,
-    paddingHorizontal: 20,
-    marginTop: 20,
-    maxHeight: 50,
-    minHeight: 50,
-  },
-
 });
