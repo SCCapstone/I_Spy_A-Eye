@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Text, View, StyleSheet } from 'react-native';
-import Constants from 'expo-constants';
 import Login from './screens/LogInScreen';
 import SignUp from './screens/SignUpScreen';
 import Page1 from './screens/SearchScreen';
@@ -45,9 +44,7 @@ fetch(settings.url, {
   }) 
   .then((response) => response.json())
   .then((data) => {
-    console.log('Success:', JSON.stringify(data));
     token=data.access_token;
-    console.log(token)
   })
   .catch((error) => {
     console.error('Error:', error);
@@ -92,7 +89,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    paddingTop: Constants.statusBarHeight,
     backgroundColor: '#ecf0f1',
     padding: 8,
   },

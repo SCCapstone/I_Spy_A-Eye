@@ -123,7 +123,7 @@ function incrementQuantity(itemID) {
   }
 }
 
-export default class Page1 extends React.Component {
+export default class SearchScreen extends React.Component {
   constructor(props) {
     super(props);
     // Set up default state for search bar input
@@ -140,6 +140,36 @@ export default class Page1 extends React.Component {
       isSortMenuOpen: false,
       latestResults: null,
     };
+  }
+
+  /* Sorting Functions */
+  // Input: Two product objects. Returns an integer based on lowest price comparison (price ascending).
+  sortPriceAsc(p1, p2) {
+    return p1.price - p2.price;   // Negative value means p1 is cheaper. Positive means p2 is cheaper. 0 means equal price.
+  }
+
+  // Input: Two product objects. Returns an integer based on highest price comparison (price descending).
+  sortPriceDesc(p1, p2) {
+    return p2.price - p1.price;   // Negative value means p2 is cheaper. Positive means p1 is cheaper. 0 means equal price.
+  }
+
+  // Input: Two product objects. Returns an integer based on an alphabetical comparison by product name.
+  sortAlpha(p1, p2) {
+    const p1Name = p1.title.toUpperCase();
+    const p2Name = p2.title.toUpperCase();
+    return p1Name.localeCompare(p2Name);   // LocalCompare handles accented characters among other non-ASCII ones
+  }
+
+  // Input: Two product objects. Returns an integer based on a reverse alphabetical comparison by product name.
+  sortAlphaReverse(p1, p2) {
+    const p1Name = p1.title.toUpperCase();
+    const p2Name = p2.title.toUpperCase();
+    return p2Name.localeCompare(p1Name);   // LocalCompare handles accented characters among other non-ASCII ones
+  }
+
+  // Input: Two product objects. Returns an integer based on unit price ascending (whichever has the lowest unit price).
+  sortUnitPrice(p1, p2) {
+    return p1.unitPrice - p2.unitPrice;   // Negative value means p1 is cheaper. Positive means p2 is cheaper. 0 means equal price.
   }
 
   render() {
@@ -172,11 +202,19 @@ export default class Page1 extends React.Component {
             {/* Search Button */}
             <Pressable
               style={styles.searchButtonStyle}
-              onPress={() => {
-                let searchResults = searchProducts(this.state);
-                if (searchResults != null)
-                  this.setState({ latestResults: searchResults });
+              onPressIn={() => {
+                searchProducts(this.state);
+                if (itemList == null) {
+                  showAlert(
+                    "No Products Found",
+                    "Try using different keywords and/or a different set of filters."
+                  );
+                }
+                this.setState({ latestResults: itemList })
+                console.log(itemList)
+                console.log(this.state.latestResults)
               }}
+              onPressOut={() => {this.setState({ latestResults: itemList })}}
               testID="Test_SearchButton"
             >
               <Text style={styles.searchButtonText}>Search</Text>
@@ -220,27 +258,67 @@ export default class Page1 extends React.Component {
                   {/* Sorting Option Buttons */}
                   <View style={[globalStyle.headerButtonText,{flex: 0, flexWrap: "wrap", flexDirection: "row"}]}>
                     {/* Sort Lowest Price */}
-                    <Pressable style={styles.sortSubmenuButton} testID="Test_SortLowestPriceButton">
+                    <Pressable 
+                      style={styles.sortSubmenuButton}
+                      testID="Test_SortLowestPriceButton"
+                      onPress={
+                        () => { 
+                          this.setState({ sort: "Lowest Price", latestResults: itemList.sort(this.sortPriceAsc)}) 
+                        }
+                      }
+                    >
                       <Text style={styles.buttonText}>Lowest Price</Text>
                     </Pressable>
 
                     {/* Sort Highest Price */}
-                    <Pressable style={styles.sortSubmenuButton} testID="Test_SortHighestPriceButton">
+                    <Pressable
+                      style={styles.sortSubmenuButton}
+                      testID="Test_SortHighestPriceButton"
+                      onPress={
+                        () => { 
+                          this.setState({ sort: "Highest Price", latestResults: itemList.sort(this.sortPriceDesc)}) 
+                        }
+                      }
+                    >
                       <Text style={styles.buttonText}>Highest Price</Text>
                     </Pressable>
 
                     {/* Sort A-Z (Alphabetically) */}
-                    <Pressable style={styles.sortSubmenuButton} testID="Test_SortA-ZButton">
+                    <Pressable
+                      style={styles.sortSubmenuButton}
+                      testID="Test_SortA-ZButton"
+                      onPress={
+                        () => { 
+                          this.setState({ sort: "A-Z", latestResults: itemList.sort(this.sortAlpha)}) 
+                        }
+                      }
+                    >
                       <Text style={styles.buttonText}>A-Z</Text>
                     </Pressable>
 
                     {/* Sort Z-A (Reverse Alphabetically) */}
-                    <Pressable style={styles.sortSubmenuButton} testID="Test_SortZ-AButton">
+                    <Pressable
+                      style={styles.sortSubmenuButton}
+                      testID="Test_SortZ-AButton"
+                      onPress={
+                        () => { 
+                          this.setState({ sort: "A-Z", latestResults: itemList.sort(this.sortAlphaReverse)}) 
+                        }
+                      }
+                    >
                       <Text style={styles.buttonText}>Z-A</Text>
                     </Pressable>
 
                      {/* Sort Unit Price */}
-                     <Pressable style={[styles.sortSubmenuButton]} testID="Test_SortUnitPriceButton">
+                     <Pressable
+                      style={[styles.sortSubmenuButton]}
+                      testID="Test_SortUnitPriceButton"
+                      onPress={
+                        () => { 
+                          this.setState({ sort: "A-Z", latestResults: itemList.sort(this.sortUnitPrice)}) 
+                        }
+                      }
+                    >
                       <Text style={styles.buttonText}>Unit Price</Text>
                     </Pressable>
 
@@ -332,7 +410,7 @@ export default class Page1 extends React.Component {
     );
   }
 }
-
+{/* Search Functions */}
 // Returns true if the input string meets the API's filter.term paramater requirements.
 function validInput(inputText) {
   // Search terms limited to max of 8 words (separated by spaces). Must also be >= 3 characters
@@ -402,13 +480,14 @@ async function searchProducts(state) {
   }
   itemIndex = 0;
 
-  return responseJSON;
-
-  // Input: Strings for the alert's title and alert's message. Displays a simple, cancellable alert with the given title and message
-  function showAlert(alertTitle, alertMsg) {
-    Alert.alert(alertTitle, alertMsg, [{ text: "OK" }], { cancelable: true });
-  }
+  return itemList;
 }
+
+// Input: Strings for the alert's title and alert's message. Displays a simple, cancellable alert with the given title and message
+function showAlert(alertTitle, alertMsg) {
+  Alert.alert(alertTitle, alertMsg, [{ text: "OK" }], { cancelable: true });
+}
+
 
 const styles = StyleSheet.create({
   searchButtonStyle: {
