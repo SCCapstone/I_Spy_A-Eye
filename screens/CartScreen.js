@@ -1,6 +1,7 @@
-import * as React from "react";
+import React from "react";
 import { Text, View, StyleSheet, TouchableOpacity, Image, Pressable, FlatList, TextInput, SafeAreaView } from "react-native";
 import globalStyle from "../globalStyle"
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 /*
   TODOS:
@@ -12,7 +13,7 @@ class ListItem extends React.Component {
 
   render() {
     const {item} = this.props
-    
+
     return(
       <View>
         {/*Item title, depends on what the user adds to the cart, allows user to go to the details screen*/}
@@ -54,8 +55,11 @@ class ListItem extends React.Component {
 }
 
 export default class CartScreen extends React.Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
+    // gets called when app is launched
+    this.getData()
+    //products being saved to state
     this.state = {
       products: [
         {
@@ -107,9 +111,30 @@ export default class CartScreen extends React.Component {
     this.setState({products}) // update products
   }
 
-  removeProduct = (productID) => {
-    const remove = this.state.products.filter((value, i) => value.id !== productID)
-    this.setState({products: remove})
+  // removes item from cart, dont want items to reappear so use async
+  removeProduct = async (productID) => {
+    try {
+      const remove = this.state.products.filter((value, i) => value.id !== productID)
+      this.setState({products: remove})
+      // saves into AsyncStorage when remove button is clicked
+      await AsyncStorage.setItem("ProductKey", JSON.stringify(remove))
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  // retrieve the key
+  getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem("ProductKey")
+      // dont want to set state to null
+      if (value !== null) {
+        // set to our state
+        this.setState({products: JSON.parse(value)})
+      }
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   addProduct = (x) => {
@@ -128,7 +153,15 @@ export default class CartScreen extends React.Component {
 
   render() {
     let deliveryPrice = 5
-    let grandTotal = this.addPrices() + deliveryPrice
+    let grandTotal = 0
+    // if grocery total is 0 dollars
+    if (this.addPrices() == 0) {
+      // then grand total is 0 dollars
+      grandTotal = 0
+    } else {
+      // otherwise give the price
+     grandTotal = this.addPrices() + deliveryPrice
+    }
 
     return (
       <SafeAreaView style={globalStyle.wholeScreen}>
@@ -167,7 +200,7 @@ export default class CartScreen extends React.Component {
           <FlatList
             contentContainerStyle={{paddingBottom: 75}}
             data={this.state.products}
-            renderItem={({item, index}) => 
+            renderItem={({item, index}) =>
               <ListItem 
                 item={item}
                 decrementValue={() => this.decrementValue(item, index)}
