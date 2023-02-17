@@ -13,7 +13,10 @@
     "runner-config": "__e2e__/config.json"
   },
   "jest": {
-    "preset": "react-native"
+    "preset": "react-native",
+    "transformIgnorePatterns": [
+      "node_modules/(?!(@react-native|react-native|expo-modules-core|expo-constants|react-native-base64)/)"
+    ]
   },
   "dependencies": {
     "expo": "^47.0.13",
