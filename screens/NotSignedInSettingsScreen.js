@@ -7,7 +7,7 @@ import firebase from 'firebase';
 require('firebase/auth');
 
 
-export default class Page4 extends React.Component {
+export default class NotSignedInSettings extends React.Component {
 
   /**
    * Function to sign out users through Firebase. After a successful sign out, the user
@@ -30,8 +30,9 @@ export default class Page4 extends React.Component {
           style={globalStyle.wideButtonStyle}
           onPress={() => this.signOut()}
         >
-          <Text style={styles.SignOutText}>Sign Out</Text>
+          <Text style={styles.SignOutText}>Log In</Text>
         </Pressable>
+        <Text>Sign in to access settings.</Text>
         <View style={globalStyle.container}>
           <View style={globalStyle.buttons}>
             <TouchableOpacity onPress={() => this.props.pageChange(1)}>
@@ -76,6 +77,7 @@ export default class Page4 extends React.Component {
     );
   }
 }
+
 
 const styles = StyleSheet.create({
   SignOutText: {
