@@ -32,7 +32,9 @@ export default class NotSignedInSettings extends React.Component {
         >
           <Text style={styles.SignOutText}>Log In</Text>
         </Pressable>
-        <Text>Sign in to access settings.</Text>
+        <Text style={globalStyle.paragraph}>
+          Sign in to access settings and make purchases.
+        </Text>
         <View style={globalStyle.container}>
           <View style={globalStyle.buttons}>
             <TouchableOpacity onPress={() => this.props.pageChange(1)}>

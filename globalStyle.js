@@ -52,6 +52,7 @@ const globalStyle = StyleSheet.create({
     fontSize: 45,
     fontWeight: 'bold',
     textAlign: 'center',
+    marginTop: 8,
   },
   inputContainer: {
     borderWidth: 7,
@@ -69,6 +70,8 @@ const globalStyle = StyleSheet.create({
     maxHeight: 60,
     minHeight: 50,
     marginTop: 20,
+    marginLeft: 8,
+    marginRight: 8,
   },
   backButtonStyle: {
     backgroundColor: "#000",
@@ -77,6 +80,7 @@ const globalStyle = StyleSheet.create({
     maxHeight: 30,
     minHeight: 30,
     maxWidth: 110,
+    marginLeft: 8,
   },
   backButtonText: {
     textAlignVertical: "center",
@@ -93,7 +97,15 @@ const globalStyle = StyleSheet.create({
     marginTop: 20,
     maxHeight: 50,
     minHeight: 50,
+    marginLeft: 8,
+    marginRight: 8,
   },
+  paragraph: {
+    marginTop: 25,
+    fontSize: 18,
+    marginLeft: 8,
+    marginRight: 8,
+  }
 })
 
 export default globalStyle;

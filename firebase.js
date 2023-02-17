@@ -12,7 +12,7 @@ import {
 /**
  * This file allows the use of Firebase accross the app. For security purposes,
  * firebaseConfig values are stored in an env file. firebaseAuth is called in 
- * LoginScreen.js, SignUpScreen.js, and SettingsScreen.js.
+ * LoginScreen.js, SignUpScreen.js, App.js, and SettingsScreen.js.
  */
 
 // TODO: Add SDKs for Firebase products that you want to use

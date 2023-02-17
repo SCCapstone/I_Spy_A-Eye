@@ -56,16 +56,15 @@ fetch(settings.url, {
 
 
 export default class App extends React.Component {
+  // This state determines which page to render. Users not logged in will see different pages.
   state = {
     page: 0,
     userLoggedIn: false,
   };
 
-
-
   // Updates the state of which screen the user is currently on.
   pickPageToRender = () => {
-
+      // Determines if user is logged in or not.
       firebase.auth().onAuthStateChanged((user) => {
         if (user) {
           console.log("User is logged in.");
@@ -90,8 +89,10 @@ export default class App extends React.Component {
         return (<Page3 pageChange={(pageNum) => this.setState({page: pageNum})}/>);
       case 4:
         if (this.state.userLoggedIn) {
+          // Users logged in will be returned this page when clicking the settings button.
           return (<Page4 pageChange={(pageNum) => this.setState({page: pageNum})}/>);
         } else {
+          // Users not logged in will be returned this page when clicking the settings button.
           return (<NotSignedInSettings pageChange={(pageNum) => this.setState({page: pageNum})}/>);
         }
       case 5:
@@ -101,7 +102,7 @@ export default class App extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <View>
         {this.pickPageToRender()}
       </View>
     );
@@ -109,16 +110,11 @@ export default class App extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    backgroundColor: '#ecf0f1',
-    padding: 8,
-  },
   paragraph: {
     margin: 24,
     fontSize: 18,
     fontWeight: 'bold',
     textAlign: 'center',
   },
+
 });

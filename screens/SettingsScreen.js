@@ -3,7 +3,6 @@ import { Text, View, StyleSheet, TouchableOpacity, Image, Pressable } from "reac
 import { SafeAreaView } from "react-native";
 import { firebaseAuth } from "../firebase";
 import globalStyle from "../globalStyle";
-import firebase from 'firebase';
 require('firebase/auth');
 
 
