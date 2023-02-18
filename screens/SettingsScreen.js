@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Text, View, StyleSheet, TouchableOpacity, Image, Pressable } from "react-native";
+import { Text, View, TouchableOpacity, Image, Pressable } from "react-native";
 import { SafeAreaView } from "react-native";
 import { firebaseAuth } from "../firebase";
 import globalStyle from "../globalStyle";
@@ -25,6 +25,21 @@ export default class Page4 extends React.Component {
     return (
       <SafeAreaView style={globalStyle.wholeScreen}>
         <Text style={globalStyle.headerText}>Settings</Text>
+        <Text
+          style={{ fontWeight: "bold", fontSize: 30, marginLeft: 8 }}
+        >
+          Personal:
+        </Text>
+        <Pressable
+          style={globalStyle.wideButtonStyle}
+        >
+          <Text style={globalStyle.wideButtonText}>Change Delivery Address</Text>
+        </Pressable>
+        <Pressable
+          style={globalStyle.wideButtonStyle}
+        >
+          <Text style={globalStyle.wideButtonText}>Clear Shopping History</Text>
+        </Pressable>
         <Pressable
           style={globalStyle.wideButtonStyle}
           onPress={() => this.signOut()}
