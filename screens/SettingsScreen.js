@@ -32,6 +32,7 @@ export default class Page4 extends React.Component {
         </Text>
         <Pressable
           style={globalStyle.wideButtonStyle}
+          onPress={() => this.props.pageChange(7)}
         >
           <Text style={globalStyle.wideButtonText}>Change Delivery Address</Text>
         </Pressable>
