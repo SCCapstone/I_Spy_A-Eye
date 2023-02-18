@@ -29,7 +29,7 @@ export default class Page4 extends React.Component {
           style={globalStyle.wideButtonStyle}
           onPress={() => this.signOut()}
         >
-          <Text style={styles.SignOutText}>Sign Out</Text>
+          <Text style={globalStyle.wideButtonText}>Sign Out</Text>
         </Pressable>
         <View style={globalStyle.container}>
           <View style={globalStyle.buttons}>
@@ -75,12 +75,3 @@ export default class Page4 extends React.Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  SignOutText: {
-    color: 'white',
-    fontWeight: 'bold',
-    fontSize: 24,
-    textAlign: 'center',
-  },
-});

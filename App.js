@@ -1,5 +1,4 @@
 import * as React from 'react';
-import View from 'react-native';
 import Login from './screens/LogInScreen';
 import SignUp from './screens/SignUpScreen';
 import Page1 from './screens/SearchScreen';
@@ -100,11 +99,13 @@ export default class App extends React.Component {
     }
   }
 
+
   render() {
     return (
-      <View>
+      <>
         {this.pickPageToRender()}
-      </View>
+      </>
     );
   }
 }
+

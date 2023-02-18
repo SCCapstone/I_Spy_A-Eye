@@ -65,31 +65,22 @@ export default class Login extends React.Component {
           onPress={() => this.login(this.state)}
           testID="Test_LogInButton"
         >
-          <Text style={styles.logInText}>Log In</Text>
+          <Text style={globalStyle.wideButtonText}>Log In</Text>
         </Pressable>
         <Pressable
           style={globalStyle.wideButtonStyle}
           onPress={() => this.props.pageChange(6)}
           testID="Test_SignUpButton"
         >
-          <Text style={styles.logInText}>Sign Up</Text>
+          <Text style={globalStyle.wideButtonText}>Sign Up</Text>
         </Pressable>
         <Pressable
           style={globalStyle.wideButtonStyle}
           onPress={() => this.props.pageChange(1)}
         >
-          <Text style={styles.logInText}>Continue Without Signing in</Text>
+          <Text style={globalStyle.wideButtonText}>Continue Without Signing in</Text>
         </Pressable>
       </SafeAreaView>
     )
   }
 }
-
-const styles = StyleSheet.create({
-  logInText: {
-    color: 'white',
-    fontWeight: 'bold',
-    fontSize: 24,
-    textAlign: 'center',
-  },
-});

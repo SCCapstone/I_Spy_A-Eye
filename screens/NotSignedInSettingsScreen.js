@@ -3,12 +3,14 @@ import { Text, View, StyleSheet, TouchableOpacity, Image, Pressable } from "reac
 import { SafeAreaView } from "react-native";
 import { firebaseAuth } from "../firebase";
 import globalStyle from "../globalStyle";
-import firebase from 'firebase';
 require('firebase/auth');
 
+/**
+ * This screen is shown when a user not signed in clicks the settings button on the navbar.
+ * This screen exists so that a user can be redirected to the sign in screen.
+ */
 
 export default class NotSignedInSettings extends React.Component {
-
   /**
    * Function to sign out users through Firebase. After a successful sign out, the user
    * is redirected to the Log In screen.
@@ -30,7 +32,7 @@ export default class NotSignedInSettings extends React.Component {
           style={globalStyle.wideButtonStyle}
           onPress={() => this.signOut()}
         >
-          <Text style={styles.SignOutText}>Log In</Text>
+          <Text style={globalStyle.wideButtonText}>Log In</Text>
         </Pressable>
         <Text style={globalStyle.paragraph}>
           Sign in to access settings and make purchases.
@@ -79,13 +81,3 @@ export default class NotSignedInSettings extends React.Component {
     );
   }
 }
-
-
-const styles = StyleSheet.create({
-  SignOutText: {
-    color: 'white',
-    fontWeight: 'bold',
-    fontSize: 24,
-    textAlign: 'center',
-  },
-});

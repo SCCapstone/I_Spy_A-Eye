@@ -76,7 +76,7 @@ export default class SignUp extends React.Component {
           style={globalStyle.wideButtonStyle}
           onPress={() => this.signUp(this.state)}
         >
-          <Text style={styles.logInText}>Sign Up</Text>
+          <Text style={globalStyle.wideButtonText}>Sign Up</Text>
         </Pressable>
         <Text style={globalStyle.paragraph}>
           Your password must be at least 8 characters long. it must contain an uppercase
@@ -86,12 +86,3 @@ export default class SignUp extends React.Component {
     )
   }
 }
-
-const styles = StyleSheet.create({
-  logInText: {
-    color: 'white',
-    fontWeight: 'bold',
-    fontSize: 24,
-    textAlign: 'center',
-  },
-});

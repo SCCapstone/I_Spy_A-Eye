@@ -100,6 +100,12 @@ const globalStyle = StyleSheet.create({
     marginLeft: 8,
     marginRight: 8,
   },
+  wideButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 24,
+    textAlign: 'center',
+  },
   paragraph: {
     marginTop: 25,
     fontSize: 18,
