@@ -5,7 +5,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 /*
   TODOS:
-    Store cart data locally on device
     Grab each product by id and add
 */
 
@@ -109,7 +108,7 @@ export default class CartScreen extends React.Component {
     const products = [...this.state.products] // empty array and copy everything over
     products[index].quantity = products[index].quantity + 1 // modify specific index quantity
     this.setState({products}) // update products
-  }
+}
 
   // removes item from cart, dont want items to reappear so use async
   removeProduct = async (productID) => {
@@ -137,8 +136,8 @@ export default class CartScreen extends React.Component {
     }
   }
 
-  addProduct = (x) => {
-    return x * 10
+  addProduct = () => {
+    
   }
 
   // Add the total prices of each product
