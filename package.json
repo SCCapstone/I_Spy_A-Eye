@@ -13,13 +13,17 @@
     "runner-config": "__e2e__/config.json"
   },
   "jest": {
-    "preset": "react-native"
+    "preset": "react-native",
+    "transformIgnorePatterns": [
+      "node_modules/(?!(@react-native|react-native|expo-modules-core|expo-constants|react-native-base64)/)"
+    ]
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.17.11",
     "expo": "^47.0.13",
     "expo-splash-screen": "~0.17.5",
     "expo-status-bar": "~1.4.0",
+    "firebase": "^8.2.3",
     "node": "^19.1.0",
     "react": "18.2.0",
     "react-native": "0.71.1",

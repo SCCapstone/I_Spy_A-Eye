@@ -5,9 +5,12 @@ import { firebaseAuth } from "../firebase";
 import globalStyle from "../globalStyle";
 require('firebase/auth');
 
+/**
+ * This screen is shown when a user not signed in clicks the settings button on the navbar.
+ * This screen exists so that a user can be redirected to the sign in screen.
+ */
 
-export default class Page4 extends React.Component {
-
+export default class NotSignedInSettings extends React.Component {
   /**
    * Function to sign out users through Firebase. After a successful sign out, the user
    * is redirected to the Log In screen.
@@ -25,28 +28,15 @@ export default class Page4 extends React.Component {
     return (
       <SafeAreaView style={globalStyle.wholeScreen}>
         <Text style={globalStyle.headerText}>Settings</Text>
-        <Text
-          style={{ fontWeight: "bold", fontSize: 30, marginLeft: 8 }}
-        >
-          Personal:
-        </Text>
-        <Pressable
-          style={globalStyle.wideButtonStyle}
-          onPress={() => this.props.pageChange(7)}
-        >
-          <Text style={globalStyle.wideButtonText}>Change Delivery Address</Text>
-        </Pressable>
-        <Pressable
-          style={globalStyle.wideButtonStyle}
-        >
-          <Text style={globalStyle.wideButtonText}>Clear Shopping History</Text>
-        </Pressable>
         <Pressable
           style={globalStyle.wideButtonStyle}
           onPress={() => this.signOut()}
         >
-          <Text style={globalStyle.wideButtonText}>Sign Out</Text>
+          <Text style={globalStyle.wideButtonText}>Log In</Text>
         </Pressable>
+        <Text style={globalStyle.paragraph}>
+          Sign in to access settings and make purchases.
+        </Text>
         <View style={globalStyle.container}>
           <View style={globalStyle.buttons}>
             <TouchableOpacity onPress={() => this.props.pageChange(1)}>
