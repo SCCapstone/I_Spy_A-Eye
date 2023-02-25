@@ -1,0 +1,1 @@
+export default '';  // mock file for Jest in order to handle icons/images from the react-native-vector-icon package
