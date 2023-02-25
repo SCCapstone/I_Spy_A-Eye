@@ -16,7 +16,8 @@
     "preset": "react-native",
     "transformIgnorePatterns": [
       "node_modules/(?!(@react-native|react-native|expo-modules-core|expo-constants|react-native-base64)/)"
-    ]
+    ],
+    "setupFiles": ["<rootDir>/jest.setup.js"]
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.17.11",
