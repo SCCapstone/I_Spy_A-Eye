@@ -13,6 +13,8 @@ import {
   Modal
 } from "react-native";
 import { SafeAreaView } from "react-native";
+import Icon from 'react-native-vector-icons/MaterialIcons'
+import SectionedMultiSelect from 'react-native-sectioned-multi-select';
 import globalStyle from "../globalStyle";
 
 // Holds data of all items
@@ -131,16 +133,59 @@ export default class SearchScreen extends React.Component {
       input: "",
       location: "01400376",
       filters: {
-        country: null,
+        selectedCountries: [],
         inStock: true,
         onSale: false,
         favorited: false,
       },
+      allAvailableCountries: [],   // The countries of origin of all products currently in results
       sort: null,
       isSortMenuOpen: false,
-      latestResults: null,
+      isFilterMenuOpen: false,
+      isFilterCountryMenuOpen: false,
+      latestResults: [],
+      unfilteredResults: [],      // A copy of the latest results in case filters are cleared (saves)
     };
   }
+
+  /* Filtering Functions */
+  // Given a list of product objects, returns an alphabetically sorted list of obtained countries of origin with no duplicates.
+  countriesFromProducts = (productList) => {
+    if(productList.length == 0) return [];      // If there are no products, then there's no need to look through them
+
+    let countries = []
+    productList.forEach((product) => {     
+      let currentCountry = product.countryOrigin
+      if(countries.indexOf(currentCountry) == -1) countries.push(currentCountry)  // Add country to list if not present already
+    })
+    countries.sort((c1,c2) => c1.localeCompare(c2))   // Sort the list of countries
+
+    let countryObjects = []
+    countries.forEach((country) => {    // MultipleSelectList requires this particular structure of object
+      countryObjects.push({key: country, value: country})
+    }) 
+    return countryObjects
+  }
+
+  // Updates the list of selectedCountries in the filters property of the class state when the selected countries change.
+  onSelectedItemsChange = (countries) => {
+    this.setState((prevState) => {
+      let filters = {...prevState.filters}    // Copy current filters applied
+      filters.selectedCountries = countries  // Update with current selected countries
+      return {filters};
+    })
+  }
+
+  // Filters the current results by the selected countries, returning the filtered results.
+  filterResultsByCountry = () => {
+    let filteredResults = []
+    this.state.unfilteredResults.forEach((product) => {
+      // If the product originates from one of the countries in the selected countries list, keep it
+      if(this.state.filters.selectedCountries.indexOf(product.countryOrigin) > -1) filteredResults.push(product)
+    })
+    return filteredResults
+  }
+
 
   /* Sorting Functions */
   // Input: Two product objects. Returns an integer based on lowest price comparison (price ascending).
@@ -210,11 +255,29 @@ export default class SearchScreen extends React.Component {
                     "Try using different keywords and/or a different set of filters."
                   );
                 }
-                this.setState({ latestResults: itemList })
+                this.setState({ latestResults: itemList, unfilteredResults: itemList })
                 console.log(itemList)
                 console.log(this.state.latestResults)
               }}
-              onPressOut={() => {this.setState({ latestResults: itemList })}}
+              // Set new results and update the list of countries those results are
+              onPressOut={() => {
+                this.setState({             // Reset filters upon new search
+                  filters : {
+                    selectedCountries: [],
+                    inStock: true,
+                    onSale: false,
+                    favorited: false,
+                  }
+                })
+                this.setState({ 
+                  latestResults: itemList, 
+                  allAvailableCountries: 
+                    [{key: 'Countries', 
+                      value: 'Countries', 
+                      children: this.countriesFromProducts(itemList)
+                    }],
+                })
+              }}
               testID="Test_SearchButton"
             >
               <Text style={styles.searchButtonText}>Search</Text>
@@ -229,9 +292,152 @@ export default class SearchScreen extends React.Component {
             ]}
           >
             {/* Filter Button */}
-            <Pressable style={globalStyle.headerButtonStyle} testID="Test_FilterButton">
+            <Pressable
+              style={globalStyle.headerButtonStyle}
+              testID="Test_FilterButton"
+              onPress={() => {this.setState({ isFilterMenuOpen : !this.state.isSortMenuOpen }); {/* Toggle sort submenu on press */} }}
+            >
               <Text style={globalStyle.headerButtonText}>Filter</Text>
             </Pressable>
+            <Modal
+              visible={this.state.isFilterMenuOpen}
+              animationType="fade"
+              transparent={true}
+              testID="Test_FilterSubmenuModal"
+              style={{flex: 0}}
+            >
+              {/* Handles closing menu when interacting outside of the submenu; also houses subbuttons */}
+              <TouchableOpacity
+                  style={{flex:1, alignItems: "center", justifyContent: "center"}}
+                  onPress={() => { this.setState({ isFilterMenuOpen : false})}}
+                  testID="Test_FilterSubmenuOpacity"
+              >
+                <View style={styles.sortSubmenuDesign} testID="Test_FilterSubmenu">
+                  {/* Filtering Option Buttons */}
+                  <View style={[globalStyle.headerButtonText,{flex: 0, flexWrap: "wrap", flexDirection: "row"}]}>
+                    {/* Filter by Country of Origin */}
+                    <Pressable 
+                      style={styles.sortSubmenuButton}
+                      testID="Test_FilterCountryButton"
+                      onPress={() => {this.setState({ isFilterCountryMenuOpen : !this.state.isFilterCountryMenuOpen }); {/* Toggle sort submenu on press */} }}
+                    >
+                      <Text style={styles.buttonText}>Country</Text>
+                      <Modal
+                        visible={this.state.isFilterCountryMenuOpen}
+                        animationType="fade"
+                        transparent={true}
+                        testID="Test_FilterCountrySubmenuModal"
+                        style={{flex: 0}}
+                      >
+                        <TouchableOpacity
+                          style={{flex:1, alignItems: "center", justifyContent: "center"}}
+                          onPress={() => { this.setState({ isFilterCountryMenuOpen : false})}}
+                          testID="Test_FilterCountrySubmenuOpacity"
+                        >
+                          <View style={[styles.sortSubmenuDesign, {height: "50%"}]} testID="Test_FilterCountrySubmenu">
+                            <SectionedMultiSelect 
+                              items={this.state.allAvailableCountries}
+                              IconRenderer={Icon}
+                              uniqueKey="key"
+                              subKey="children"
+                              displayKey="value"
+                              selectText="Pick countries by tapping..."
+                              showDropDowns={true}
+                              expandDropDowns={true}
+                              showCancelButton={true}
+                              showChips={false}
+                              alwaysShowSelectText={true}
+                              readOnlyHeadings={true}
+                              onSelectedItemsChange={this.onSelectedItemsChange}
+                              selectedItems={this.state.filters.selectedCountries}
+                              onConfirm={() => {
+                                itemList = this.filterResultsByCountry()      // Filter results on confirmation by selected countries
+                                this.setState({ latestResults : itemList })
+                              }}
+                              onCancel={() => {this.setState({latestResults : this.state.unfilteredResults})}}   // Reset results to last unfiltered copy
+                              searchPlaceholderText="Search countries of origin..."
+                              modalWithTouchable={true}
+                              styles={{
+                                modalWrapper: {
+                                  backgroundColor: 'none',
+                                  animationType: 'fade',
+                                  flex: 1,
+                                  alignItems: 'center',
+                                  justifyContent: 'center'
+                                },
+                                backdrop: {
+                                  justifyContent: 'center',
+                                },
+                                container: {
+                                  borderColor: "#000000",
+                                  borderWidth: 10,
+                                  height: "50%",
+                                  width: "90%",
+                                  flex: 0,
+                                  alignSelf: 'center'
+                                }
+                              }}
+                              testID="Test_CountrySelectMenu"
+                            />
+                          </View>
+                        </TouchableOpacity>
+                      </Modal>
+                    </Pressable>
+
+                    {/* Filter by Whether it's in Stock */}
+                    <Pressable
+                      style={styles.sortSubmenuButton}
+                      testID="Test_FilterInStockButton"
+                      onPress={
+                        () => { 
+                          this.setState({ 
+                            sort: "Highest Price",
+                            latestResults: itemList.sort(this.sortPriceDesc),
+                            unfilteredResults: itemList.sort(this.sortPriceDesc),
+                          }) 
+                        }
+                      }
+                    >
+                      <Text style={styles.buttonText}>In Stock</Text>
+                    </Pressable>
+
+                    {/* Filter by Whether it's on sale */}
+                    <Pressable
+                      style={styles.sortSubmenuButton}
+                      testID="Test_FilterOnSaleButton"
+                      onPress={
+                        () => { 
+                          this.setState({ 
+                            sort: "A-Z", 
+                            latestResults: itemList.sort(this.sortAlpha),
+                            unfilteredResults: itemList.sort(this.sortAlpha)
+                          }) 
+                        }
+                      }
+                    >
+                      <Text style={styles.buttonText}>On Sale</Text>
+                    </Pressable>
+
+                    {/* Filter by Favorited */}
+                    <Pressable
+                      style={styles.sortSubmenuButton}
+                      testID="Test_FilterByFavoritedButton"
+                      onPress={
+                        () => { 
+                          this.setState({ 
+                            sort: "A-Z", 
+                            latestResults: itemList.sort(this.sortAlphaReverse),
+                            unfilteredResults: itemList.sort(this.sortAlphaReverse)
+                          }) 
+                        }
+                      }
+                    >
+                      <Text style={styles.buttonText}>Favorited</Text>
+                    </Pressable>
+                  </View>
+                </View>
+              </TouchableOpacity>
+            </Modal>
 
             {/* Sort Button and Sort Submenu */}
             <Pressable 
@@ -263,7 +469,11 @@ export default class SearchScreen extends React.Component {
                       testID="Test_SortLowestPriceButton"
                       onPress={
                         () => { 
-                          this.setState({ sort: "Lowest Price", latestResults: itemList.sort(this.sortPriceAsc)}) 
+                          this.setState({ 
+                            sort: "Lowest Price", 
+                            latestResults: itemList.sort(this.sortPriceAsc),
+                            unfilteredResults: itemList.sort(this.sortPriceAsc)
+                          }) 
                         }
                       }
                     >
@@ -276,7 +486,11 @@ export default class SearchScreen extends React.Component {
                       testID="Test_SortHighestPriceButton"
                       onPress={
                         () => { 
-                          this.setState({ sort: "Highest Price", latestResults: itemList.sort(this.sortPriceDesc)}) 
+                          this.setState({ 
+                            sort: "Highest Price",
+                            latestResults: itemList.sort(this.sortPriceDesc),
+                            unfilteredResults: itemList.sort(this.sortPriceDesc),
+                          }) 
                         }
                       }
                     >
@@ -289,7 +503,11 @@ export default class SearchScreen extends React.Component {
                       testID="Test_SortA-ZButton"
                       onPress={
                         () => { 
-                          this.setState({ sort: "A-Z", latestResults: itemList.sort(this.sortAlpha)}) 
+                          this.setState({ 
+                            sort: "A-Z", 
+                            latestResults: itemList.sort(this.sortAlpha),
+                            unfilteredResults: itemList.sort(this.sortAlpha)
+                          }) 
                         }
                       }
                     >
@@ -302,7 +520,11 @@ export default class SearchScreen extends React.Component {
                       testID="Test_SortZ-AButton"
                       onPress={
                         () => { 
-                          this.setState({ sort: "A-Z", latestResults: itemList.sort(this.sortAlphaReverse)}) 
+                          this.setState({ 
+                            sort: "Z-A", 
+                            latestResults: itemList.sort(this.sortAlphaReverse),
+                            unfilteredResults: itemList.sort(this.sortAlphaReverse)
+                          }) 
                         }
                       }
                     >
@@ -315,7 +537,11 @@ export default class SearchScreen extends React.Component {
                       testID="Test_SortUnitPriceButton"
                       onPress={
                         () => { 
-                          this.setState({ sort: "A-Z", latestResults: itemList.sort(this.sortUnitPrice)}) 
+                          this.setState({ 
+                            sort: "UnitPrice", 
+                            latestResults: itemList.sort(this.sortUnitPrice),
+                            unfilteredResults: itemList.sort(this.sortUnitPrice)
+                          }) 
                         }
                       }
                     >
@@ -475,6 +701,7 @@ async function searchProducts(state) {
       stock: "Low",
       quantity: 1,
       inCart: false,
+      countryOrigin: responseJSON.data[i].countryOrigin,
     };
     itemIndex++;
   }
