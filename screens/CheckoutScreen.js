@@ -9,6 +9,11 @@ export default class Page5 extends React.Component {
         super(props)
     }
 
+    confirm = () => {
+        alert("Thank you for your purchase!")
+        this.props.pageChange(3)
+    }
+
     render() {
         return(
             <SafeAreaView style={globalStyle.wholeScreen}>
@@ -77,7 +82,7 @@ export default class Page5 extends React.Component {
                     />
 
                     {/*Confirm Purchase which takes user to orders screen*/}
-                    <Pressable style={style.confirmButton} onPress={() => this.props.pageChange(3)}>
+                    <Pressable style={style.confirmButton} onPress={() => this.confirm()}>
                         <Text style={style.buttonText}>Confirm Purchase</Text>
                     </Pressable>
 
@@ -102,7 +107,7 @@ const style = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 45,
         marginTop: 25,
-        marginHorizontal: 60
+        marginHorizontal: 75
     },
     input: {
         backgroundColor: 'white',

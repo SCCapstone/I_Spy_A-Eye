@@ -16,8 +16,8 @@ test("addPrices should return a number", () => {
 })
 
 // testing if the buy button exists
-test("should find buy button via the id name", () => {
-    const IdName = 'buyButton'
+test("should find buy button via the test id name", () => {
+    const IdName = 'test_BuyButtonHeader'
     const {getByTestId} = render(<CartScreen/>)
     const buyButton = getByTestId(IdName)
     expect(buyButton).toBeTruthy()

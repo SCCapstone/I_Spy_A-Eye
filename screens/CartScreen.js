@@ -95,19 +95,29 @@ export default class CartScreen extends React.Component {
     }
   }
 
-  decrementValue = (item, index) => {
+  decrementValue = async (item, index) => {
     const products = [...this.state.products]
     products[index].quantity = products[index].quantity - 1
     if(products[index].quantity <= 1) { // if less than or equal to 1
       products[index].quantity = 1 // set to 1
     }
     this.setState({products})
+    try {
+      await AsyncStorage.setItem("decrement", JSON.stringify(products))
+    } catch (err) {
+      console.log(err)
+    }
   }
 
-  incrementValue = (item, index) => {
+  incrementValue = async (item, index) => {
     const products = [...this.state.products] // empty array and copy everything over
-    products[index].quantity = products[index].quantity + 1 // modify specific index quantity
+    products[index].quantity = products[index].quantity + 1 // modify specific  index quantity
     this.setState({products}) // update products
+    try {
+      await AsyncStorage.setItem("increment", JSON.stringify(products))
+    } catch (err) {
+      console.log(err)
+    }
 }
 
   // removes item from cart, dont want items to reappear so use async
@@ -122,22 +132,36 @@ export default class CartScreen extends React.Component {
     }
   }
 
-  // retrieve the key
-  getData = async () => {
-    try {
-      const value = await AsyncStorage.getItem("ProductKey")
-      // dont want to set state to null
-      if (value !== null) {
-        // set to our state
-        this.setState({products: JSON.parse(value)})
-      }
+  addProduct = async (id) => {
+    try{
+      
     } catch (err) {
       console.log(err)
     }
   }
 
-  addProduct = () => {
-    
+  // retrieve the key
+  getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem("ProductKey")
+      const increment = await AsyncStorage.getItem("increment")
+      const decrement = await AsyncStorage.getItem("decrement")
+      // dont want to set state to null
+      if (value !== null) {
+        // set to our state
+        this.setState({products: JSON.parse(value)})
+      }
+      if (increment !== null) {
+        AsyncStorage.clear()
+        this.setState({products: JSON.parse(increment)})
+      }
+      if (decrement !== null) {
+        AsyncStorage.clear()
+        this.setState({products: JSON.parse(decrement)})
+      }
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   // Add the total prices of each product
@@ -166,20 +190,20 @@ export default class CartScreen extends React.Component {
       <SafeAreaView style={globalStyle.wholeScreen}>
         <View style={style.container}>
           {/*Header*/}
-          <Text style={style.header}>Cart</Text>
+          <Text style={style.header} testID="test_CartTextHeader">Cart</Text>
 
-          <Text style={{fontSize: 23, marginHorizontal: 20, marginBottom: 17}}>Grocery Total: ${this.addPrices()}</Text>
+          <Text style={{fontSize: 23, marginHorizontal: 20, marginBottom: 17}} testID="test_GroceryTextHeader">Grocery Total: ${this.addPrices()}</Text>
 
           <View style={{flexDirection: 'row'}}>
-            <Text style={{fontSize: 23, marginHorizontal: 20, marginRight: 30}}>Delivery Price:${deliveryPrice}.00</Text>
+            <Text style={{fontSize: 23, marginHorizontal: 20, marginRight: 30}} testID="test_DeliveryTextHeader">Delivery Price:${deliveryPrice}.00</Text>
 
             {/*Takes user to the checkout screen*/}
-            <Pressable testID="buyButton" style={style.button} onPress={() => this.props.pageChange(5)}>
+            <Pressable testID="test_BuyButtonHeader" style={style.button} onPress={() => this.props.pageChange(5)}>
               <Text style={style.buttonText}>Buy</Text>
             </Pressable>
           </View>
 
-          <Text style={{fontSize: 23, marginHorizontal: 20}}>Grand Total:     ${grandTotal}</Text>
+          <Text style={{fontSize: 23, marginHorizontal: 20}} testID="test_GrandTotalHeader">Grand Total:     ${grandTotal}</Text>
 
           {/*Horizontal line*/}
           <View
@@ -208,6 +232,7 @@ export default class CartScreen extends React.Component {
               />
             }
             keyExtractor={item => item.id}
+            testID="test_ItemsInCart"
           />
         </View>
 
