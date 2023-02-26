@@ -67,28 +67,28 @@ const Item = ({ id, title, price, unitPrice, stock, quantity }) => (
       }}
     >
       {/* Decrement quantity button*/}
-      <Pressable onPress={() => decrementQuantity(id)}>
+      {/* <Pressable onPress={() => decrementQuantity(id)}>
         <Text style={{ fontWeight: "bold", fontSize: 30 }}>{"<"}</Text>
-      </Pressable>
+      </Pressable> */}
 
       {/*No longer pulling quantity off of the state*/}
-      <TextInput style={{ fontSize: 25 }} keyboardType="numeric">
+      {/* <TextInput style={{ fontSize: 25 }} keyboardType="numeric">
         {quantity}
-      </TextInput>
+      </TextInput> */}
       
       {/* Increment quantity button*/}
-      <Pressable>
+      {/* <Pressable>
         <Text
           onPress={() => incrementQuantity(id)}
           style={{ fontWeight: "bold", fontSize: 30, marginRight: 70 }}
         >
           {">"}
         </Text>
-      </Pressable>
+      </Pressable> */}
 
-      {/*<Pressable style={styles.remove} >
+      <Pressable style={styles.remove} >
             <Text style={{color: 'white', fontSize: 19, fontWeight:'bold'}}>Add to Cart</Text>
-          </Pressable>*/}
+          </Pressable>
     </View>
   </View>
 );
