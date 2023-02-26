@@ -13,7 +13,7 @@ import {
   Modal
 } from "react-native";
 import { SafeAreaView } from "react-native";
-import Icon from 'react-native-vector-icons/MaterialIcons'
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import SectionedMultiSelect from 'react-native-sectioned-multi-select';
 import globalStyle from "../globalStyle";
 
@@ -134,7 +134,7 @@ export default class SearchScreen extends React.Component {
       location: "01400376",
       filters: {
         selectedCountries: [],
-        inStock: true,
+        inStock: false,
         onSale: false,
         favorited: false,
       },
@@ -179,9 +179,19 @@ export default class SearchScreen extends React.Component {
   // Filters the current results by the selected countries, returning the filtered results.
   filterResultsByCountry = () => {
     let filteredResults = []
-    this.state.unfilteredResults.forEach((product) => {
+    this.state.latestResults.forEach((product) => {
       // If the product originates from one of the countries in the selected countries list, keep it
       if(this.state.filters.selectedCountries.indexOf(product.countryOrigin) > -1) filteredResults.push(product)
+    })
+    return filteredResults
+  }
+
+  // Filters the current results by whether they're in stock, returning the filtered results.
+  filterResultsByStock = () => {
+    let filteredResults = []
+    this.state.latestResults.forEach((product) => {
+      // If the product has a stock that's not out of stock or unavailable, keep it
+      if(product.stock != "N/A" && product.stock != "Temp. Out") filteredResults.push(product)
     })
     return filteredResults
   }
@@ -264,7 +274,7 @@ export default class SearchScreen extends React.Component {
                 this.setState({             // Reset filters upon new search
                   filters : {
                     selectedCountries: [],
-                    inStock: true,
+                    inStock: false,
                     onSale: false,
                     favorited: false,
                   }
@@ -390,11 +400,13 @@ export default class SearchScreen extends React.Component {
                       testID="Test_FilterInStockButton"
                       onPress={
                         () => { 
-                          this.setState({ 
-                            sort: "Highest Price",
-                            latestResults: itemList.sort(this.sortPriceDesc),
-                            unfilteredResults: itemList.sort(this.sortPriceDesc),
-                          }) 
+                          itemList = this.filterResultsByStock()
+                          this.setState({ latestResults: itemList }) 
+                          this.setState((prevState) => {
+                            let filters = {...prevState.filters}    // Copy current filters applied
+                            filters.inStock = true  // Update with current filter
+                            return {filters};
+                          })
                         }
                       }
                     >
@@ -407,11 +419,7 @@ export default class SearchScreen extends React.Component {
                       testID="Test_FilterOnSaleButton"
                       onPress={
                         () => { 
-                          this.setState({ 
-                            sort: "A-Z", 
-                            latestResults: itemList.sort(this.sortAlpha),
-                            unfilteredResults: itemList.sort(this.sortAlpha)
-                          }) 
+                         // Placeholder
                         }
                       }
                     >
@@ -424,11 +432,7 @@ export default class SearchScreen extends React.Component {
                       testID="Test_FilterByFavoritedButton"
                       onPress={
                         () => { 
-                          this.setState({ 
-                            sort: "A-Z", 
-                            latestResults: itemList.sort(this.sortAlphaReverse),
-                            unfilteredResults: itemList.sort(this.sortAlphaReverse)
-                          }) 
+                         // Placeholder
                         }
                       }
                     >
@@ -698,11 +702,25 @@ async function searchProducts(state) {
       // TODO: remove placeholder
       unitPrice: 0,
       // TODO: remove placeholder
-      stock: "Low",
+      stock: null,
       quantity: 1,
       inCart: false,
       countryOrigin: responseJSON.data[i].countryOrigin,
     };
+
+    // The stockLevel property is omitted when an item is out of stock, so catch for that case
+    try {
+      const stockLevel = responseJSON.data[i].items[0].inventory.stockLevel
+      if(stockLevel == "TEMPORARILY_OUT_OF_STOCK") {
+        itemList[itemIndex].stock = "Temp. Out"
+      }
+      else {
+        itemList[itemIndex].stock = stockLevel[0] + stockLevel.slice(1).toLocaleLowerCase()   // Proper capitalization, not ALL CAPS
+      }
+    } catch(missingPropError) {         // If stockLevel is unavailable, say so
+      itemList[itemIndex].stock = "N/A"
+    }
+    
     itemIndex++;
   }
   itemIndex = 0;

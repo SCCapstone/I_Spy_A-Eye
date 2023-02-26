@@ -15,9 +15,13 @@
   "jest": {
     "preset": "react-native",
     "transformIgnorePatterns": [
-      "node_modules/(?!(@react-native|react-native|expo-modules-core|expo-constants|react-native-base64)/)"
-    ]
-  },
+      "node_modules/(?!(@react-native|react-native|@expo.*|expo.*|react-native-base64|react-native-sectioned-multi-select)/)"
+    ],
+    "setupFilesAfterEnv": ["./__unit__/jest.setup.js"],
+    "moduleNameMapper": {
+      "\\.(jpg|ico|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__unit__/mocks/fileMock.js",
+      "\\.(css|less)$": "<rootDir>/__unit__/mocks/fileMock.js"
+    } },
   "dependencies": {
     "expo": "^47.0.13",
     "expo-splash-screen": "~0.17.5",
