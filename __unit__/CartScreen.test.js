@@ -4,12 +4,6 @@ import CartScreen from "../screens/CartScreen";
 import renderer from "react-test-renderer"; // renders the components
 import { render } from "react-native-testing-library";
 
-// testing to make sure jest works
-test("function test", () => {
-    const Cart = renderer.create(<CartScreen/>).getInstance()
-    expect(Cart.addProduct(2)).toEqual(20)
-})
-
 // testing if the component renders
 test("renders correctly", () => {
     render(<CartScreen/>)
@@ -22,9 +16,16 @@ test("addPrices should return a number", () => {
 })
 
 // testing if the buy button exists
-test("should find buy button via the id name", () => {
-    const IdName = 'buyButton'
+test("should find buy button via the test id name", () => {
+    const IdName = 'test_BuyButtonHeader'
     const {getByTestId} = render(<CartScreen/>)
     const buyButton = getByTestId(IdName)
     expect(buyButton).toBeTruthy()
 })
+
+// test("", () => {
+//     let product = {id: 1, name: 'Deluxe Mint Chocolate Chip Ice Cream', price: '5.00', quantity: 1}
+//     const increment = renderer.create(<CartScreen/>).getInstance()
+//     increment.incrementValue(product, 0)
+//     expect(product).toEqual(expect.objectContaining({quantity: 2}))
+// })

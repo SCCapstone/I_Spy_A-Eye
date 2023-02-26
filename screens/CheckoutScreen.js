@@ -1,10 +1,19 @@
 import React from "react";
-import { View, Text, SafeAreaView, StyleSheet, Pressable, TextInput } from "react-native";
+import { View, Text, SafeAreaView, StyleSheet, Pressable, TextInput, ScrollView } from "react-native";
 import globalStyle from "../globalStyle";
 
 // User can checkout items in cart (Simulation)
 
 export default class Page5 extends React.Component {
+    constructor(props) {
+        super(props)
+    }
+
+    confirm = () => {
+        alert("Thank you for your purchase!")
+        this.props.pageChange(3)
+    }
+
     render() {
         return(
             <SafeAreaView style={globalStyle.wholeScreen}>
@@ -25,7 +34,7 @@ export default class Page5 extends React.Component {
                             marginTop: 20
                         }}
                     />
-
+                    <ScrollView>
                     {/*The user can choose to have products delivered or available for pick-up*/}
                     <Text style={{marginLeft: 25, marginTop: 10}}>Delivery or Pick-Up</Text>
                     <TextInput
@@ -62,16 +71,18 @@ export default class Page5 extends React.Component {
 
                         <TextInput
                             style={[style.date_code, {marginLeft: 40}]}
+                            keyboardType={'numeric'}
                         />
                     </View>
 
                     <Text style={{marginLeft: 25, marginTop: 10}}>Zip/Postal Code</Text>
                     <TextInput
                         style={style.input}
+                        keyboardType={'numeric'}
                     />
 
                     {/*Confirm Purchase which takes user to orders screen*/}
-                    <Pressable style={style.confirmButton} onPress={() => this.props.pageChange(3)}>
+                    <Pressable style={style.confirmButton} onPress={() => this.confirm()}>
                         <Text style={style.buttonText}>Confirm Purchase</Text>
                     </Pressable>
 
@@ -80,6 +91,7 @@ export default class Page5 extends React.Component {
                         <Text style={{fontSize: 20}}>Estimated Delivery Time: </Text>
                         <Text style={{fontSize: 20}}>5 hours</Text>
                     </View>
+                    </ScrollView>
                 </View>
             </SafeAreaView>
         )
@@ -88,14 +100,14 @@ export default class Page5 extends React.Component {
 
 const style = StyleSheet.create({
     container: {
-        flex:1
+        flex: 1
     },
     header: {
         textAlign: 'center',
         fontWeight: 'bold',
-        fontSize: '45',
+        fontSize: 45,
         marginTop: 25,
-        marginHorizontal: 60
+        marginHorizontal: 75
     },
     input: {
         backgroundColor: 'white',

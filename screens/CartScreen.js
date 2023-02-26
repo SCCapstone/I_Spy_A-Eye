@@ -1,10 +1,10 @@
-import * as React from "react";
+import React from "react";
 import { Text, View, StyleSheet, TouchableOpacity, Image, Pressable, FlatList, TextInput, SafeAreaView } from "react-native";
 import globalStyle from "../globalStyle"
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 /*
   TODOS:
-    Store cart data locally on device
     Grab each product by id and add
 */
 
@@ -12,7 +12,7 @@ class ListItem extends React.Component {
 
   render() {
     const {item} = this.props
-    
+
     return(
       <View>
         {/*Item title, depends on what the user adds to the cart, allows user to go to the details screen*/}
@@ -54,67 +54,114 @@ class ListItem extends React.Component {
 }
 
 export default class CartScreen extends React.Component {
-  state = {
-    products: [
-      {
-        id: 1,
-        name: 'Deluxe Mint Chocolate Chip Ice Cream',
-        price: '5.00',
-        quantity: 1
-      },
-      {
-        id: 2,
-        name: '1% Lowfat Milk',
-        price: '2.00',
-        quantity: 1
-      },
-      {
-        id: 3,
-        name: 'Barbecue Flavored Potato Chips',
-        price: '10.00',
-        quantity: 1
-      },
-      {
-        id: 4,
-        name: "Bakery Fresh Goodness Peanut Butter Cookies",
-        price: "3.00",
-        quantity: 1
-      },
-      {
-        id: 5,
-        name: "Kellogg's Club Original Crackers Snack Stacks",
-        price: "2.50",
-        quantity: 1
-      }
-    ]
+  constructor(props) {
+    super(props)
+    // gets called when app is launched
+    this.getData()
+    //products being saved to state
+    this.state = {
+      products: [
+        {
+          id: 1,
+          name: 'Deluxe Mint Chocolate Chip Ice Cream',
+          price: '5.00',
+          quantity: 1
+        },
+        {
+          id: 2,
+          name: '1% Lowfat Milk',
+          price: '2.00',
+          quantity: 1
+        },
+        {
+          id: 3,
+          name: 'Barbecue Flavored Potato Chips',
+          price: '10.00',
+          quantity: 1
+        },
+        {
+          id: 4,
+          name: "Bakery Fresh Goodness Peanut Butter Cookies",
+          price: "3.00",
+          quantity: 1
+        },
+        {
+          id: 5,
+          name: "Kellogg's Club Original Crackers Snack Stacks",
+          price: "2.50",
+          quantity: 1
+        }
+      ]
+    }
   }
 
-  decrementValue = (item, index) => {
+  decrementValue = async (item, index) => {
     const products = [...this.state.products]
     products[index].quantity = products[index].quantity - 1
     if(products[index].quantity <= 1) { // if less than or equal to 1
       products[index].quantity = 1 // set to 1
     }
     this.setState({products})
+    try {
+      await AsyncStorage.setItem("decrement", JSON.stringify(products))
+    } catch (err) {
+      console.log(err)
+    }
   }
 
-  incrementValue = (item, index) => {
+  incrementValue = async (item, index) => {
     const products = [...this.state.products] // empty array and copy everything over
-    products[index].quantity = products[index].quantity + 1 // modify specific index quantity
+    products[index].quantity = products[index].quantity + 1 // modify specific  index quantity
     this.setState({products}) // update products
+    try {
+      await AsyncStorage.setItem("increment", JSON.stringify(products))
+    } catch (err) {
+      console.log(err)
+    }
+}
+
+  // removes item from cart, dont want items to reappear so use async
+  removeProduct = async (productID) => {
+    try {
+      const remove = this.state.products.filter((value, i) => value.id !== productID)
+      this.setState({products: remove})
+      // saves into AsyncStorage when remove button is clicked
+      await AsyncStorage.setItem("ProductKey", JSON.stringify(remove))
+    } catch (err) {
+      console.log(err)
+    }
   }
 
-  removeProduct = (productID) => {
-    let remove = this.state.products.filter((value, i) => {
-      if(value.id !== productID) {
-        return value
+  addProduct = async (id) => {
+    try{
+      
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  // retrieve the key
+  getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem("ProductKey")
+      const increment = await AsyncStorage.getItem("increment")
+      const decrement = await AsyncStorage.getItem("decrement")
+      // dont want to set state to null
+      if (value !== null) {
+        // set to our state
+        this.setState({products: JSON.parse(value)})
       }
-    })
-    this.setState({products: remove})
-  }
-
-  addProduct = (x) => {
-    return x * 10
+      if (increment !== null) {
+        AsyncStorage.clear()
+        this.setState({products: JSON.parse(increment)})
+      }
+      if (decrement !== null) {
+        AsyncStorage.clear()
+        this.setState({products: JSON.parse(decrement)})
+      }
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   // Add the total prices of each product
@@ -129,26 +176,34 @@ export default class CartScreen extends React.Component {
 
   render() {
     let deliveryPrice = 5
-    let grandTotal = this.addPrices() + deliveryPrice
+    let grandTotal = 0
+    // if grocery total is 0 dollars
+    if (this.addPrices() == 0) {
+      // then grand total is 0 dollars
+      grandTotal = 0
+    } else {
+      // otherwise give the price
+     grandTotal = this.addPrices() + deliveryPrice
+    }
 
     return (
       <SafeAreaView style={globalStyle.wholeScreen}>
         <View style={style.container}>
           {/*Header*/}
-          <Text style={style.header}>Cart</Text>
+          <Text style={style.header} testID="test_CartTextHeader">Cart</Text>
 
-          <Text style={{fontSize: 23, marginHorizontal: 20, marginBottom: 17}}>Grocery Total: ${this.addPrices()}</Text>
+          <Text style={{fontSize: 23, marginHorizontal: 20, marginBottom: 17}} testID="test_GroceryTextHeader">Grocery Total: ${this.addPrices()}</Text>
 
           <View style={{flexDirection: 'row'}}>
-            <Text style={{fontSize: 23, marginHorizontal: 20, marginRight: 30}}>Delivery Price:${deliveryPrice}.00</Text>
+            <Text style={{fontSize: 23, marginHorizontal: 20, marginRight: 30}} testID="test_DeliveryTextHeader">Delivery Price:${deliveryPrice}.00</Text>
 
             {/*Takes user to the checkout screen*/}
-            <Pressable testID="buyButton" style={style.button} onPress={() => this.props.pageChange(5)}>
+            <Pressable testID="test_BuyButtonHeader" style={style.button} onPress={() => this.props.pageChange(5)}>
               <Text style={style.buttonText}>Buy</Text>
             </Pressable>
           </View>
 
-          <Text style={{fontSize: 23, marginHorizontal: 20}}>Grand Total:     ${grandTotal}</Text>
+          <Text style={{fontSize: 23, marginHorizontal: 20}} testID="test_GrandTotalHeader">Grand Total:     ${grandTotal}</Text>
 
           {/*Horizontal line*/}
           <View
@@ -166,8 +221,9 @@ export default class CartScreen extends React.Component {
           />
 
           <FlatList
+            contentContainerStyle={{paddingBottom: 75}}
             data={this.state.products}
-            renderItem={({item, index}) => 
+            renderItem={({item, index}) =>
               <ListItem 
                 item={item}
                 decrementValue={() => this.decrementValue(item, index)}
@@ -176,6 +232,7 @@ export default class CartScreen extends React.Component {
               />
             }
             keyExtractor={item => item.id}
+            testID="test_ItemsInCart"
           />
         </View>
 
