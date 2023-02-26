@@ -15,9 +15,18 @@
   "jest": {
     "preset": "react-native",
     "transformIgnorePatterns": [
-      "node_modules/(?!(@react-native|react-native|expo-modules-core|expo-constants|react-native-base64)/)"
+      "node_modules/(?!(@react-native|react-native|@expo.*|expo.*|react-native-base64|react-native-sectioned-multi-select)/)"
     ],
-    "setupFiles": ["<rootDir>/jest.setup.js"]
+    "moduleNameMapper": {
+      "\\.(jpg|ico|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__unit__/mocks/fileMock.js",
+      "\\.(css|less)$": "<rootDir>/__unit__/mocks/fileMock.js"
+    },
+    "setupFilesAfterEnv": [
+      "./__unit__/jest.firebase_setup.js"
+    ],
+    "setupFiles": [
+      "<rootDir>/jest.setup.js"
+    ]
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.17.11",
@@ -31,7 +40,9 @@
     "react-native-base64": "^0.2.1",
     "react-native-config": "^1.4.11",
     "react-native-randombytes": "^3.6.1",
-    "react-native-testing-library": "^6.0.0"
+    "react-native-sectioned-multi-select": "^0.9.1",
+    "react-native-testing-library": "^6.0.0",
+    "react-native-vector-icons": "^9.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
