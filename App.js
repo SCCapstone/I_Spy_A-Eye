@@ -13,7 +13,7 @@ import { CLIENT_ID, CLIENT_SECRET } from "@env";
 import firebase from 'firebase';
 require('firebase/auth');
 
-// I Spy Shopper v0.1
+// I Spy Shopper v0.5
 
 let token = 0;
 var settings = {
