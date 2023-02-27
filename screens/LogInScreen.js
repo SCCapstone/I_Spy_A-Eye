@@ -77,6 +77,7 @@ export default class Login extends React.Component {
         <Pressable
           style={globalStyle.wideButtonStyle}
           onPress={() => this.props.pageChange(1)}
+          testID="Test_SignInSkip"
         >
           <Text style={globalStyle.wideButtonText}>Continue Without Signing in</Text>
         </Pressable>
