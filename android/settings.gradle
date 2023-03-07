@@ -1,4 +1,4 @@
-rootProject.name = 'I_Spy_Shopper'
+rootProject.name = 'I Spy Shopper'
 
 apply from: new File(["node", "--print", "require.resolve('expo/package.json')"].execute(null, rootDir).text.trim(), "../scripts/autolinking.gradle");
 useExpoModules()
