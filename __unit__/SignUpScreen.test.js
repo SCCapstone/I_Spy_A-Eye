@@ -41,3 +41,18 @@ test("This password should be accepted: ßpaS8wOrd1", () => {
   const validPasswordChoice = newPasswordIsValid("ßpaS8wOrd1", "ßpaS8wOrd1");
   expect(validPasswordChoice).toBe(true); 
 })
+
+test("This password should be accepted: ßpaS8wOrd10000000000000000000000", () => {
+  const validPasswordChoice = newPasswordIsValid("ßpaS8wOrd10000000000000000000000", "ßpaS8wOrd10000000000000000000000");
+  expect(validPasswordChoice).toBe(true); 
+})
+
+test("Passwords longer than 32 chars should be rejected.", () => {
+  const validPasswordChoice = newPasswordIsValid("ßpaS8wOrd100000000000000000000001", "ßpaS8wOrd100000000000000000000001");
+  expect(validPasswordChoice).toBe(true); 
+})
+
+test("Passowrds are rejected if they contain characters not allowed", () => {
+  const validPasswordChoice = newPasswordIsValid("ðñòF13_zz1☘️", "ðñòF13_zz1☘️");
+  expect(validPasswordChoice).toBe(true); 
+})

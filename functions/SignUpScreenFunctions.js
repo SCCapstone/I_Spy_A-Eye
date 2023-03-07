@@ -14,19 +14,24 @@ import {Alert} from 'react-native';
   function newPasswordIsValid(passwordInput, confirmPasswordInput) {
     const allowedSpecialChars = 
     /[~`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöùúûüýþÿ]/;
+    const allCharsAllowed =
+    /[^~`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöùúûüýþÿabcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789]*/;
     // If any of boolean vars below are false, then this function returns false at the end.
     let hasCapitalChar = passwordInput.match(".*[A-Z]+.*");
     let hasLowercaseChar = passwordInput.match(".*[a-z]+.*");
     let hasDigitChar = passwordInput.match(".*[0-9]+.*");
     let hasSpecialChar = allowedSpecialChars.test(passwordInput);
+    let hasAllowedChars = allCharsAllowed.test(passwordInput);
 
-    if (passwordInput === confirmPasswordInput && passwordInput.length >= 8
-      && hasCapitalChar && hasLowercaseChar && hasDigitChar && hasSpecialChar) {
+    if (passwordInput === confirmPasswordInput && passwordInput.length >= 8 && passwordInput.length <= 32 
+      && hasCapitalChar && hasLowercaseChar && hasDigitChar && hasSpecialChar && hasAllowedChars) {
       return true;
     } else if (passwordInput !== confirmPasswordInput) {
       Alert.alert("Passwords don't match.");
     } else if (passwordInput.length < 8) {
       Alert.alert("Passwords must be 8 or more characters long.");
+    } else if (passwordInput.length > 32) {
+      Alert.alert("Password is too long. Passwords cannot be longer than 32 characters.");
     } else if (!hasCapitalChar) {
       Alert.alert("Passwords must contain an uppercase letter.");
     } else if (!hasLowercaseChar) {
@@ -35,6 +40,8 @@ import {Alert} from 'react-native';
       Alert.alert("Passwords must contain a number.");
     } else if (!hasSpecialChar) {
       Alert.alert("Passwords must contain a non alpha-numeric character.");
+    } else if (!hasAllowedChars) {
+      Alert.alert("Password contains a character that isn't allowed.");
     }
     return false;
   }
