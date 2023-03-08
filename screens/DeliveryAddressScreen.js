@@ -3,8 +3,10 @@ import { Text, Pressable, SafeAreaView, TextInput } from "react-native";
 import globalStyle from '../globalStyle';
 import firebase from 'firebase';
 require('firebase/auth');
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default class DeliveryAddress extends React.Component {
+
   // Holds the values of the text input fields on this screen.
   constructor(props) {
     super(props);
@@ -14,6 +16,19 @@ export default class DeliveryAddress extends React.Component {
       zipCodeInput: "",
       stateInput: "",
     };
+  }
+
+  async getDeliveryAddress() {
+    let dataResponse;
+    dataResponse = await firebase.firestore().collection('users').doc(await AsyncStorage.getItem("userID")).get();
+    console.log(JSON.stringify(dataResponse));
+
+  }
+
+  componentDidMount() {
+    this.getDeliveryAddress();
+    this.setState({ message: "This is an updated message" });
+
   }
 
   saveDeliveryAddressFirestore(addressInput, cityInput, zipCodeInput, stateInput) {
@@ -30,7 +45,7 @@ export default class DeliveryAddress extends React.Component {
 
   render() {
     return (
-      <SafeAreaView style={globalStyle.wholeScreen}>
+      <SafeAreaView style={globalStyle.wholeScreen} >
         <Text style={globalStyle.headerText}>Delivery Address</Text>
         <Pressable
           style={globalStyle.backButtonStyle}
@@ -46,6 +61,7 @@ export default class DeliveryAddress extends React.Component {
           onChangeText={(newAddressInput) =>
             this.setState({ addressInput: newAddressInput.trim() })
           }
+          value={this.state.addressInput}
         />
         <TextInput
           style={globalStyle.loginSignUpInputContainer}
