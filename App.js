@@ -12,6 +12,7 @@ import base64 from 'react-native-base64';
 import { CLIENT_ID, CLIENT_SECRET } from "@env";
 import firebase from 'firebase';
 require('firebase/auth');
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // I Spy Shopper v0.5
 
@@ -64,14 +65,20 @@ export default class App extends React.Component {
 
   // Updates the state of which screen the user is currently on.
   pickPageToRender = () => {
-    // Determines if user is logged in or not.
+   /**
+    * Determines if user is logged in or not and updates the state. If a user is logged in,
+    * The current user's ID is stored in local storage which gives easy access to Firestore.
+    */
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-        console.log("User is logged in.");
+        var userID = user.uid;
         this.state.userLoggedIn = true;
+        AsyncStorage.setItem("userID", userID);
+        console.log(`Current user ID: ${userID}`);
       } else {
         console.log("No user is logged in.");
         this.state.userLoggedIn = false;
+        AsyncStorage.setItem("userID", "null");
       }
     });
 
