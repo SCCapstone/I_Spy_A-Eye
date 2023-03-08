@@ -67,7 +67,7 @@ export default class App extends React.Component {
   pickPageToRender = () => {
    /**
     * Determines if user is logged in or not and updates the state. If a user is logged in,
-    * The current user's ID is stored in local storage which gives easy access to Firestore.
+    * The current user's ID is stored in Async storage which gives easy access to Firestore.
     */
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
