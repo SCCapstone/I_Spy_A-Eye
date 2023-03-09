@@ -1,12 +1,20 @@
 import * as React from "react";
-import { Text, View, TouchableOpacity, Image, Pressable } from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity, Image, Pressable } from "react-native";
 import { SafeAreaView } from "react-native";
 import { firebaseAuth } from "../firebase";
 import globalStyle from "../globalStyle";
 require('firebase/auth');
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 export default class Page4 extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      currentEmail: ""
+    };
+  }
 
   /**
    * Function to sign out users through Firebase. After a successful sign out, the user
@@ -21,6 +29,14 @@ export default class Page4 extends React.Component {
       .catch((error) => alert(error.message));
   };
 
+  async updateCurrentEmailState() {
+    this.setState({ currentEmail: `Signed in as: ${await AsyncStorage.getItem("userEmail")}`});
+  }
+
+  componentDidMount() {
+    this.updateCurrentEmailState();
+  }
+
   render() {
     return (
       <SafeAreaView style={globalStyle.wholeScreen}>
@@ -30,6 +46,7 @@ export default class Page4 extends React.Component {
         >
           Personal:
         </Text>
+        <Text style={style.signedInText}>{this.state.currentEmail}</Text>
         <Pressable
           style={globalStyle.wideButtonStyle}
           onPress={() => this.props.pageChange(7)}
@@ -91,3 +108,11 @@ export default class Page4 extends React.Component {
     );
   }
 }
+
+const style = StyleSheet.create({
+  signedInText: {
+    marginLeft: 8,
+    fontSize: 17,
+  }
+
+});
