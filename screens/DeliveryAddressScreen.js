@@ -19,16 +19,14 @@ export default class DeliveryAddress extends React.Component {
   }
 
   async getDeliveryAddress() {
-    let dataResponse;
-    dataResponse = await firebase.firestore().collection('users').doc(await AsyncStorage.getItem("userID")).get();
-    console.log(JSON.stringify(dataResponse));
+    let dataResponse = await firebase.firestore().collection('users').doc(await AsyncStorage.getItem("userID")).get();
+    console.log(dataResponse._delegate._document.data.value.mapValue.fields.city.stringValue);
+    this.setState({ cityInput: dataResponse._delegate._document.data.value.mapValue.fields.city.stringValue });
 
   }
 
   componentDidMount() {
     this.getDeliveryAddress();
-    this.setState({ message: "This is an updated message" });
-
   }
 
   saveDeliveryAddressFirestore(addressInput, cityInput, zipCodeInput, stateInput) {
@@ -66,6 +64,7 @@ export default class DeliveryAddress extends React.Component {
         <TextInput
           style={globalStyle.loginSignUpInputContainer}
           placeholder="City"
+          value={this.state.cityInput}
           placeholderTextColor={"#000"}
           onChangeText={(newCityInput) =>
             this.setState({ cityInput: newCityInput.trim() })
