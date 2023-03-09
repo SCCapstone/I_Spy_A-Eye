@@ -78,7 +78,7 @@ export default class App extends React.Component {
       } else {
         console.log("No user is logged in.");
         this.state.userLoggedIn = false;
-        AsyncStorage.setItem("userID", "null");
+        AsyncStorage.setItem("userID", "none");
       }
     });
 

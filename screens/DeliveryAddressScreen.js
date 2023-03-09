@@ -14,21 +14,30 @@ export default class DeliveryAddress extends React.Component {
       addressInput: "",
       cityInput: "",
       zipCodeInput: "",
-      stateInput: "",
+      stateInput: ""
     };
   }
 
+  // Function to get the current user's delivery address stored in Firestore.
   async getDeliveryAddress() {
     let dataResponse = await firebase.firestore().collection('users').doc(await AsyncStorage.getItem("userID")).get();
-    console.log(dataResponse._delegate._document.data.value.mapValue.fields.city.stringValue);
+    this.setState({ addressInput: dataResponse._delegate._document.data.value.mapValue.fields.address.stringValue });
     this.setState({ cityInput: dataResponse._delegate._document.data.value.mapValue.fields.city.stringValue });
-
+    this.setState({ zipCodeInput: dataResponse._delegate._document.data.value.mapValue.fields.zipCode.stringValue });
+    this.setState({ stateInput: dataResponse._delegate._document.data.value.mapValue.fields.state.stringValue });
   }
 
   componentDidMount() {
     this.getDeliveryAddress();
   }
 
+  /**
+   * Function to update the current user's
+   * @param {*} addressInput 
+   * @param {*} cityInput 
+   * @param {*} zipCodeInput 
+   * @param {*} stateInput 
+   */
   saveDeliveryAddressFirestore(addressInput, cityInput, zipCodeInput, stateInput) {
     firebase.auth().onAuthStateChanged(function (user) {
       firebase.firestore().collection('users')
@@ -39,6 +48,8 @@ export default class DeliveryAddress extends React.Component {
           state: stateInput
         });
     });
+    // Returns user back to settings screen.
+    this.props.pageChange(4);
   }
 
   render() {
@@ -55,11 +66,12 @@ export default class DeliveryAddress extends React.Component {
         <TextInput
           style={globalStyle.loginSignUpInputContainer}
           placeholder="Street Address"
+          value={this.state.addressInput}
           placeholderTextColor={"#000"}
           onChangeText={(newAddressInput) =>
-            this.setState({ addressInput: newAddressInput.trim() })
+            this.setState({ addressInput: newAddressInput })
           }
-          value={this.state.addressInput}
+
         />
         <TextInput
           style={globalStyle.loginSignUpInputContainer}
@@ -67,23 +79,25 @@ export default class DeliveryAddress extends React.Component {
           value={this.state.cityInput}
           placeholderTextColor={"#000"}
           onChangeText={(newCityInput) =>
-            this.setState({ cityInput: newCityInput.trim() })
+            this.setState({ cityInput: newCityInput })
           }
         />
         <TextInput
           style={globalStyle.loginSignUpInputContainer}
           placeholder="Zip Code"
+          value={this.state.zipCodeInput}
           placeholderTextColor={"#000"}
           onChangeText={(newZipCodeInput) =>
-            this.setState({ zipCodeInput: newZipCodeInput.trim() })
+            this.setState({ zipCodeInput: newZipCodeInput })
           }
         />
         <TextInput
           style={globalStyle.loginSignUpInputContainer}
           placeholder="State"
+          value={this.state.stateInput}
           placeholderTextColor={"#000"}
           onChangeText={(newStateInput) =>
-            this.setState({ stateInput: newStateInput.trim() })
+            this.setState({ stateInput: newStateInput })
           }
         />
 

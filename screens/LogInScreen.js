@@ -1,7 +1,8 @@
 import * as React from "react";
-import { Text, StyleSheet, Pressable, SafeAreaView, TextInput } from "react-native";
+import { Text, Pressable, SafeAreaView, TextInput } from "react-native";
 import globalStyle from '../globalStyle';
 import {firebaseAuth} from '../firebase';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 /**
  * This is the first screen users will see when they start the app. Users can login
@@ -21,7 +22,8 @@ export default class Login extends React.Component {
 
   /**
    * This function handles logging in through Firebase. If a login is successful,
-   * the user is redirected to the Search Screen.
+   * the user is redirected to the Search Screen. Async storage is also updated
+   * to allow for easy access to Firestore.
    * @param {*} state the values of the text fields on this page.
    */
   login(state) {
@@ -30,6 +32,9 @@ export default class Login extends React.Component {
       .then((userCredentials) => {
         const user = userCredentials.user;
         console.log(user.email, " successfully logged in.");
+        var userID = user.uid;
+        AsyncStorage.setItem("userID", userID);
+        console.log(`Current user ID: ${userID}`);
         this.props.pageChange(1);
       })
       .catch((error) => alert(error.message));
