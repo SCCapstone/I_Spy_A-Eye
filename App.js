@@ -60,7 +60,7 @@ export { token }
 export default class App extends React.Component {
   // This state determines which page to render. Users not logged in will see different pages.
   state = {
-    page: 0,
+    page: PAGE_ID.login,
     userLoggedIn: false,
   };
 
