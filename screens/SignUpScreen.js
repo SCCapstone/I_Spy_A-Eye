@@ -1,8 +1,9 @@
 import * as React from "react";
-import { Text, StyleSheet, Pressable, SafeAreaView, TextInput } from "react-native";
+import { Text, Pressable, SafeAreaView, TextInput } from "react-native";
 import globalStyle from '../globalStyle';
 import {firebaseAuth} from '../firebase';
 import { newPasswordIsValid } from "../functions/SignUpScreenFunctions";
+import { PAGE_ID } from "../constants";
 
 export default class SignUp extends React.Component {
   // Holds the values of the text input fields on this screen.
@@ -29,7 +30,7 @@ export default class SignUp extends React.Component {
           const user = userCredentials.user;
           alert("You have successfully registered!");
           console.log(user.email, " successfully registered.");
-          this.props.pageChange(0);
+          this.props.pageChange(PAGE_ID.login);
         })
         .catch((error) => alert(error.message));
     }
@@ -41,7 +42,7 @@ export default class SignUp extends React.Component {
         <Text style={globalStyle.headerText}>Create an Account</Text>
         <Pressable
           style={globalStyle.backButtonStyle}
-          onPress={() => this.props.pageChange(0)}
+          onPress={() => this.props.pageChange(PAGE_ID.login)}
         >
           <Text style={globalStyle.backButtonText}>&lt; Back</Text>
         </Pressable>

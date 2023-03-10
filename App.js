@@ -1,12 +1,13 @@
 import * as React from 'react';
+import { PAGE_ID } from './constants';
 import Login from './screens/LogInScreen';
 import SignUp from './screens/SignUpScreen';
-import Page1 from './screens/SearchScreen';
-import Page2 from './screens/CartScreen';
+import SearchScreen from './screens/SearchScreen';
+import CartScreen from './screens/CartScreen';
 import Page3 from './screens/OrdersScreen';
 import Page4 from './screens/SettingsScreen';
 import NotSignedInSettings from './screens/NotSignedInSettingsScreen';
-import Page5 from './screens/CheckoutScreen';
+import CheckoutScreen from './screens/CheckoutScreen';
 import DeliveryAddress from './screens/DeliveryAddressScreen';
 import base64 from 'react-native-base64';
 import { CLIENT_ID, CLIENT_SECRET } from "@env";
@@ -85,17 +86,17 @@ export default class App extends React.Component {
 
 
     switch (this.state.page) {
-      case 6:
+      case PAGE_ID.sign_up:
         return (<SignUp pageChange={(pageNum) => this.setState({ page: pageNum })} />);
-      case 0:
+      case PAGE_ID.login:
         return (<Login pageChange={(pageNum) => this.setState({ page: pageNum })} />);
-      case 1:
-        return (<Page1 pageChange={(pageNum) => this.setState({ page: pageNum })} />);
-      case 2:
-        return (<Page2 pageChange={(pageNum) => this.setState({ page: pageNum })} />);
-      case 3:
+      case PAGE_ID.search:
+        return (<SearchScreen pageChange={(pageNum) => this.setState({ page: pageNum })} />);
+      case PAGE_ID.cart:
+        return (<CartScreen pageChange={(pageNum) => this.setState({ page: pageNum })} />);
+      case PAGE_ID.orders:
         return (<Page3 pageChange={(pageNum) => this.setState({ page: pageNum })} />);
-      case 4:
+      case PAGE_ID.settings:
         if (this.state.userLoggedIn) {
           // Users logged in will be returned this page when clicking the settings button.
           return (<Page4 pageChange={(pageNum) => this.setState({ page: pageNum })} />);
@@ -103,9 +104,9 @@ export default class App extends React.Component {
           // Users not logged in will be returned this page when clicking the settings button.
           return (<NotSignedInSettings pageChange={(pageNum) => this.setState({ page: pageNum })} />);
         }
-      case 5:
-        return (<Page5 pageChange={(pageNum) => this.setState({ page: pageNum })} />);
-      case 7:
+      case PAGE_ID.checkout:
+        return (<CheckoutScreen pageChange={(pageNum) => this.setState({ page: pageNum })} />);
+      case PAGE_ID.delivery_address:
         return (<DeliveryAddress pageChange={(pageNum) => this.setState({ page: pageNum })} />);
     }
   }

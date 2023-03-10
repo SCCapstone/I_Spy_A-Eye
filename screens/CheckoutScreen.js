@@ -1,17 +1,18 @@
 import React from "react";
+import { PAGE_ID } from "../constants";
 import { View, Text, SafeAreaView, StyleSheet, Pressable, TextInput, ScrollView } from "react-native";
 import globalStyle from "../globalStyle";
 
 // User can checkout items in cart (Simulation)
 
-export default class Page5 extends React.Component {
+export default class CheckoutScreen extends React.Component {
     constructor(props) {
         super(props)
     }
 
     confirm = () => {
         alert("Thank you for your purchase!")
-        this.props.pageChange(3)
+        this.props.pageChange(PAGE_ID.orders)
     }
 
     render() {
@@ -20,7 +21,7 @@ export default class Page5 extends React.Component {
                 <View style={style.container}>
                     <View style={{flexDirection: 'row', alignItems: 'center'}}>
                         {/*Takes user back to the cart screen*/}
-                        <Pressable onPress={() => this.props.pageChange(2)}>
+                        <Pressable onPress={() => this.props.pageChange(PAGE_ID.cart)}>
                             <Text style={{fontWeight: 'bold', fontSize: 35, marginLeft: 10, marginTop: 20}}>{'<'}</Text>
                         </Pressable>
                         <Text style={style.header}>Checkout</Text>

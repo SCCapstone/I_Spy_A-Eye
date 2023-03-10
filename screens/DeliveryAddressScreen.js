@@ -1,4 +1,5 @@
 import * as React from "react";
+import { PAGE_ID } from "../constants";
 import { Text, Pressable, SafeAreaView, TextInput } from "react-native";
 import globalStyle from '../globalStyle';
 import firebase from 'firebase';
@@ -49,7 +50,7 @@ export default class DeliveryAddress extends React.Component {
         });
     });
     // Returns user back to settings screen.
-    this.props.pageChange(4);
+    this.props.pageChange(PAGE_ID.settings);
   }
 
   render() {
@@ -59,7 +60,7 @@ export default class DeliveryAddress extends React.Component {
         <Pressable
           style={globalStyle.backButtonStyle}
           // Returns user back to settings screen.
-          onPress={() => this.props.pageChange(4)}
+          onPress={() => this.props.pageChange(PAGE_ID.settings)}
         >
           <Text style={globalStyle.backButtonText}>&lt; Back</Text>
         </Pressable>

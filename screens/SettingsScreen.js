@@ -1,4 +1,5 @@
 import * as React from "react";
+import { PAGE_ID } from "../constants";
 import { Text, View, StyleSheet, TouchableOpacity, Image, Pressable } from "react-native";
 import { SafeAreaView } from "react-native";
 import { firebaseAuth } from "../firebase";
@@ -24,7 +25,7 @@ export default class Page4 extends React.Component {
     firebaseAuth
       .signOut()
       .then(() => {
-        this.props.pageChange(0);
+        this.props.pageChange(PAGE_ID.login);
       })
       .catch((error) => alert(error.message));
   };
@@ -49,7 +50,7 @@ export default class Page4 extends React.Component {
         <Text style={style.signedInText}>{this.state.currentEmail}</Text>
         <Pressable
           style={globalStyle.wideButtonStyle}
-          onPress={() => this.props.pageChange(7)}
+          onPress={() => this.props.pageChange(PAGE_ID.delivery_address)}
         >
           <Text style={globalStyle.wideButtonText}>Change Delivery Address</Text>
         </Pressable>
@@ -66,7 +67,7 @@ export default class Page4 extends React.Component {
         </Pressable>
         <View style={globalStyle.container}>
           <View style={globalStyle.buttons}>
-            <TouchableOpacity onPress={() => this.props.pageChange(1)}>
+            <TouchableOpacity onPress={() => this.props.pageChange(PAGE_ID.search)}>
               <Image
                 style={globalStyle.icon}
                 source={require("../assets/search.png")}
@@ -75,7 +76,7 @@ export default class Page4 extends React.Component {
               />
               <Text>Search</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.props.pageChange(2)}>
+            <TouchableOpacity onPress={() => this.props.pageChange(PAGE_ID.cart)}>
               <Image
                 style={globalStyle.icon}
                 source={require("../assets/cart.png")}
@@ -84,7 +85,7 @@ export default class Page4 extends React.Component {
               />
               <Text>My Cart</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.props.pageChange(3)}>
+            <TouchableOpacity onPress={() => this.props.pageChange(PAGE_ID.orders)}>
               <Image
                 style={globalStyle.icon}
                 source={require("../assets/orders.png")}
@@ -93,7 +94,7 @@ export default class Page4 extends React.Component {
               />
               <Text>Orders</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.props.pageChange(4)}>
+            <TouchableOpacity onPress={() => this.props.pageChange(PAGE_ID.settings)}>
               <Image
                 style={globalStyle.icon}
                 source={require("../assets/gear.png")}
@@ -114,5 +115,4 @@ const style = StyleSheet.create({
     marginLeft: 8,
     fontSize: 17,
   }
-
 });

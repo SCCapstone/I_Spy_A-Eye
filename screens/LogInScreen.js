@@ -1,4 +1,5 @@
 import * as React from "react";
+import { PAGE_ID } from "../constants";
 import { Text, Pressable, SafeAreaView, TextInput } from "react-native";
 import globalStyle from '../globalStyle';
 import {firebaseAuth} from '../firebase';
@@ -36,7 +37,7 @@ export default class Login extends React.Component {
         AsyncStorage.setItem("userID", userID);
         AsyncStorage.setItem("userEmail", user.email);
         console.log(`Current user ID: ${userID}`);
-        this.props.pageChange(1);
+        this.props.pageChange(PAGE_ID.search);
       })
       .catch((error) => alert(error.message));
   };
@@ -74,14 +75,14 @@ export default class Login extends React.Component {
         </Pressable>
         <Pressable
           style={globalStyle.wideButtonStyle}
-          onPress={() => this.props.pageChange(6)}
+          onPress={() => this.props.pageChange(PAGE_ID.sign_up)}
           testID="Test_SignUpButton"
         >
           <Text style={globalStyle.wideButtonText}>Sign Up</Text>
         </Pressable>
         <Pressable
           style={globalStyle.wideButtonStyle}
-          onPress={() => this.props.pageChange(1)}
+          onPress={() => this.props.pageChange(PAGE_ID.search)}
           testID="Test_SignInSkip"
         >
           <Text style={globalStyle.wideButtonText}>Continue Without Signing in</Text>
