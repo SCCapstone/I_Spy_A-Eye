@@ -1,5 +1,5 @@
 import "react-native";
-import { newPasswordIsValid } from "../functions/SignUpScreenFunctions";
+import { newPasswordIsValid } from "../utils/SignUpScreenFunctions";
 
 
 test("The Password and Confirm Password field must have matching input.", () => {

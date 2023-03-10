@@ -1,9 +1,9 @@
 import * as React from "react";
 import { Text, Pressable, SafeAreaView, TextInput } from "react-native";
 import globalStyle from '../globalStyle';
-import {firebaseAuth} from '../firebase';
-import { newPasswordIsValid } from "../functions/SignUpScreenFunctions";
-import { PAGE_ID } from "../constants";
+import {firebaseAuth} from '../utils/firebase';
+import { newPasswordIsValid } from "../utils/SignUpScreenFunctions";
+import { PAGE_ID } from "../utils/constants";
 
 export default class SignUp extends React.Component {
   // Holds the values of the text input fields on this screen.

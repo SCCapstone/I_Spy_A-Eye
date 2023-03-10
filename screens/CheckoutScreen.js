@@ -1,5 +1,5 @@
 import React from "react";
-import { PAGE_ID } from "../constants";
+import { PAGE_ID } from "../utils/constants";
 import { View, Text, SafeAreaView, StyleSheet, Pressable, TextInput, ScrollView } from "react-native";
 import globalStyle from "../globalStyle";
 

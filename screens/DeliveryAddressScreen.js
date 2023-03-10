@@ -1,5 +1,5 @@
 import * as React from "react";
-import { PAGE_ID } from "../constants";
+import { PAGE_ID } from "../utils/constants";
 import { Text, Pressable, SafeAreaView, TextInput } from "react-native";
 import globalStyle from '../globalStyle';
 import firebase from 'firebase';
@@ -21,11 +21,11 @@ export default class DeliveryAddress extends React.Component {
 
   // Function to get the current user's delivery address stored in Firestore.
   async getDeliveryAddress() {
-    let dataResponse = await firebase.firestore().collection('users').doc(await AsyncStorage.getItem("userID")).get();
-    this.setState({ addressInput: dataResponse._delegate._document.data.value.mapValue.fields.address.stringValue });
-    this.setState({ cityInput: dataResponse._delegate._document.data.value.mapValue.fields.city.stringValue });
-    this.setState({ zipCodeInput: dataResponse._delegate._document.data.value.mapValue.fields.zipCode.stringValue });
-    this.setState({ stateInput: dataResponse._delegate._document.data.value.mapValue.fields.state.stringValue });
+    let res = await firebase.firestore().collection('users').doc(await AsyncStorage.getItem("userID")).get();
+    this.setState({ addressInput: res._delegate._document.data.value.mapValue.fields.address.stringValue });
+    this.setState({ cityInput: res._delegate._document.data.value.mapValue.fields.city.stringValue });
+    this.setState({ zipCodeInput: res._delegate._document.data.value.mapValue.fields.zipCode.stringValue });
+    this.setState({ stateInput: res._delegate._document.data.value.mapValue.fields.state.stringValue });
   }
 
   componentDidMount() {

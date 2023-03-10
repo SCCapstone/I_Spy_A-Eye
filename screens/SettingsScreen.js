@@ -1,8 +1,8 @@
 import * as React from "react";
-import { PAGE_ID } from "../constants";
+import { PAGE_ID } from "../utils/constants";
 import { Text, View, StyleSheet, TouchableOpacity, Image, Pressable } from "react-native";
 import { SafeAreaView } from "react-native";
-import { firebaseAuth } from "../firebase";
+import { firebaseAuth } from "../utils/firebase";
 import globalStyle from "../globalStyle";
 require('firebase/auth');
 import AsyncStorage from "@react-native-async-storage/async-storage";

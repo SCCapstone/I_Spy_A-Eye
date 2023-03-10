@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PAGE_ID } from './constants';
+import { PAGE_ID } from './utils/constants';
 import Login from './screens/LogInScreen';
 import SignUp from './screens/SignUpScreen';
 import SearchScreen from './screens/SearchScreen';
