@@ -50,20 +50,20 @@ export default class BillingInfoScreen extends React.Component {
             <Text style={{ marginLeft: 25, marginTop: 10 }}>
               Delivery or Pick-Up
             </Text>
-            <TextInput placeholder="Pick-Up" style={style.input} />
+            <TextInput placeholder="Pick-Up" style={globalStyle.wideInputContainer} />
 
             {/*The user can input the delivery address*/}
             <Text style={{ marginLeft: 25, marginTop: 10 }}>
               Delivery Address
             </Text>
-            <TextInput style={style.input} />
+            <TextInput style={globalStyle.wideInputContainer} />
 
             {/*The user can input billing information*/}
             <Text style={{ marginLeft: 25, marginTop: 10 }}>Name on Card</Text>
-            <TextInput style={style.input} />
+            <TextInput style={globalStyle.wideInputContainer} />
 
             <Text style={{ marginLeft: 25, marginTop: 10 }}>Card Number</Text>
-            <TextInput style={style.input} />
+            <TextInput style={globalStyle.wideInputContainer} />
 
             <View style={{ flexDirection: "row" }}>
               <Text style={{ marginLeft: 25, marginTop: 10 }}>Expiry Date</Text>
