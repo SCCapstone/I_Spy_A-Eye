@@ -20,22 +20,53 @@ export default class BillingInfoScreen extends React.Component {
     this.state = {
       nameInput: "",
       cardNumberInput: "",
-      ExpiryInput: "",
+      expiryInput: "",
       securityCodeInput: "",
     };
+  }
+
+  // Function to get the current user's billing info stored in Firestore.
+  async getBillingInfo() {
+    let res = await firebase
+      .firestore()
+      .collection("billing")
+      .doc(await AsyncStorage.getItem("userID"))
+      .get();
+    this.setState({
+      nameInput:
+        res._delegate._document.data.value.mapValue.fields.name.stringValue,
+    });
+    this.setState({
+      cardNumberInput:
+        res._delegate._document.data.value.mapValue.fields.cardNumber
+          .stringValue,
+    });
+    this.setState({
+      expiryInput:
+        res._delegate._document.data.value.mapValue.fields.expiry.stringValue,
+    });
+    this.setState({
+      securityCodeInput:
+        res._delegate._document.data.value.mapValue.fields.securityCode
+          .stringValue,
+    });
+  }
+
+  componentDidMount() {
+    this.getBillingInfo();
   }
 
   saveBillingInfoFirestore(
     nameInput,
     cardNumberInput,
-    ExpiryInput,
+    expiryInput,
     securityCodeInput
   ) {
     firebase.auth().onAuthStateChanged(function (user) {
       firebase.firestore().collection("billing").doc(user.uid).set({
         name: nameInput,
-        CardNumber: cardNumberInput,
-        Expiry: ExpiryInput,
+        cardNumber: cardNumberInput,
+        expiry: expiryInput,
         securityCode: securityCodeInput,
       });
     });
@@ -101,16 +132,21 @@ export default class BillingInfoScreen extends React.Component {
             <Text style={{ marginLeft: 25, marginTop: 10 }}>Name on Card</Text>
             <TextInput
               style={globalStyle.wideInputContainer}
+              value={this.state.nameInput}
               onChangeText={(newNameInput) =>
                 this.setState({ nameInput: newNameInput })
               }
+              
             />
 
             <Text style={{ marginLeft: 25, marginTop: 10 }}>Card Number</Text>
-            <TextInput style={globalStyle.wideInputContainer} 
-            onChangeText={(newCardNumberInput) =>
-              this.setState({ cardNumberInput: newCardNumberInput })
-            }/>
+            <TextInput
+              style={globalStyle.wideInputContainer}
+              onChangeText={(newCardNumberInput) =>
+                this.setState({ cardNumberInput: newCardNumberInput })
+              }
+              value={this.state.cardNumberInput}
+            />
 
             <View style={{ flexDirection: "row" }}>
               <Text style={{ marginLeft: 25, marginTop: 10 }}>Expiry Date</Text>
@@ -120,17 +156,23 @@ export default class BillingInfoScreen extends React.Component {
             </View>
 
             <View style={{ flexDirection: "row" }}>
-              <TextInput style={style.date_code} 
-              onChangeText={(newExpiryInput) =>
-                this.setState({ expiryInput: newExpiryInput })
-              }/>
+              <TextInput
+                style={style.date_code}
+                value={this.state.expiryInput}
+                onChangeText={(newExpiryInput) =>
+                  this.setState({ expiryInput: newExpiryInput })
+                }
+                
+              />
 
               <TextInput
                 style={[style.date_code, { marginLeft: 40 }]}
                 keyboardType={"numeric"}
+                value={this.state.securityCodeInput}
                 onChangeText={(newSecurityCodeInput) =>
                   this.setState({ securityCodeInput: newSecurityCodeInput })
                 }
+                
               />
             </View>
             <Pressable
