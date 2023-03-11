@@ -147,11 +147,12 @@ export default class CheckoutScreen extends React.Component {
             />
             <Text style={globalStyle.subHeaderText}>Billing Info</Text>
             <Text style={globalStyle.paragraph}>
-              {this.state.nameBilling}
+              {"Name: "}{this.state.nameBilling}
             </Text>
             <Text style={style.paragraph_bot_margin}>
-              {this.state.cardNumberBilling}, {this.state.securityCodeBilling}{" "}
-              {this.state.expiryBilling}
+            {"Card Number: "}{this.state.cardNumberBilling}{"\n"}
+            {"Security Code: "}{this.state.securityCodeBilling}{"\n"}
+            {"Expiration: "}{this.state.expiryBilling}
             </Text>
             <Pressable
               style={globalStyle.headerButtonStyle}
