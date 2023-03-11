@@ -32,7 +32,11 @@ export default class BillingInfoScreen extends React.Component {
     securityCodeInput
   ) {
     firebase.auth().onAuthStateChanged(function (user) {
+<<<<<<< HEAD
       firebase.firestore().collection("billing").doc(user.uid).set({
+=======
+      firebase.firestore().collection("users").doc(user.uid).set({
+>>>>>>> 55f027650c432a6549a1b4ca1bae687439f70b2c
         name: nameInput,
         CardNumber: CardNumberInput,
         Expiry: ExpiryInput,
