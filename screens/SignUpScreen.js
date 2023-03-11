@@ -47,7 +47,7 @@ export default class SignUp extends React.Component {
           <Text style={globalStyle.backButtonText}>&lt; Back</Text>
         </Pressable>
         <TextInput
-          style={globalStyle.loginSignUpInputContainer}
+          style={globalStyle.wideInputContainer}
           placeholder="Email"
           placeholderTextColor={"#000"}
           onChangeText={(newEmailInput) =>
@@ -55,7 +55,7 @@ export default class SignUp extends React.Component {
           }
         />
         <TextInput
-          style={globalStyle.loginSignUpInputContainer}
+          style={globalStyle.wideInputContainer}
           placeholder="Password"
           placeholderTextColor={"#000"}
           secureTextEntry={true}
@@ -64,7 +64,7 @@ export default class SignUp extends React.Component {
           }
         />
         <TextInput
-          style={globalStyle.loginSignUpInputContainer}
+          style={globalStyle.wideInputContainer}
           placeholder="Confirm Password"
           placeholderTextColor={"#000"}
           secureTextEntry={true}

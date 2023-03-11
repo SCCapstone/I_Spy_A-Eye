@@ -1,57 +1,56 @@
-import { StyleSheet } from 'react-native'
-
+import { StyleSheet } from "react-native";
 
 const globalStyle = StyleSheet.create({
   wholeScreen: {
-    backgroundColor: '#fff',
-    height: '100%',
+    backgroundColor: "#fff",
+    height: "100%",
   },
   buttons: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    justifyContent: 'space-evenly',
+    flexDirection: "row",
+    justifyContent: "center",
+    justifyContent: "space-evenly",
   },
   container: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 0,
     width: "100%",
     borderWidth: 5,
     borderRadius: 999,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     padding: 2,
   },
   icon: {
     width: 36,
     height: 36,
-    alignSelf: 'center'
+    alignSelf: "center",
   },
   headerButtonRow: {
-    alignContent: 'space-between',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    alignContent: "space-between",
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   headerButtonStyle: {
     flex: 1,
-    backgroundColor: 'black',
+    backgroundColor: "black",
     borderRadius: 20,
     paddingVertical: 8,
     paddingHorizontal: 20,
     marginHorizontal: 4,
   },
   headerButtonText: {
-    color: 'white',
-    fontWeight: 'bold',
+    color: "white",
+    fontWeight: "bold",
     fontSize: 20,
-    textAlign: 'center',
+    textAlign: "center",
   },
   headerDivider: {
-    borderBottomColor: 'black',
+    borderBottomColor: "black",
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
   headerText: {
     fontSize: 45,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    fontWeight: "bold",
+    textAlign: "center",
     marginTop: 8,
   },
   inputContainer: {
@@ -60,7 +59,7 @@ const globalStyle = StyleSheet.create({
     paddingVertical: 5,
     paddingHorizontal: 25,
   },
-  loginSignUpInputContainer: {
+  wideInputContainer: {
     borderWidth: 7,
     borderRadius: 20,
     paddingVertical: 5,
@@ -90,7 +89,7 @@ const globalStyle = StyleSheet.create({
   },
   wideButtonStyle: {
     flex: 1,
-    backgroundColor: '#000',
+    backgroundColor: "#000",
     borderRadius: 20,
     paddingVertical: 8,
     paddingHorizontal: 20,
@@ -101,17 +100,17 @@ const globalStyle = StyleSheet.create({
     marginRight: 8,
   },
   wideButtonText: {
-    color: 'white',
-    fontWeight: 'bold',
+    color: "white",
+    fontWeight: "bold",
     fontSize: 24,
-    textAlign: 'center',
+    textAlign: "center",
   },
   paragraph: {
     marginTop: 25,
     fontSize: 18,
     marginLeft: 8,
     marginRight: 8,
-  }
-})
+  },
+});
 
 export default globalStyle;

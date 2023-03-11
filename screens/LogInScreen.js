@@ -47,7 +47,7 @@ export default class Login extends React.Component {
       <SafeAreaView style={globalStyle.wholeScreen}>
         <Text style={globalStyle.headerText}>I Spy Shopper</Text>
         <TextInput
-          style={globalStyle.loginSignUpInputContainer}
+          style={globalStyle.wideInputContainer}
           placeholder="Email"
           placeholderTextColor={"#000"}
           onChangeText={(newEmailInput) =>
@@ -56,7 +56,7 @@ export default class Login extends React.Component {
           testID="Test_EmailTextBar"
         />
         <TextInput
-          style={globalStyle.loginSignUpInputContainer}
+          style={globalStyle.wideInputContainer}
           placeholder="Password"
           placeholderTextColor={"#000"}
           secureTextEntry={true}
