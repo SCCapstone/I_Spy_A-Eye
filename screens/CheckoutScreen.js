@@ -6,7 +6,6 @@ import {
   SafeAreaView,
   StyleSheet,
   Pressable,
-  TextInput,
   ScrollView,
 } from "react-native";
 import globalStyle from "../globalStyle";
@@ -100,7 +99,7 @@ export default class CheckoutScreen extends React.Component {
               {this.state.cityDelivery}, {this.state.stateDelivery}{" "}
               {this.state.zipCodeDelivery}
             </Text>
-            <Pressable 
+            <Pressable
               style={globalStyle.headerButtonStyle}
               onPress={() => this.props.pageChange(PAGE_ID.delivery_address)}
             >
@@ -115,9 +114,9 @@ export default class CheckoutScreen extends React.Component {
               }}
             />
             <Text style={globalStyle.subHeaderText}>Billing Info</Text>
-            <Pressable 
+            <Pressable
               style={globalStyle.headerButtonStyle}
-              // onPress={() => this.props.pageChange(PAGE_ID.delivery_address)}
+              onPress={() => this.props.pageChange(PAGE_ID.billing_info)}
             >
               <Text style={globalStyle.headerButtonText}>Change</Text>
             </Pressable>

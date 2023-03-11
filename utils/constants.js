@@ -11,4 +11,5 @@ export const PAGE_ID = {
   checkout: 5,
   sign_up: 6,
   delivery_address: 7,
+  billing_info: 8,
 };

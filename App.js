@@ -9,6 +9,7 @@ import Page4 from './screens/SettingsScreen';
 import NotSignedInSettings from './screens/NotSignedInSettingsScreen';
 import CheckoutScreen from './screens/CheckoutScreen';
 import DeliveryAddress from './screens/DeliveryAddressScreen';
+import BillingInfoScreen from './screens/BillingInfoScreen';
 import base64 from 'react-native-base64';
 import { CLIENT_ID, CLIENT_SECRET } from "@env";
 import firebase from 'firebase';
@@ -108,6 +109,8 @@ export default class App extends React.Component {
         return (<CheckoutScreen pageChange={(pageNum) => this.setState({ page: pageNum })} />);
       case PAGE_ID.delivery_address:
         return (<DeliveryAddress pageChange={(pageNum) => this.setState({ page: pageNum })} />);
+      case PAGE_ID.billing_info:
+        return (<BillingInfoScreen pageChange={(pageNum) => this.setState({ page: pageNum })} />);
     }
   }
 
