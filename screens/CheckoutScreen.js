@@ -23,6 +23,10 @@ export default class CheckoutScreen extends React.Component {
       cityDelivery: "",
       zipCodeDelivery: "",
       stateDelivery: "",
+      nameBilling: "",
+      cardNumberBilling: "",
+      expiryBilling: "",
+      securityCodeBilling: "",
     };
   }
 
@@ -51,8 +55,36 @@ export default class CheckoutScreen extends React.Component {
     });
   }
 
+  // Function to get the current user's billing info stored in Firestore.
+  async getBillingInfo() {
+    let res = await firebase
+      .firestore()
+      .collection("billing")
+      .doc(await AsyncStorage.getItem("userID"))
+      .get();
+    this.setState({
+      nameBilling:
+        res._delegate._document.data.value.mapValue.fields.name.stringValue,
+    });
+    this.setState({
+      cardNumberBilling:
+        res._delegate._document.data.value.mapValue.fields.cardNumber
+          .stringValue,
+    });
+    this.setState({
+      expiryBilling:
+        res._delegate._document.data.value.mapValue.fields.expiry.stringValue,
+    });
+    this.setState({
+      securityCodeBilling:
+        res._delegate._document.data.value.mapValue.fields.securityCode
+          .stringValue,
+    });
+  }
+
   componentDidMount() {
     this.getDeliveryAddress();
+    this.getBillingInfo();
   }
 
   confirm = () => {
@@ -115,11 +147,11 @@ export default class CheckoutScreen extends React.Component {
             />
             <Text style={globalStyle.subHeaderText}>Billing Info</Text>
             <Text style={globalStyle.paragraph}>
-              {this.state.addressDelivery}
+              {this.state.nameBilling}
             </Text>
             <Text style={style.paragraph_bot_margin}>
-              {this.state.cityDelivery}, {this.state.stateDelivery}{" "}
-              {this.state.zipCodeDelivery}
+              {this.state.cardNumberBilling}, {this.state.securityCodeBilling}{" "}
+              {this.state.expiryBilling}
             </Text>
             <Pressable
               style={globalStyle.headerButtonStyle}
