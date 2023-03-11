@@ -114,34 +114,21 @@ export default class CheckoutScreen extends React.Component {
                 marginTop: 20,
               }}
             />
-            {/*The user can input billing information*/}
-            <Text style={{ marginLeft: 25, marginTop: 10 }}>Name on Card</Text>
-            <TextInput style={globalStyle.wideInputContainer} />
-
-            <Text style={{ marginLeft: 25, marginTop: 10 }}>Card Number</Text>
-            <TextInput style={globalStyle.wideInputContainer} />
-
-            <View style={{ flexDirection: "row" }}>
-              <Text style={{ marginLeft: 25, marginTop: 10 }}>Expiry Date</Text>
-              <Text style={{ marginLeft: 125, marginTop: 10 }}>
-                Security Code
-              </Text>
-            </View>
-
-            <View style={{ flexDirection: "row" }}>
-              <TextInput style={style.date_code} />
-
-              <TextInput
-                style={[style.date_code, { marginLeft: 40 }]}
-                keyboardType={"numeric"}
-              />
-            </View>
-
-            <Text style={{ marginLeft: 25, marginTop: 10 }}>
-              Zip/Postal Code
-            </Text>
-            <TextInput style={style.input} keyboardType={"numeric"} />
-
+            <Text style={globalStyle.subHeaderText}>Billing Info</Text>
+            <Pressable 
+              style={globalStyle.headerButtonStyle}
+              // onPress={() => this.props.pageChange(PAGE_ID.delivery_address)}
+            >
+              <Text style={globalStyle.headerButtonText}>Change</Text>
+            </Pressable>
+            {/*Horizontal line*/}
+            <View
+              style={{
+                borderBottomColor: "black",
+                borderBottomWidth: 10,
+                marginTop: 20,
+              }}
+            />
             {/*Confirm Purchase which takes user to orders screen*/}
             <Pressable
               style={style.confirmButton}
