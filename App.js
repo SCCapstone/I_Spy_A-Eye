@@ -85,7 +85,6 @@ export default class App extends React.Component {
       }
     });
 
-
     switch (this.state.page) {
       case PAGE_ID.sign_up:
         return (<SignUp pageChange={(pageNum) => this.setState({ page: pageNum })} />);
@@ -118,7 +117,6 @@ export default class App extends React.Component {
         return (<BillingInfoScreen pageChange={(pageNum) => this.setState({ page: pageNum })} />);
     }
   }
-
 
   render() {
     return (

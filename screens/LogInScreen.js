@@ -3,6 +3,8 @@ import { PAGE_ID } from "../utils/constants";
 import { Text, Pressable, SafeAreaView, TextInput } from "react-native";
 import globalStyle from "../globalStyle";
 import { firebaseAuth } from "../utils/firebase";
+import firebase from "firebase";
+require("firebase/auth");
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 /**
@@ -10,7 +12,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
  * and be redirected to the search screen, or they can click the Sign Up button and
  * be redirected to the Create an Account screen.
  */
-
 export default class Login extends React.Component {
   // Holds the values of the text input fields on this screen.
   constructor(props) {
@@ -19,6 +20,22 @@ export default class Login extends React.Component {
       emailInput: "",
       passwordInput: "",
     };
+  }
+
+  // Function to redirect users to search screen if they are already signed in.
+  componentDidMount() {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        var userID = user.uid;
+        AsyncStorage.setItem("userID", userID);
+        AsyncStorage.setItem("userEmail", user.email);
+        console.log(`Current user ID: ${userID}`);
+        this.props.pageChange(PAGE_ID.search);
+      } else {
+        console.log("No user is logged in.");
+        AsyncStorage.setItem("userID", "none");
+      }
+    });
   }
 
   /**
