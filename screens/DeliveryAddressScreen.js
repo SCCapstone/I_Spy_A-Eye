@@ -1,13 +1,12 @@
 import * as React from "react";
 import { PAGE_ID } from "../utils/constants";
 import { Text, Pressable, SafeAreaView, TextInput } from "react-native";
-import globalStyle from '../globalStyle';
-import firebase from 'firebase';
-require('firebase/auth');
+import globalStyle from "../globalStyle";
+import firebase from "firebase";
+require("firebase/auth");
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default class DeliveryAddress extends React.Component {
-
   // Holds the values of the text input fields on this screen.
   constructor(props) {
     super(props);
@@ -15,17 +14,33 @@ export default class DeliveryAddress extends React.Component {
       addressInput: "",
       cityInput: "",
       zipCodeInput: "",
-      stateInput: ""
+      stateInput: "",
     };
   }
 
   // Function to get the current user's delivery address stored in Firestore.
   async getDeliveryAddress() {
-    let res = await firebase.firestore().collection('users').doc(await AsyncStorage.getItem("userID")).get();
-    this.setState({ addressInput: res._delegate._document.data.value.mapValue.fields.address.stringValue });
-    this.setState({ cityInput: res._delegate._document.data.value.mapValue.fields.city.stringValue });
-    this.setState({ zipCodeInput: res._delegate._document.data.value.mapValue.fields.zipCode.stringValue });
-    this.setState({ stateInput: res._delegate._document.data.value.mapValue.fields.state.stringValue });
+    let res = await firebase
+      .firestore()
+      .collection("users")
+      .doc(await AsyncStorage.getItem("userID"))
+      .get();
+    this.setState({
+      addressInput:
+        res._delegate._document.data.value.mapValue.fields.address.stringValue,
+    });
+    this.setState({
+      cityInput:
+        res._delegate._document.data.value.mapValue.fields.city.stringValue,
+    });
+    this.setState({
+      zipCodeInput:
+        res._delegate._document.data.value.mapValue.fields.zipCode.stringValue,
+    });
+    this.setState({
+      stateInput:
+        res._delegate._document.data.value.mapValue.fields.state.stringValue,
+    });
   }
 
   componentDidMount() {
@@ -34,20 +49,24 @@ export default class DeliveryAddress extends React.Component {
 
   /**
    * Function to update the current user's
-   * @param {*} addressInput 
-   * @param {*} cityInput 
-   * @param {*} zipCodeInput 
-   * @param {*} stateInput 
+   * @param {*} addressInput
+   * @param {*} cityInput
+   * @param {*} zipCodeInput
+   * @param {*} stateInput
    */
-  saveDeliveryAddressFirestore(addressInput, cityInput, zipCodeInput, stateInput) {
+  saveDeliveryAddressFirestore(
+    addressInput,
+    cityInput,
+    zipCodeInput,
+    stateInput
+  ) {
     firebase.auth().onAuthStateChanged(function (user) {
-      firebase.firestore().collection('users')
-        .doc(user.uid).set({
-          address: addressInput,
-          city: cityInput,
-          zipCode: zipCodeInput,
-          state: stateInput
-        });
+      firebase.firestore().collection("users").doc(user.uid).set({
+        address: addressInput,
+        city: cityInput,
+        zipCode: zipCodeInput,
+        state: stateInput,
+      });
     });
     // Returns user back to settings screen.
     this.props.pageChange(PAGE_ID.settings);
@@ -55,7 +74,7 @@ export default class DeliveryAddress extends React.Component {
 
   render() {
     return (
-      <SafeAreaView style={globalStyle.wholeScreen} >
+      <SafeAreaView style={globalStyle.wholeScreen}>
         <Text style={globalStyle.headerText}>Delivery Address</Text>
         <Pressable
           style={globalStyle.backButtonStyle}
@@ -72,7 +91,6 @@ export default class DeliveryAddress extends React.Component {
           onChangeText={(newAddressInput) =>
             this.setState({ addressInput: newAddressInput })
           }
-
         />
         <TextInput
           style={globalStyle.loginSignUpInputContainer}
@@ -110,11 +128,12 @@ export default class DeliveryAddress extends React.Component {
               this.state.cityInput,
               this.state.zipCodeInput,
               this.state.stateInput
-            )}
+            )
+          }
         >
           <Text style={globalStyle.wideButtonText}>Update</Text>
         </Pressable>
       </SafeAreaView>
-    )
+    );
   }
 }

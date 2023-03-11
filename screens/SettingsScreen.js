@@ -1,19 +1,24 @@
 import * as React from "react";
 import { PAGE_ID } from "../utils/constants";
-import { Text, View, StyleSheet, TouchableOpacity, Image, Pressable } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  Pressable,
+} from "react-native";
 import { SafeAreaView } from "react-native";
 import { firebaseAuth } from "../utils/firebase";
 import globalStyle from "../globalStyle";
-require('firebase/auth');
+require("firebase/auth");
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-
 export default class Page4 extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = {
-      currentEmail: ""
+      currentEmail: "",
     };
   }
 
@@ -31,7 +36,9 @@ export default class Page4 extends React.Component {
   };
 
   async updateCurrentEmailState() {
-    this.setState({ currentEmail: `Signed in as: ${await AsyncStorage.getItem("userEmail")}`});
+    this.setState({
+      currentEmail: `Signed in as: ${await AsyncStorage.getItem("userEmail")}`,
+    });
   }
 
   componentDidMount() {
@@ -42,9 +49,7 @@ export default class Page4 extends React.Component {
     return (
       <SafeAreaView style={globalStyle.wholeScreen}>
         <Text style={globalStyle.headerText}>Settings</Text>
-        <Text
-          style={{ fontWeight: "bold", fontSize: 30, marginLeft: 8 }}
-        >
+        <Text style={{ fontWeight: "bold", fontSize: 30, marginLeft: 8 }}>
           Personal:
         </Text>
         <Text style={style.signedInText}>{this.state.currentEmail}</Text>
@@ -52,11 +57,11 @@ export default class Page4 extends React.Component {
           style={globalStyle.wideButtonStyle}
           onPress={() => this.props.pageChange(PAGE_ID.delivery_address)}
         >
-          <Text style={globalStyle.wideButtonText}>Change Delivery Address</Text>
+          <Text style={globalStyle.wideButtonText}>
+            Change Delivery Address
+          </Text>
         </Pressable>
-        <Pressable
-          style={globalStyle.wideButtonStyle}
-        >
+        <Pressable style={globalStyle.wideButtonStyle}>
           <Text style={globalStyle.wideButtonText}>Clear Shopping History</Text>
         </Pressable>
         <Pressable
@@ -67,7 +72,9 @@ export default class Page4 extends React.Component {
         </Pressable>
         <View style={globalStyle.container}>
           <View style={globalStyle.buttons}>
-            <TouchableOpacity onPress={() => this.props.pageChange(PAGE_ID.search)}>
+            <TouchableOpacity
+              onPress={() => this.props.pageChange(PAGE_ID.search)}
+            >
               <Image
                 style={globalStyle.icon}
                 source={require("../assets/search.png")}
@@ -76,7 +83,9 @@ export default class Page4 extends React.Component {
               />
               <Text>Search</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.props.pageChange(PAGE_ID.cart)}>
+            <TouchableOpacity
+              onPress={() => this.props.pageChange(PAGE_ID.cart)}
+            >
               <Image
                 style={globalStyle.icon}
                 source={require("../assets/cart.png")}
@@ -85,7 +94,9 @@ export default class Page4 extends React.Component {
               />
               <Text>My Cart</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.props.pageChange(PAGE_ID.orders)}>
+            <TouchableOpacity
+              onPress={() => this.props.pageChange(PAGE_ID.orders)}
+            >
               <Image
                 style={globalStyle.icon}
                 source={require("../assets/orders.png")}
@@ -94,7 +105,9 @@ export default class Page4 extends React.Component {
               />
               <Text>Orders</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.props.pageChange(PAGE_ID.settings)}>
+            <TouchableOpacity
+              onPress={() => this.props.pageChange(PAGE_ID.settings)}
+            >
               <Image
                 style={globalStyle.icon}
                 source={require("../assets/gear.png")}
@@ -114,5 +127,5 @@ const style = StyleSheet.create({
   signedInText: {
     marginLeft: 8,
     fontSize: 17,
-  }
+  },
 });

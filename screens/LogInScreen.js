@@ -1,14 +1,14 @@
 import * as React from "react";
 import { PAGE_ID } from "../utils/constants";
 import { Text, Pressable, SafeAreaView, TextInput } from "react-native";
-import globalStyle from '../globalStyle';
-import {firebaseAuth} from '../utils/firebase';
+import globalStyle from "../globalStyle";
+import { firebaseAuth } from "../utils/firebase";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 /**
  * This is the first screen users will see when they start the app. Users can login
  * and be redirected to the search screen, or they can click the Sign Up button and
- * be redirected to the Create an Account screen. 
+ * be redirected to the Create an Account screen.
  */
 
 export default class Login extends React.Component {
@@ -40,7 +40,7 @@ export default class Login extends React.Component {
         this.props.pageChange(PAGE_ID.search);
       })
       .catch((error) => alert(error.message));
-  };
+  }
 
   render() {
     return (
@@ -85,9 +85,11 @@ export default class Login extends React.Component {
           onPress={() => this.props.pageChange(PAGE_ID.search)}
           testID="Test_SignInSkip"
         >
-          <Text style={globalStyle.wideButtonText}>Continue Without Signing in</Text>
+          <Text style={globalStyle.wideButtonText}>
+            Continue Without Signing in
+          </Text>
         </Pressable>
       </SafeAreaView>
-    )
+    );
   }
 }

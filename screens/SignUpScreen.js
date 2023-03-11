@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Text, Pressable, SafeAreaView, TextInput } from "react-native";
-import globalStyle from '../globalStyle';
-import {firebaseAuth} from '../utils/firebase';
+import globalStyle from "../globalStyle";
+import { firebaseAuth } from "../utils/firebase";
 import { newPasswordIsValid } from "../utils/SignUpScreenFunctions";
 import { PAGE_ID } from "../utils/constants";
 
@@ -34,7 +34,7 @@ export default class SignUp extends React.Component {
         })
         .catch((error) => alert(error.message));
     }
-  };
+  }
 
   render() {
     return (
@@ -80,10 +80,11 @@ export default class SignUp extends React.Component {
           <Text style={globalStyle.wideButtonText}>Sign Up</Text>
         </Pressable>
         <Text style={globalStyle.paragraph}>
-          Your password must be at least 8 characters long. it must contain an uppercase
-          letter, a lowercase letter, a number, and a non-alphanumeric character.
+          Your password must be at least 8 characters long. it must contain an
+          uppercase letter, a lowercase letter, a number, and a non-alphanumeric
+          character.
         </Text>
       </SafeAreaView>
-    )
+    );
   }
 }

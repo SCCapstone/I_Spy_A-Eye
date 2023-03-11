@@ -3,7 +3,7 @@ import { Text, View, TouchableOpacity, Image, Pressable } from "react-native";
 import { SafeAreaView } from "react-native";
 import { firebaseAuth } from "../utils/firebase";
 import globalStyle from "../globalStyle";
-require('firebase/auth');
+require("firebase/auth");
 
 /**
  * This screen is shown when a user not signed in clicks the settings button on the navbar.
