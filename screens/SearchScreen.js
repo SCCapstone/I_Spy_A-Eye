@@ -16,6 +16,7 @@ import { SafeAreaView } from "react-native";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import SectionedMultiSelect from 'react-native-sectioned-multi-select';
 import globalStyle from "../globalStyle";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Holds data of all items
 var itemList = [];
@@ -87,8 +88,8 @@ const Item = ({ id, title, price, unitPrice, stock, quantity }) => (
       </Pressable> */}
 
       <Pressable style={styles.remove} >
-            <Text style={{color: 'white', fontSize: 19, fontWeight:'bold'}}>Add to Cart</Text>
-          </Pressable>
+        <Text style={{color: 'white', fontSize: 19, fontWeight:'bold'}} onPress={() => addToCart(id)}>Add to Cart</Text>
+      </Pressable>
     </View>
   </View>
 );
@@ -106,6 +107,52 @@ const renderItem = ({ id, item, price, unitPrice, stock, quantity }) => (
     />
   </>
 );
+
+addToCart = async (itemID) => {
+  // let array = []
+  // for (let i = 0; i < itemList.length; i++) {
+  //   if (itemList[i].id == itemID) {
+  //     array.push(itemList[i])
+  //     //itemList[i].inCart = true
+  //     try {
+  //       await AsyncStorage.setItem("product", JSON.stringify(array))
+  //     } catch (err) {
+  //       console.log(err)
+  //     }
+  //   }
+  // }
+  // console.log(array)
+  
+  for (let i = 0; i < itemList.length; i++) {
+    if (itemList[i].id == itemID) {
+      let itemArray = await AsyncStorage.getItem("product")
+      itemArray = JSON.parse(itemArray)
+      if (itemArray) {
+        let array = itemArray
+        array.push(itemList[i])
+
+        try {
+          await AsyncStorage.setItem("product", JSON.stringify(array))
+        } catch (err) {
+          console.log(err)
+        }
+        console.log(array)
+      } else {
+        let array = []
+        if (itemList[i].id == itemID) {
+          array.push(itemList[i])
+          
+          try {
+            await AsyncStorage.setItem("product", JSON.stringify(array))
+          } catch {
+            console.log(err)
+          }
+        }
+        console.log(array)
+      }
+    }
+  }
+}
 
 // For future functionality of decrementing the quantity of an item to add to cart.
 function decrementQuantity(itemID) {
