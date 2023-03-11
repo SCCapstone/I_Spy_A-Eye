@@ -14,7 +14,7 @@ import globalStyle from "../globalStyle";
 require("firebase/auth");
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default class Page4 extends React.Component {
+export default class SettingsScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {

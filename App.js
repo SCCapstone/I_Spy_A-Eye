@@ -5,7 +5,7 @@ import SignUp from './screens/SignUpScreen';
 import SearchScreen from './screens/SearchScreen';
 import CartScreen from './screens/CartScreen';
 import Page3 from './screens/OrdersScreen';
-import Page4 from './screens/SettingsScreen';
+import SettingsScreen from './screens/SettingsScreen';
 import NotSignedInSettings from './screens/NotSignedInSettingsScreen';
 import CheckoutScreen from './screens/CheckoutScreen';
 import DeliveryAddress from './screens/DeliveryAddressScreen';
@@ -100,7 +100,7 @@ export default class App extends React.Component {
       case PAGE_ID.settings:
         if (this.state.userLoggedIn) {
           // Users logged in will be returned this page when clicking the settings button.
-          return (<Page4 pageChange={(pageNum) => this.setState({ page: pageNum })} />);
+          return (<SettingsScreen pageChange={(pageNum) => this.setState({ page: pageNum })} />);
         } else {
           // Users not logged in will be returned this page when clicking the settings button.
           return (<NotSignedInSettings pageChange={(pageNum) => this.setState({ page: pageNum })} />);
