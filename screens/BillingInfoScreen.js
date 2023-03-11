@@ -14,6 +14,30 @@ import globalStyle from "../globalStyle";
 export default class BillingInfoScreen extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      nameInput: "",
+      CardNumberInput: "",
+      ExpiryInput: "",
+      securityCodeInput: "",
+    };
+  }
+
+  saveBillingInfoFirestore(
+    nameInput,
+    CardNumberInput,
+    ExpiryInput,
+    securityCodeInput
+  ) {
+    firebase.auth().onAuthStateChanged(function (user) {
+      firebase.firestore().collection("users").doc(user.uid).set({
+        name: nameInput,
+        CardNumber: CardNumberInput,
+        Expiry: ExpiryInput,
+        securityCode: securityCodeInput,
+      });
+    });
+    // Returns user back to settings screen.
+    this.props.pageChange(PAGE_ID.settings);
   }
 
   render() {
@@ -48,7 +72,12 @@ export default class BillingInfoScreen extends React.Component {
           <ScrollView>
             {/*The user can input billing information*/}
             <Text style={{ marginLeft: 25, marginTop: 10 }}>Name on Card</Text>
-            <TextInput style={globalStyle.wideInputContainer} />
+            <TextInput
+              style={globalStyle.wideInputContainer}
+              onChangeText={(newNameInput) =>
+                this.setState({ nameInput: newNameInput })
+              }
+            />
 
             <Text style={{ marginLeft: 25, marginTop: 10 }}>Card Number</Text>
             <TextInput style={globalStyle.wideInputContainer} />
@@ -68,11 +97,19 @@ export default class BillingInfoScreen extends React.Component {
                 keyboardType={"numeric"}
               />
             </View>
-
-            <Text style={{ marginLeft: 25, marginTop: 10 }}>
-              Zip/Postal Code
-            </Text>
-            <TextInput style={style.input} keyboardType={"numeric"} />
+            <Pressable
+              style={globalStyle.wideButtonStyle}
+              onPress={() =>
+                this.saveBillingInfoFirestore(
+                  this.state.nameInput,
+                  this.state.CardNumberInput,
+                  this.state.ExpiryInput,
+                  this.state.securityCodeInput
+                )
+              }
+            >
+              <Text style={globalStyle.wideButtonText}>Update</Text>
+            </Pressable>
           </ScrollView>
         </View>
       </SafeAreaView>
