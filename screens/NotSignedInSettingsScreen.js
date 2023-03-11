@@ -28,6 +28,14 @@ export default class NotSignedInSettings extends React.Component {
     return (
       <SafeAreaView style={globalStyle.wholeScreen}>
         <Text style={globalStyle.headerText}>Settings</Text>
+        {/*Horizontal line*/}
+        <View
+          style={{
+            borderBottomColor: "black",
+            borderBottomWidth: 10,
+            marginTop: 20,
+          }}
+        />
         <Pressable
           style={globalStyle.wideButtonStyle}
           onPress={() => this.signOut()}

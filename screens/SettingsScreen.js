@@ -49,6 +49,14 @@ export default class Page4 extends React.Component {
     return (
       <SafeAreaView style={globalStyle.wholeScreen}>
         <Text style={globalStyle.headerText}>Settings</Text>
+        {/*Horizontal line*/}
+        <View
+          style={{
+            borderBottomColor: "black",
+            borderBottomWidth: 10,
+            marginTop: 20,
+          }}
+        />
         <Text style={{ fontWeight: "bold", fontSize: 30, marginLeft: 8 }}>
           Personal:
         </Text>
