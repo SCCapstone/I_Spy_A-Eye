@@ -10,12 +10,50 @@ import {
   ScrollView,
 } from "react-native";
 import globalStyle from "../globalStyle";
+import firebase from "firebase";
+require("firebase/auth");
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // User can checkout items in cart (Simulation)
 
 export default class CheckoutScreen extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      addressDelivery: "",
+      cityDelivery: "",
+      zipCodeDelivery: "",
+      stateDelivery: "",
+    };
+  }
+
+  // Function to get the current user's delivery address stored in Firestore.
+  async getDeliveryAddress() {
+    let res = await firebase
+      .firestore()
+      .collection("users")
+      .doc(await AsyncStorage.getItem("userID"))
+      .get();
+    this.setState({
+      addressDelivery:
+        res._delegate._document.data.value.mapValue.fields.address.stringValue,
+    });
+    this.setState({
+      cityDelivery:
+        res._delegate._document.data.value.mapValue.fields.city.stringValue,
+    });
+    this.setState({
+      zipCodeDelivery:
+        res._delegate._document.data.value.mapValue.fields.zipCode.stringValue,
+    });
+    this.setState({
+      stateDelivery:
+        res._delegate._document.data.value.mapValue.fields.state.stringValue,
+    });
+  }
+
+  componentDidMount() {
+    this.getDeliveryAddress();
   }
 
   confirm = () => {
@@ -54,11 +92,28 @@ export default class CheckoutScreen extends React.Component {
           />
           <ScrollView>
             {/*The user can input the delivery address*/}
-            <Text style={{ marginLeft: 25, marginTop: 10 }}>
-              Delivery Address
+            <Text style={globalStyle.subHeaderText}>Delivery Address</Text>
+            <Text style={globalStyle.paragraph}>
+              {this.state.addressDelivery}
             </Text>
-            <TextInput style={globalStyle.wideInputContainer} />
-
+            <Text style={style.paragraph_bot_margin}>
+              {this.state.cityDelivery}, {this.state.stateDelivery}{" "}
+              {this.state.zipCodeDelivery}
+            </Text>
+            <Pressable 
+              style={globalStyle.headerButtonStyle}
+              onPress={() => this.props.pageChange(PAGE_ID.delivery_address)}
+            >
+              <Text style={globalStyle.headerButtonText}>Change</Text>
+            </Pressable>
+            {/*Horizontal line*/}
+            <View
+              style={{
+                borderBottomColor: "black",
+                borderBottomWidth: 10,
+                marginTop: 20,
+              }}
+            />
             {/*The user can input billing information*/}
             <Text style={{ marginLeft: 25, marginTop: 10 }}>Name on Card</Text>
             <TextInput style={globalStyle.wideInputContainer} />
@@ -154,5 +209,11 @@ const style = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 20,
     textAlign: "center",
+  },
+  paragraph_bot_margin: {
+    fontSize: 18,
+    marginLeft: 8,
+    marginRight: 8,
+    marginBottom: 16,
   },
 });

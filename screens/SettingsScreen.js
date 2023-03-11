@@ -57,7 +57,7 @@ export default class Page4 extends React.Component {
             marginTop: 20,
           }}
         />
-        <Text style={{ fontWeight: "bold", fontSize: 30, marginLeft: 8 }}>
+        <Text style={globalStyle.subHeaderText}>
           Personal:
         </Text>
         <Text style={style.signedInText}>{this.state.currentEmail}</Text>

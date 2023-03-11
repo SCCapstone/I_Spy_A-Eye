@@ -53,6 +53,11 @@ const globalStyle = StyleSheet.create({
     textAlign: "center",
     marginTop: 8,
   },
+  subHeaderText: {
+    fontWeight: "bold", 
+    fontSize: 30,
+    marginLeft: 8
+  },
   inputContainer: {
     borderWidth: 7,
     borderRadius: 20,
@@ -111,6 +116,7 @@ const globalStyle = StyleSheet.create({
     marginLeft: 8,
     marginRight: 8,
   },
+
 });
 
 export default globalStyle;
