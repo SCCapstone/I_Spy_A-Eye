@@ -129,52 +129,42 @@ export default class BillingInfoScreen extends React.Component {
           />
           <ScrollView>
             {/*The user can input billing information*/}
-            <Text style={{ marginLeft: 25, marginTop: 10 }}>Name on Card</Text>
+            <Text>Name on Card</Text>
             <TextInput
-              style={globalStyle.wideInputContainer}
+              style={style.input}
               value={this.state.nameInput}
               onChangeText={(newNameInput) =>
                 this.setState({ nameInput: newNameInput })
               }
-              
             />
 
-            <Text style={{ marginLeft: 25, marginTop: 10 }}>Card Number</Text>
+            <Text>Card Number</Text>
             <TextInput
-              style={globalStyle.wideInputContainer}
+              style={style.input}
               onChangeText={(newCardNumberInput) =>
                 this.setState({ cardNumberInput: newCardNumberInput })
               }
               value={this.state.cardNumberInput}
             />
 
-            <View style={{ flexDirection: "row" }}>
-              <Text style={{ marginLeft: 25, marginTop: 10 }}>Expiry Date</Text>
-              <Text style={{ marginLeft: 125, marginTop: 10 }}>
-                Security Code
-              </Text>
-            </View>
+            <Text>Expiry Date</Text>
+            <TextInput
+              style={style.date_code}
+              value={this.state.expiryInput}
+              onChangeText={(newExpiryInput) =>
+                this.setState({ expiryInput: newExpiryInput })
+              }
+            />
+            <Text>Security Code</Text>
+            <TextInput
+              style={style.date_code}
+              keyboardType={"numeric"}
+              value={this.state.securityCodeInput}
+              onChangeText={(newSecurityCodeInput) =>
+                this.setState({ securityCodeInput: newSecurityCodeInput })
+              }
+            />
 
-            <View style={{ flexDirection: "row" }}>
-              <TextInput
-                style={style.date_code}
-                value={this.state.expiryInput}
-                onChangeText={(newExpiryInput) =>
-                  this.setState({ expiryInput: newExpiryInput })
-                }
-                
-              />
-
-              <TextInput
-                style={[style.date_code, { marginLeft: 40 }]}
-                keyboardType={"numeric"}
-                value={this.state.securityCodeInput}
-                onChangeText={(newSecurityCodeInput) =>
-                  this.setState({ securityCodeInput: newSecurityCodeInput })
-                }
-                
-              />
-            </View>
             <Pressable
               style={globalStyle.wideButtonStyle}
               onPress={() =>
@@ -207,24 +197,33 @@ const style = StyleSheet.create({
     marginHorizontal: 75,
   },
   input: {
-    backgroundColor: "white",
-    width: 350,
-    borderColor: "black",
-    borderWidth: 1,
-    borderRadius: 5,
-    padding: 10,
-    margin: 10,
-    marginLeft: 25,
+    borderWidth: 7,
+    borderRadius: 20,
+    paddingVertical: 5,
+    paddingHorizontal: 25,
+    fontWeight: "bold",
+    fontSize: 18,
+    maxHeight: 60,
+    minHeight: 50,
+    marginLeft: 8,
+    marginRight: 8,
   },
   date_code: {
-    backgroundColor: "white",
-    borderColor: "black",
-    borderWidth: 1,
-    borderRadius: 5,
-    width: 150,
-    padding: 10,
-    margin: 10,
-    marginLeft: 25,
+    borderWidth: 7,
+    borderRadius: 20,
+    paddingVertical: 5,
+    paddingHorizontal: 25,
+    fontWeight: "bold",
+    fontSize: 18,
+    maxHeight: 60,
+    minHeight: 50,
+    marginLeft: 8,
+    marginRight: 8,
+  },
+  date_codeContainter: {
+    minWidth: "40%",
+    marginLeft: 8,
+    marginRight: 8,
   },
   confirmButton: {
     backgroundColor: "black",
