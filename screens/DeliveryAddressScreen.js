@@ -22,7 +22,7 @@ export default class DeliveryAddress extends React.Component {
   async getDeliveryAddress() {
     let res = await firebase
       .firestore()
-      .collection("users")
+      .collection("delivery")
       .doc(await AsyncStorage.getItem("userID"))
       .get();
     this.setState({
@@ -61,7 +61,7 @@ export default class DeliveryAddress extends React.Component {
     stateInput
   ) {
     firebase.auth().onAuthStateChanged(function (user) {
-      firebase.firestore().collection("users").doc(user.uid).set({
+      firebase.firestore().collection("delivery").doc(user.uid).set({
         address: addressInput,
         city: cityInput,
         zipCode: zipCodeInput,

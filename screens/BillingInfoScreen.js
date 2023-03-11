@@ -10,6 +10,9 @@ import {
   ScrollView,
 } from "react-native";
 import globalStyle from "../globalStyle";
+import firebase from "firebase";
+require("firebase/auth");
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default class BillingInfoScreen extends React.Component {
   constructor(props) {
@@ -29,7 +32,7 @@ export default class BillingInfoScreen extends React.Component {
     securityCodeInput
   ) {
     firebase.auth().onAuthStateChanged(function (user) {
-      firebase.firestore().collection("users").doc(user.uid).set({
+      firebase.firestore().collection("billing").doc(user.uid).set({
         name: nameInput,
         CardNumber: CardNumberInput,
         Expiry: ExpiryInput,
