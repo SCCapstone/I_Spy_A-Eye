@@ -30,7 +30,7 @@ export default class CheckoutScreen extends React.Component {
   async getDeliveryAddress() {
     let res = await firebase
       .firestore()
-      .collection("users")
+      .collection("delivery")
       .doc(await AsyncStorage.getItem("userID"))
       .get();
     this.setState({
@@ -114,6 +114,13 @@ export default class CheckoutScreen extends React.Component {
               }}
             />
             <Text style={globalStyle.subHeaderText}>Billing Info</Text>
+            <Text style={globalStyle.paragraph}>
+              {this.state.addressDelivery}
+            </Text>
+            <Text style={style.paragraph_bot_margin}>
+              {this.state.cityDelivery}, {this.state.stateDelivery}{" "}
+              {this.state.zipCodeDelivery}
+            </Text>
             <Pressable
               style={globalStyle.headerButtonStyle}
               onPress={() => this.props.pageChange(PAGE_ID.billing_info)}
