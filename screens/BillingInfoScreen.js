@@ -32,11 +32,31 @@ export default class BillingInfoScreen extends React.Component {
     securityCodeInput
   ) {
     firebase.auth().onAuthStateChanged(function (user) {
-<<<<<<< HEAD
       firebase.firestore().collection("billing").doc(user.uid).set({
-=======
-      firebase.firestore().collection("users").doc(user.uid).set({
->>>>>>> 55f027650c432a6549a1b4ca1bae687439f70b2c
+        name: nameInput,
+        CardNumber: CardNumberInput,
+        Expiry: ExpiryInput,
+        securityCode: securityCodeInput,
+      });
+    });
+    // Returns user back to settings screen.
+    this.props.pageChange(PAGE_ID.settings);
+    this.state = {
+      nameInput: "",
+      CardNumberInput: "",
+      ExpiryInput: "",
+      securityCodeInput: "",
+    };
+  }
+
+  saveBillingInfoFirestore(
+    nameInput,
+    CardNumberInput,
+    ExpiryInput,
+    securityCodeInput
+  ) {
+    firebase.auth().onAuthStateChanged(function (user) {
+      firebase.firestore().collection("billing").doc(user.uid).set({
         name: nameInput,
         CardNumber: CardNumberInput,
         Expiry: ExpiryInput,
@@ -79,6 +99,12 @@ export default class BillingInfoScreen extends React.Component {
           <ScrollView>
             {/*The user can input billing information*/}
             <Text style={{ marginLeft: 25, marginTop: 10 }}>Name on Card</Text>
+            <TextInput
+              style={globalStyle.wideInputContainer}
+              onChangeText={(newNameInput) =>
+                this.setState({ nameInput: newNameInput })
+              }
+            />
             <TextInput
               style={globalStyle.wideInputContainer}
               onChangeText={(newNameInput) =>
