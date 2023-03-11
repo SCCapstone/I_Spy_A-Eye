@@ -146,24 +146,29 @@ export default class BillingInfoScreen extends React.Component {
               }
               value={this.state.cardNumberInput}
             />
-
-            <Text>Expiry Date</Text>
-            <TextInput
-              style={style.date_code}
-              value={this.state.expiryInput}
-              onChangeText={(newExpiryInput) =>
-                this.setState({ expiryInput: newExpiryInput })
-              }
-            />
-            <Text>Security Code</Text>
-            <TextInput
-              style={style.date_code}
-              keyboardType={"numeric"}
-              value={this.state.securityCodeInput}
-              onChangeText={(newSecurityCodeInput) =>
-                this.setState({ securityCodeInput: newSecurityCodeInput })
-              }
-            />
+            <View style={{flexDirection: "row"}}>
+            <View style={style.date_codeContainter}>
+              <Text>Expiry Date</Text>
+              <TextInput
+                style={style.date_code}
+                value={this.state.expiryInput}
+                onChangeText={(newExpiryInput) =>
+                  this.setState({ expiryInput: newExpiryInput })
+                }
+              />
+            </View>
+            <View style={style.date_codeContainter}>
+              <Text>Security Code</Text>
+              <TextInput
+                style={style.date_code}
+                keyboardType={"numeric"}
+                value={this.state.securityCodeInput}
+                onChangeText={(newSecurityCodeInput) =>
+                  this.setState({ securityCodeInput: newSecurityCodeInput })
+                }
+              />
+            </View>
+            </View>
 
             <Pressable
               style={globalStyle.wideButtonStyle}
@@ -209,19 +214,16 @@ const style = StyleSheet.create({
     marginRight: 8,
   },
   date_code: {
+    minWidth: "40%",
     borderWidth: 7,
     borderRadius: 20,
     paddingVertical: 5,
-    paddingHorizontal: 25,
     fontWeight: "bold",
     fontSize: 18,
     maxHeight: 60,
     minHeight: 50,
-    marginLeft: 8,
-    marginRight: 8,
   },
   date_codeContainter: {
-    minWidth: "40%",
     marginLeft: 8,
     marginRight: 8,
   },
