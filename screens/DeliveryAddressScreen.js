@@ -84,7 +84,7 @@ export default class DeliveryAddress extends React.Component {
           <Text style={globalStyle.backButtonText}>&lt; Back</Text>
         </Pressable>
         <TextInput
-          style={globalStyle.loginSignUpInputContainer}
+          style={globalStyle.wideInputContainer}
           placeholder="Street Address"
           value={this.state.addressInput}
           placeholderTextColor={"#000"}
@@ -93,7 +93,7 @@ export default class DeliveryAddress extends React.Component {
           }
         />
         <TextInput
-          style={globalStyle.loginSignUpInputContainer}
+          style={globalStyle.wideInputContainer}
           placeholder="City"
           value={this.state.cityInput}
           placeholderTextColor={"#000"}
@@ -102,7 +102,7 @@ export default class DeliveryAddress extends React.Component {
           }
         />
         <TextInput
-          style={globalStyle.loginSignUpInputContainer}
+          style={globalStyle.wideInputContainer}
           placeholder="Zip Code"
           value={this.state.zipCodeInput}
           placeholderTextColor={"#000"}
@@ -111,7 +111,7 @@ export default class DeliveryAddress extends React.Component {
           }
         />
         <TextInput
-          style={globalStyle.loginSignUpInputContainer}
+          style={globalStyle.wideInputContainer}
           placeholder="State"
           value={this.state.stateInput}
           placeholderTextColor={"#000"}
