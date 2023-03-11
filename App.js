@@ -106,7 +106,12 @@ export default class App extends React.Component {
           return (<NotSignedInSettings pageChange={(pageNum) => this.setState({ page: pageNum })} />);
         }
       case PAGE_ID.checkout:
-        return (<CheckoutScreen pageChange={(pageNum) => this.setState({ page: pageNum })} />);
+        if (this.state.userLoggedIn) {
+          return (<CheckoutScreen pageChange={(pageNum) => this.setState({ page: pageNum })} />);
+        } else {
+          // Users can't checkout if they aren't signed in.
+          return (<NotSignedInSettings pageChange={(pageNum) => this.setState({ page: pageNum })} />);
+        }
       case PAGE_ID.delivery_address:
         return (<DeliveryAddress pageChange={(pageNum) => this.setState({ page: pageNum })} />);
       case PAGE_ID.billing_info:
