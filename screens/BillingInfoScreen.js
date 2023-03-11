@@ -80,24 +80,6 @@ export default class BillingInfoScreen extends React.Component {
     };
   }
 
-  saveBillingInfoFirestore(
-    nameInput,
-    cardNumberInput,
-    expiryInput,
-    securityCodeInput
-  ) {
-    firebase.auth().onAuthStateChanged(function (user) {
-      firebase.firestore().collection("billing").doc(user.uid).set({
-        name: nameInput,
-        cardNumber: cardNumberInput,
-        expiry: expiryInput,
-        securityCode: securityCodeInput,
-      });
-    });
-    // Returns user back to settings screen.
-    this.props.pageChange(PAGE_ID.settings);
-  }
-
   render() {
     return (
       <SafeAreaView style={globalStyle.wholeScreen}>
@@ -129,7 +111,7 @@ export default class BillingInfoScreen extends React.Component {
           />
           <ScrollView>
             {/*The user can input billing information*/}
-            <Text>Name on Card</Text>
+            <Text style={globalStyle.paragraph}>Name on Card</Text>
             <TextInput
               style={style.input}
               value={this.state.nameInput}
@@ -138,36 +120,42 @@ export default class BillingInfoScreen extends React.Component {
               }
             />
 
-            <Text>Card Number</Text>
+            <Text style={globalStyle.paragraph}>Card Number</Text>
             <TextInput
+              placeholder="#### #### #### ####"
+              placeholderTextColor={"#000"}
               style={style.input}
               onChangeText={(newCardNumberInput) =>
                 this.setState({ cardNumberInput: newCardNumberInput })
               }
               value={this.state.cardNumberInput}
             />
-            <View style={{flexDirection: "row"}}>
-            <View style={style.date_codeContainter}>
-              <Text>Expiry Date</Text>
-              <TextInput
-                style={style.date_code}
-                value={this.state.expiryInput}
-                onChangeText={(newExpiryInput) =>
-                  this.setState({ expiryInput: newExpiryInput })
-                }
-              />
-            </View>
-            <View style={style.date_codeContainter}>
-              <Text>Security Code</Text>
-              <TextInput
-                style={style.date_code}
-                keyboardType={"numeric"}
-                value={this.state.securityCodeInput}
-                onChangeText={(newSecurityCodeInput) =>
-                  this.setState({ securityCodeInput: newSecurityCodeInput })
-                }
-              />
-            </View>
+            <View style={{ flexDirection: "row" }}>
+              <View style={style.date_codeContainter}>
+                <Text style={globalStyle.paragraph}>Expiry Date</Text>
+                <TextInput
+                  placeholder="MM/YY"
+                  placeholderTextColor={"#000"}
+                  style={style.date_code}
+                  value={this.state.expiryInput}
+                  onChangeText={(newExpiryInput) =>
+                    this.setState({ expiryInput: newExpiryInput })
+                  }
+                />
+              </View>
+              <View style={style.date_codeContainter}>
+                <Text style={globalStyle.paragraph}>Security Code</Text>
+                <TextInput
+                  placeholder="###"
+                  placeholderTextColor={"#000"}
+                  style={style.date_code}
+                  keyboardType={"numeric"}
+                  value={this.state.securityCodeInput}
+                  onChangeText={(newSecurityCodeInput) =>
+                    this.setState({ securityCodeInput: newSecurityCodeInput })
+                  }
+                />
+              </View>
             </View>
 
             <Pressable
@@ -214,7 +202,7 @@ const style = StyleSheet.create({
     marginRight: 8,
   },
   date_code: {
-    minWidth: "40%",
+    paddingHorizontal: 25,
     borderWidth: 7,
     borderRadius: 20,
     paddingVertical: 5,
@@ -226,6 +214,8 @@ const style = StyleSheet.create({
   date_codeContainter: {
     marginLeft: 8,
     marginRight: 8,
+    minWidth: "40%",
+    maxWidth: "40%",
   },
   confirmButton: {
     backgroundColor: "black",
