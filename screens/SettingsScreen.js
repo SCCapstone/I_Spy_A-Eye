@@ -3,6 +3,7 @@ import { Text, View, TouchableOpacity, Image, Pressable } from "react-native";
 import { SafeAreaView } from "react-native";
 import { firebaseAuth } from "../firebase";
 import globalStyle from "../globalStyle";
+import {OpenURLButton} from '../functions/RedirectButton'
 require('firebase/auth');
 
 
@@ -47,6 +48,9 @@ export default class Page4 extends React.Component {
         >
           <Text style={globalStyle.wideButtonText}>Sign Out</Text>
         </Pressable>
+        <View style={globalStyle.wideButtonStyle} >
+          <OpenURLButton url={'https://google.com'}>Tutorial</OpenURLButton>
+        </View>
         <View style={globalStyle.container}>
           <View style={globalStyle.buttons}>
             <TouchableOpacity onPress={() => this.props.pageChange(1)}>
