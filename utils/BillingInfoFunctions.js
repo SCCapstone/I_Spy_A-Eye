@@ -1,5 +1,14 @@
 import { Alert } from "react-native";
 
+function nameIsValidOrEmpty(name) {
+  if (name.length <= 21) {
+    return true;
+  } else {
+    Alert.alert("Names cannot exceed 21 characters.");
+    return false;
+  }
+}
+
 function securityCodeIsValidOrEmpty(securityCode) {
   if (securityCode.length === 0 || securityCode.length === 3) {
     return true;
@@ -33,6 +42,7 @@ function expiryIsValidOrEmpty(expiry) {
 }
 
 export {
+  nameIsValidOrEmpty,
   securityCodeIsValidOrEmpty,
   cardNumberIsValidOrEmpty,
   expiryIsValidOrEmpty

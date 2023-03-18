@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  nameIsValidOrEmpty,
   securityCodeIsValidOrEmpty,
   cardNumberIsValidOrEmpty,
   expiryIsValidOrEmpty
@@ -72,6 +73,7 @@ export default class BillingInfoScreen extends React.Component {
      * confirm a purchase however.
      */
     if (
+      nameIsValidOrEmpty(nameInput) &&
       securityCodeIsValidOrEmpty(securityCodeInput) &&
       cardNumberIsValidOrEmpty(cardNumberInput) &&
       expiryIsValidOrEmpty(expiryInput)
