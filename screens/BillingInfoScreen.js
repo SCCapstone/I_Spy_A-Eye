@@ -1,5 +1,9 @@
 import React from "react";
-import { PAGE_ID } from "../utils/constants";
+import {
+  securityCodeIsValidOrEmpty,
+  cardNumberIsValidOrEmpty,
+  expiryIsValidOrEmpty
+} from "../utils/BillingInfoFunctions";
 import {
   View,
   Text,
@@ -62,22 +66,33 @@ export default class BillingInfoScreen extends React.Component {
     expiryInput,
     securityCodeInput
   ) {
-    firebase.auth().onAuthStateChanged(function (user) {
-      firebase.firestore().collection("billing").doc(user.uid).set({
-        name: nameInput,
-        cardNumber: cardNumberInput,
-        expiry: expiryInput,
-        securityCode: securityCodeInput,
+    /**
+     * This will disable the saving of incorrect information while giving a chance
+     * for users to leave fields blank. Empty info isn't allowed when users try to
+     * confirm a purchase however.
+     */
+    if (
+      securityCodeIsValidOrEmpty(securityCodeInput) &&
+      cardNumberIsValidOrEmpty(cardNumberInput) &&
+      expiryIsValidOrEmpty(expiryInput)
+    ) {
+      firebase.auth().onAuthStateChanged(function (user) {
+        firebase.firestore().collection("billing").doc(user.uid).set({
+          name: nameInput,
+          cardNumber: cardNumberInput,
+          expiry: expiryInput,
+          securityCode: securityCodeInput,
+        });
       });
-    });
 
-    this.returnToPreviousPage();
-    this.state = {
-      nameInput: "",
-      cardNumberInput: "",
-      expiryInput: "",
-      securityCodeInput: "",
-    };
+      this.returnToPreviousPage();
+      this.state = {
+        nameInput: "",
+        cardNumberInput: "",
+        expiryInput: "",
+        securityCodeInput: "",
+      };
+    }
   }
 
   // Returns user back to previous screen.
@@ -128,7 +143,8 @@ export default class BillingInfoScreen extends React.Component {
 
             <Text style={globalStyle.paragraph}>Card Number</Text>
             <TextInput
-              placeholder="#### #### #### ####"
+              placeholder="################"
+              keyboardType={"numeric"}
               placeholderTextColor={"#000"}
               style={globalStyle.billingDeliveryInput}
               onChangeText={(newCardNumberInput) =>
