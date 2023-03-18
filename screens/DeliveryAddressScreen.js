@@ -1,6 +1,12 @@
 import * as React from "react";
 import { PAGE_ID } from "../utils/constants";
-import { Text, Pressable, SafeAreaView, TextInput, ScrollView } from "react-native";
+import {
+  Text,
+  Pressable,
+  SafeAreaView,
+  TextInput,
+  ScrollView,
+} from "react-native";
 import globalStyle from "../globalStyle";
 import firebase from "firebase";
 require("firebase/auth");
@@ -73,7 +79,9 @@ export default class DeliveryAddress extends React.Component {
 
   // Returns user back to previous screen.
   async returnToPreviousPage() {
-    this.props.pageChange(parseInt(await AsyncStorage.getItem("previousPage"), 10));
+    this.props.pageChange(
+      parseInt(await AsyncStorage.getItem("previousPage"), 10)
+    );
   }
 
   render() {

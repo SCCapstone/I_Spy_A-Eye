@@ -70,8 +70,8 @@ export default class BillingInfoScreen extends React.Component {
         securityCode: securityCodeInput,
       });
     });
-    // Returns user back to settings screen.
-    this.props.pageChange(PAGE_ID.settings);
+
+    this.returnToPreviousPage();
     this.state = {
       nameInput: "",
       cardNumberInput: "",
@@ -80,13 +80,19 @@ export default class BillingInfoScreen extends React.Component {
     };
   }
 
+  // Returns user back to previous screen.
+  async returnToPreviousPage() {
+    this.props.pageChange(
+      parseInt(await AsyncStorage.getItem("previousPage"), 10)
+    );
+  }
+
   render() {
     return (
       <SafeAreaView style={globalStyle.wholeScreen}>
         <View style={style.container}>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
-            {/*Takes user back to the cart screen*/}
-            <Pressable onPress={() => this.props.pageChange(PAGE_ID.cart)}>
+            <Pressable onPress={() => this.returnToPreviousPage()}>
               <Text
                 style={{
                   fontWeight: "bold",
