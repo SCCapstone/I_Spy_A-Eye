@@ -85,6 +85,12 @@ export default class CheckoutScreen extends React.Component {
   componentDidMount() {
     this.getDeliveryAddress();
     this.getBillingInfo();
+    /**
+     * The Billing Address and Delivery Address screens have back buttons and can 
+     * be accessed from this screen and the settings screen. The previousPage
+     * variable will allow those screens to determine which screen to go back to. 
+     */
+    AsyncStorage.setItem("previousPage", "5");
   }
 
   confirm = () => {

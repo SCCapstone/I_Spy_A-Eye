@@ -43,6 +43,12 @@ export default class SettingsScreen extends React.Component {
 
   componentDidMount() {
     this.updateCurrentEmailState();
+    /**
+     * The Billing Address and Delivery Address screens have back buttons and can
+     * be accessed from this screen and the Checkout screen. The previousPage
+     * variable will allow those screens to determine which screen to go back to.
+     */
+    AsyncStorage.setItem("previousPage", "4");
   }
 
   render() {
@@ -57,9 +63,7 @@ export default class SettingsScreen extends React.Component {
             marginTop: 20,
           }}
         />
-        <Text style={globalStyle.subHeaderText}>
-          Personal:
-        </Text>
+        <Text style={globalStyle.subHeaderText}>Personal:</Text>
         <Text style={style.signedInText}>{this.state.currentEmail}</Text>
         <Pressable
           style={globalStyle.wideButtonStyle}
@@ -71,11 +75,9 @@ export default class SettingsScreen extends React.Component {
         </Pressable>
         <Pressable
           style={globalStyle.wideButtonStyle}
-           onPress={() => this.props.pageChange(PAGE_ID.billing_info)}
+          onPress={() => this.props.pageChange(PAGE_ID.billing_info)}
         >
-          <Text style={globalStyle.wideButtonText}>
-            Change Billing Info
-          </Text>
+          <Text style={globalStyle.wideButtonText}>Change Billing Info</Text>
         </Pressable>
         <Pressable style={globalStyle.wideButtonStyle}>
           <Text style={globalStyle.wideButtonText}>Clear Shopping History</Text>

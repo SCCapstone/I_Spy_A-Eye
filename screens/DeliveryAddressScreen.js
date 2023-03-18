@@ -54,7 +54,7 @@ export default class DeliveryAddress extends React.Component {
    * @param {*} zipCodeInput
    * @param {*} stateInput
    */
-  saveDeliveryAddressFirestore(
+  async saveDeliveryAddressFirestore(
     addressInput,
     cityInput,
     zipCodeInput,
@@ -68,8 +68,12 @@ export default class DeliveryAddress extends React.Component {
         state: stateInput,
       });
     });
-    // Returns user back to settings screen.
-    this.props.pageChange(PAGE_ID.settings);
+    this.returnToPreviousPage();
+  }
+
+  // Returns user back to previous screen.
+  async returnToPreviousPage() {
+    this.props.pageChange(parseInt(await AsyncStorage.getItem("previousPage"), 10));
   }
 
   render() {
@@ -78,8 +82,8 @@ export default class DeliveryAddress extends React.Component {
         <Text style={globalStyle.headerText}>Delivery Address</Text>
         <Pressable
           style={globalStyle.backButtonStyle}
-          // Returns user back to settings screen.
-          onPress={() => this.props.pageChange(PAGE_ID.settings)}
+          // Returns user back to previous page.
+          onPress={() => this.returnToPreviousPage()}
         >
           <Text style={globalStyle.backButtonText}>&lt; Back</Text>
         </Pressable>
