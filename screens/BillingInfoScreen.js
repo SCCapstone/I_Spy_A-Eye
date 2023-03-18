@@ -113,7 +113,7 @@ export default class BillingInfoScreen extends React.Component {
             {/*The user can input billing information*/}
             <Text style={globalStyle.paragraph}>Name on Card</Text>
             <TextInput
-              style={style.input}
+              style={globalStyle.billingDeliveryInput}
               value={this.state.nameInput}
               onChangeText={(newNameInput) =>
                 this.setState({ nameInput: newNameInput })
@@ -124,7 +124,7 @@ export default class BillingInfoScreen extends React.Component {
             <TextInput
               placeholder="#### #### #### ####"
               placeholderTextColor={"#000"}
-              style={style.input}
+              style={globalStyle.billingDeliveryInput}
               onChangeText={(newCardNumberInput) =>
                 this.setState({ cardNumberInput: newCardNumberInput })
               }
@@ -188,18 +188,6 @@ const style = StyleSheet.create({
     fontSize: 45,
     marginTop: 25,
     marginHorizontal: 75,
-  },
-  input: {
-    borderWidth: 7,
-    borderRadius: 20,
-    paddingVertical: 5,
-    paddingHorizontal: 25,
-    fontWeight: "bold",
-    fontSize: 18,
-    maxHeight: 60,
-    minHeight: 50,
-    marginLeft: 8,
-    marginRight: 8,
   },
   date_code: {
     paddingHorizontal: 25,

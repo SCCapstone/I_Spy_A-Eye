@@ -1,6 +1,6 @@
 import * as React from "react";
 import { PAGE_ID } from "../utils/constants";
-import { Text, Pressable, SafeAreaView, TextInput } from "react-native";
+import { Text, Pressable, SafeAreaView, TextInput, ScrollView } from "react-native";
 import globalStyle from "../globalStyle";
 import firebase from "firebase";
 require("firebase/auth");
@@ -83,56 +83,56 @@ export default class DeliveryAddress extends React.Component {
         >
           <Text style={globalStyle.backButtonText}>&lt; Back</Text>
         </Pressable>
-        <TextInput
-          style={globalStyle.wideInputContainer}
-          placeholder="Street Address"
-          value={this.state.addressInput}
-          placeholderTextColor={"#000"}
-          onChangeText={(newAddressInput) =>
-            this.setState({ addressInput: newAddressInput })
-          }
-        />
-        <TextInput
-          style={globalStyle.wideInputContainer}
-          placeholder="City"
-          value={this.state.cityInput}
-          placeholderTextColor={"#000"}
-          onChangeText={(newCityInput) =>
-            this.setState({ cityInput: newCityInput })
-          }
-        />
-        <TextInput
-          style={globalStyle.wideInputContainer}
-          placeholder="Zip Code"
-          value={this.state.zipCodeInput}
-          placeholderTextColor={"#000"}
-          onChangeText={(newZipCodeInput) =>
-            this.setState({ zipCodeInput: newZipCodeInput })
-          }
-        />
-        <TextInput
-          style={globalStyle.wideInputContainer}
-          placeholder="State"
-          value={this.state.stateInput}
-          placeholderTextColor={"#000"}
-          onChangeText={(newStateInput) =>
-            this.setState({ stateInput: newStateInput })
-          }
-        />
+        <ScrollView>
+          <Text style={globalStyle.paragraph}>Street Address</Text>
+          <TextInput
+            style={globalStyle.billingDeliveryInput}
+            value={this.state.addressInput}
+            onChangeText={(newAddressInput) =>
+              this.setState({ addressInput: newAddressInput })
+            }
+          />
+          <Text style={globalStyle.paragraph}>City</Text>
+          <TextInput
+            style={globalStyle.billingDeliveryInput}
+            value={this.state.cityInput}
+            onChangeText={(newCityInput) =>
+              this.setState({ cityInput: newCityInput })
+            }
+          />
+          <Text style={globalStyle.paragraph}>Zip Code</Text>
+          <TextInput
+            style={globalStyle.billingDeliveryInput}
+            placeholder="#####"
+            value={this.state.zipCodeInput}
+            placeholderTextColor={"#000"}
+            onChangeText={(newZipCodeInput) =>
+              this.setState({ zipCodeInput: newZipCodeInput })
+            }
+          />
+          <Text style={globalStyle.paragraph}>State</Text>
+          <TextInput
+            style={globalStyle.billingDeliveryInput}
+            value={this.state.stateInput}
+            onChangeText={(newStateInput) =>
+              this.setState({ stateInput: newStateInput })
+            }
+          />
 
-        <Pressable
-          style={globalStyle.wideButtonStyle}
-          onPress={() =>
-            this.saveDeliveryAddressFirestore(
-              this.state.addressInput,
-              this.state.cityInput,
-              this.state.zipCodeInput,
-              this.state.stateInput
-            )
-          }
-        >
-          <Text style={globalStyle.wideButtonText}>Update</Text>
-        </Pressable>
+          <Pressable
+            style={globalStyle.wideButtonStyle}
+            onPress={() =>
+              this.saveDeliveryAddressFirestore(
+                this.state.addressInput,
+                this.state.cityInput,
+                this.state.zipCodeInput,
+                this.state.stateInput
+              )
+            }
+          >
+            <Text style={globalStyle.wideButtonText}>Update</Text>
+          </Pressable>
+        </ScrollView>
       </SafeAreaView>
     );
   }
