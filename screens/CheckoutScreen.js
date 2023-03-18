@@ -86,9 +86,9 @@ export default class CheckoutScreen extends React.Component {
     this.getDeliveryAddress();
     this.getBillingInfo();
     /**
-     * The Billing Address and Delivery Address screens have back buttons and can 
+     * The Billing Address and Delivery Address screens have back buttons and can
      * be accessed from this screen and the settings screen. The previousPage
-     * variable will allow those screens to determine which screen to go back to. 
+     * variable will allow those screens to determine which screen to go back to.
      */
     AsyncStorage.setItem("previousPage", "5");
   }
@@ -153,12 +153,18 @@ export default class CheckoutScreen extends React.Component {
             />
             <Text style={globalStyle.subHeaderText}>Billing Info</Text>
             <Text style={globalStyle.paragraph}>
-              {"Name: "}{this.state.nameBilling}
+              {"Name: "}
+              {this.state.nameBilling}
             </Text>
             <Text style={style.paragraph_bot_margin}>
-            {"Card Number: "}{this.state.cardNumberBilling}{"\n"}
-            {"Security Code: "}{this.state.securityCodeBilling}{"\n"}
-            {"Expiration: "}{this.state.expiryBilling}
+              {"Card Number: "}
+              {this.state.cardNumberBilling}
+              {"\n"}
+              {"Security Code: "}
+              {this.state.securityCodeBilling}
+              {"\n"}
+              {"Expiration: "}
+              {this.state.expiryBilling}
             </Text>
             <Pressable
               style={globalStyle.headerButtonStyle}
