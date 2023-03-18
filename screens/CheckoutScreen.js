@@ -93,9 +93,23 @@ export default class CheckoutScreen extends React.Component {
     AsyncStorage.setItem("previousPage", "5");
   }
 
+  // Function to "make a purchase" if all info is filled out. 
   confirm = () => {
-    alert("Thank you for your purchase!");
-    this.props.pageChange(PAGE_ID.orders);
+    if (
+      this.state.addressDelivery !== "" &&
+      this.state.cityDelivery !== "" &&
+      this.state.zipCodeDelivery !== "" &&
+      this.state.stateDelivery !== "" &&
+      this.state.nameBilling !== "" &&
+      this.state.cardNumberBilling !== "" &&
+      this.state.expiryBilling !== "" &&
+      this.state.securityCodeBilling !== ""
+    ) {
+      alert("Thank you for your purchase!");
+      this.props.pageChange(PAGE_ID.orders);
+    } else {
+      alert("You haven't filled out all the required information to make a purchase.");
+    }
   };
 
   render() {
