@@ -1,5 +1,10 @@
 import { Alert } from "react-native";
 
+/**
+ * These functions do exactly what their name implies.
+ * They are used on the screen that updates delivery addresses.
+ */
+
 function addressIsValidOrEmpty(address) {
   if (
     (address.match("[0-9]+.*") && address.length <= 40) ||
@@ -31,6 +36,7 @@ function zipCodeIsValidOrEmpty(zipCode) {
 }
 
 function stateIsValidOrEmpty(state) {
+  // All 50 state names and abbreviations are valid, plus Washington DC.
   if (
     state === "Alabama" ||
     state === "Alaska" ||
@@ -79,6 +85,7 @@ function stateIsValidOrEmpty(state) {
     state === "Vermont" ||
     state === "Virginia" ||
     state === "Washington" ||
+    state === "Washington DC" ||
     state === "West Virginia" ||
     state === "Wisconsin" ||
     state === "Wyoming" ||
