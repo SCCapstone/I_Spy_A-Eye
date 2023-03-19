@@ -81,7 +81,7 @@ export default class NotSignedInSettings extends React.Component {
                 accessible={true}
                 accessibilityLabel={"Gear Icon"}
               />
-              <Text>Settings</Text>
+              <Text>Log In</Text>
             </TouchableOpacity>
           </View>
         </View>

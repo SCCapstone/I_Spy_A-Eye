@@ -60,6 +60,7 @@ export default class CartScreen extends React.Component {
     this.getData()
     //products being saved to state
     this.state = {
+      settingsOrLogIn: "Settings",
       products: [
         {
           id: 1,
@@ -93,6 +94,16 @@ export default class CartScreen extends React.Component {
         }
       ]
     }
+  }
+
+  async updateNavBarText() {
+    this.setState({
+      settingsOrLogIn: await AsyncStorage.getItem("SettingsOrLogIn")
+    });
+  }
+
+  componentDidMount() {
+    this.updateNavBarText();
   }
 
   decrementValue = async (item, index) => {
@@ -272,7 +283,7 @@ export default class CartScreen extends React.Component {
                 accessible={true}
                 accessibilityLabel={"Gear Icon"}
               />
-              <Text>Settings</Text>
+              <Text>{this.state.settingsOrLogIn}</Text>
             </TouchableOpacity>
           </View>
         </View>
