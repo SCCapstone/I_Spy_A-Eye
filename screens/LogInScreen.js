@@ -53,6 +53,7 @@ export default class Login extends React.Component {
         var userID = user.uid;
         AsyncStorage.setItem("userID", userID);
         AsyncStorage.setItem("userEmail", user.email);
+        AsyncStorage.setItem("SettingsOrLogIn", "Settings");
         console.log(`Current user ID: ${userID}`);
         this.props.pageChange(PAGE_ID.search);
       })
