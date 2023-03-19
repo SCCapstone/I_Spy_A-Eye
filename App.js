@@ -77,15 +77,12 @@ export default class App extends React.Component {
         this.state.userLoggedIn = true;
         AsyncStorage.setItem("userID", userID);
         AsyncStorage.setItem("userEmail", user.email);
-        // Determines what text to render for the navbar
-        AsyncStorage.setItem("SettingsOrLogIn", "Settings");
         console.log(`Current user ID: ${userID}`);
       } else {
         console.log("No user is logged in.");
         this.state.userLoggedIn = false;
         AsyncStorage.setItem("userID", "none");
-        // Determines what text to render for the navbar
-        AsyncStorage.setItem("SettingsOrLogIn", "Log In");
+
       }
     });
 
