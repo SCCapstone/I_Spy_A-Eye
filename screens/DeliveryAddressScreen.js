@@ -1,5 +1,10 @@
 import * as React from "react";
-import { PAGE_ID } from "../utils/constants";
+import {
+  addressIsValidOrEmpty,
+  cityIsValidOrEmpty,
+  zipCodeIsValidOrEmpty,
+  stateIsValidOrEmpty
+} from "../utils/DeliveryAddressFunctions";
 import {
   Text,
   Pressable,
@@ -66,15 +71,27 @@ export default class DeliveryAddress extends React.Component {
     zipCodeInput,
     stateInput
   ) {
-    firebase.auth().onAuthStateChanged(function (user) {
-      firebase.firestore().collection("delivery").doc(user.uid).set({
-        address: addressInput,
-        city: cityInput,
-        zipCode: zipCodeInput,
-        state: stateInput,
+    /**
+     * This will disable the saving of incorrect information while giving a chance
+     * for users to leave fields blank. Empty info isn't allowed when users try to
+     * confirm a purchase however.
+     */
+    if (
+      addressIsValidOrEmpty(addressInput) &&
+      cityIsValidOrEmpty(cityInput) &&
+      zipCodeIsValidOrEmpty(zipCodeInput) &&
+      stateIsValidOrEmpty(stateInput)
+    ) {
+      firebase.auth().onAuthStateChanged(function (user) {
+        firebase.firestore().collection("delivery").doc(user.uid).set({
+          address: addressInput,
+          city: cityInput,
+          zipCode: zipCodeInput,
+          state: stateInput,
+        });
       });
-    });
-    this.returnToPreviousPage();
+      this.returnToPreviousPage();
+    }
   }
 
   // Returns user back to previous screen.
