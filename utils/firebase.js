@@ -39,4 +39,13 @@ if (!firebase.apps.length) {
 // Allows firebase to be used across the app.
 const firebaseAuth = firebase.auth();
 
+// These are settings that might allow Firestore to run on an emulator.
+// firebase.firestore().settings({
+//   host: "localhost:8080",
+//   ssl: false,
+//   merge: true,
+//   experimentalForceLongPolling: true,
+//   experimentalAutoDetectLongPolling: true,
+// });
+
 export { firebaseAuth };

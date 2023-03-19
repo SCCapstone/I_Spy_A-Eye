@@ -1,5 +1,10 @@
 import React from "react";
-import { PAGE_ID } from "../utils/constants";
+import {
+  nameIsValidOrEmpty,
+  securityCodeIsValidOrEmpty,
+  cardNumberIsValidOrEmpty,
+  expiryIsValidOrEmpty
+} from "../utils/BillingInfoFunctions";
 import {
   View,
   Text,
@@ -62,22 +67,41 @@ export default class BillingInfoScreen extends React.Component {
     expiryInput,
     securityCodeInput
   ) {
-    firebase.auth().onAuthStateChanged(function (user) {
-      firebase.firestore().collection("billing").doc(user.uid).set({
-        name: nameInput,
-        cardNumber: cardNumberInput,
-        expiry: expiryInput,
-        securityCode: securityCodeInput,
+    /**
+     * This will disable the saving of incorrect information while giving a chance
+     * for users to leave fields blank. Empty info isn't allowed when users try to
+     * confirm a purchase however.
+     */
+    if (
+      nameIsValidOrEmpty(nameInput) &&
+      securityCodeIsValidOrEmpty(securityCodeInput) &&
+      cardNumberIsValidOrEmpty(cardNumberInput) &&
+      expiryIsValidOrEmpty(expiryInput)
+    ) {
+      firebase.auth().onAuthStateChanged(function (user) {
+        firebase.firestore().collection("billing").doc(user.uid).set({
+          name: nameInput,
+          cardNumber: cardNumberInput,
+          expiry: expiryInput,
+          securityCode: securityCodeInput,
+        });
       });
-    });
-    // Returns user back to settings screen.
-    this.props.pageChange(PAGE_ID.settings);
-    this.state = {
-      nameInput: "",
-      cardNumberInput: "",
-      expiryInput: "",
-      securityCodeInput: "",
-    };
+
+      this.returnToPreviousPage();
+      this.state = {
+        nameInput: "",
+        cardNumberInput: "",
+        expiryInput: "",
+        securityCodeInput: "",
+      };
+    }
+  }
+
+  // Returns user back to previous screen.
+  async returnToPreviousPage() {
+    this.props.pageChange(
+      parseInt(await AsyncStorage.getItem("previousPage"), 10)
+    );
   }
 
   render() {
@@ -85,8 +109,7 @@ export default class BillingInfoScreen extends React.Component {
       <SafeAreaView style={globalStyle.wholeScreen}>
         <View style={style.container}>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
-            {/*Takes user back to the cart screen*/}
-            <Pressable onPress={() => this.props.pageChange(PAGE_ID.cart)}>
+            <Pressable onPress={() => this.returnToPreviousPage()}>
               <Text
                 style={{
                   fontWeight: "bold",
@@ -113,7 +136,7 @@ export default class BillingInfoScreen extends React.Component {
             {/*The user can input billing information*/}
             <Text style={globalStyle.paragraph}>Name on Card</Text>
             <TextInput
-              style={style.input}
+              style={globalStyle.billingDeliveryInput}
               value={this.state.nameInput}
               onChangeText={(newNameInput) =>
                 this.setState({ nameInput: newNameInput })
@@ -122,9 +145,10 @@ export default class BillingInfoScreen extends React.Component {
 
             <Text style={globalStyle.paragraph}>Card Number</Text>
             <TextInput
-              placeholder="#### #### #### ####"
+              placeholder="################"
+              keyboardType={"numeric"}
               placeholderTextColor={"#000"}
-              style={style.input}
+              style={globalStyle.billingDeliveryInput}
               onChangeText={(newCardNumberInput) =>
                 this.setState({ cardNumberInput: newCardNumberInput })
               }
@@ -188,18 +212,6 @@ const style = StyleSheet.create({
     fontSize: 45,
     marginTop: 25,
     marginHorizontal: 75,
-  },
-  input: {
-    borderWidth: 7,
-    borderRadius: 20,
-    paddingVertical: 5,
-    paddingHorizontal: 25,
-    fontWeight: "bold",
-    fontSize: 18,
-    maxHeight: 60,
-    minHeight: 50,
-    marginLeft: 8,
-    marginRight: 8,
   },
   date_code: {
     paddingHorizontal: 25,

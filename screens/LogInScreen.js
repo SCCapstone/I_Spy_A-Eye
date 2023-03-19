@@ -34,6 +34,8 @@ export default class Login extends React.Component {
       } else {
         console.log("No user is logged in.");
         AsyncStorage.setItem("userID", "none");
+        // Determines what text to render for the navbar
+        AsyncStorage.setItem("SettingsOrLogIn", "Log In");
       }
     });
   }
@@ -53,6 +55,8 @@ export default class Login extends React.Component {
         var userID = user.uid;
         AsyncStorage.setItem("userID", userID);
         AsyncStorage.setItem("userEmail", user.email);
+        // Determins what text to render in Navbar
+        AsyncStorage.setItem("SettingsOrLogIn", "Settings");
         console.log(`Current user ID: ${userID}`);
         this.props.pageChange(PAGE_ID.search);
       })

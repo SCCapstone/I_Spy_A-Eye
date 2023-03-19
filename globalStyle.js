@@ -116,6 +116,18 @@ const globalStyle = StyleSheet.create({
     marginLeft: 8,
     marginRight: 8,
   },
+  billingDeliveryInput: {
+    borderWidth: 7,
+    borderRadius: 20,
+    paddingVertical: 5,
+    paddingHorizontal: 25,
+    fontWeight: "bold",
+    fontSize: 18,
+    maxHeight: 60,
+    minHeight: 50,
+    marginLeft: 8,
+    marginRight: 8,
+  },
 
 });
 

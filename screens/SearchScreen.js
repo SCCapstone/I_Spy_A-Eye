@@ -16,6 +16,7 @@ import { SafeAreaView } from "react-native";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import SectionedMultiSelect from 'react-native-sectioned-multi-select';
 import globalStyle from "../globalStyle";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Holds data of all items
 var itemList = [];
@@ -135,6 +136,7 @@ export default class SearchScreen extends React.Component {
     super(props);
     // Set up default state for search bar input
     this.state = {
+      settingsOrLogIn: "Settings",
       input: "",
       location: "01400376",
       filters: {
@@ -153,6 +155,16 @@ export default class SearchScreen extends React.Component {
       latestResults: [],
       unfilteredResults: [],      // A copy of the latest results in case filters are cleared (saves)
     };
+  }
+
+  async updateNavBarText() {
+    this.setState({
+      settingsOrLogIn: await AsyncStorage.getItem("SettingsOrLogIn")
+    });
+  }
+
+  componentDidMount() {
+    this.updateNavBarText();
   }
 
   /*** Filtering Functions ***/
@@ -896,7 +908,7 @@ export default class SearchScreen extends React.Component {
                 accessible={true}
                 accessibilityLabel={"Gear Icon"}
               />
-              <Text>Settings</Text>
+              <Text>{this.state.settingsOrLogIn}</Text>
             </TouchableOpacity>
           </View>
         </View>
