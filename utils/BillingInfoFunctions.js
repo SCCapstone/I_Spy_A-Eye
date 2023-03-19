@@ -1,5 +1,10 @@
 import { Alert } from "react-native";
 
+/**
+ * These functions do exactly what their name implies.
+ * They are used on the screen that updates billing info.
+ */
+
 function nameIsValidOrEmpty(name) {
   if (name.length <= 21) {
     return true;
