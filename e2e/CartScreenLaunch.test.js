@@ -6,15 +6,7 @@ describe("Example", () => {
     // Reload react native, login and reach cart screen
     beforeEach(async () => {
         await device.reloadReactNative();
-        await element(by.id('Test_EmailTextBar')).longPress();
-        await element(by.id('Test_EmailTextBar')).typeText('123cookie@yopmail.com\n');
-        await element(by.id('Test_PasswordTextBar')).longPress();
-        await element(by.id('Test_PasswordTextBar')).longPress();
-        await element(by.id('Test_PasswordTextBar')).typeText('123cookie\n');
-        await element(by.id('Test_LogInButton')).longPress();
-        await element(by.id('Test_LogInButton')).longPress();
-        await waitFor(element(by.text('OK'))).toExist().withTimeout(5000);
-        await element(by.text('OK')).longPress();
+        await element(by.id('Test_SignInSkip')).longPress();
         await element(by.id("cart_navigation")).longPress();
       });
 
