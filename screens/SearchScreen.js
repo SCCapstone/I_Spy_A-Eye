@@ -109,21 +109,8 @@ const renderItem = ({ id, item, price, unitPrice, stock, quantity }) => (
 );
 
 addToCart = async (itemID) => {
-  // let array = []
-  // for (let i = 0; i < itemList.length; i++) {
-  //   if (itemList[i].id == itemID) {
-  //     array.push(itemList[i])
-  //     //itemList[i].inCart = true
-  //     try {
-  //       await AsyncStorage.setItem("product", JSON.stringify(array))
-  //     } catch (err) {
-  //       console.log(err)
-  //     }
-  //   }
-  // }
-  // console.log(array)
-  
-  for (let i = 0; i < itemList.length; i++) {
+  for (let i = 0; i < itemList.length; i++) { // loop through item list array
+    // if array is not empty and has item(s) already in there
     if (itemList[i].id == itemID) {
       let itemArray = await AsyncStorage.getItem("product")
       itemArray = JSON.parse(itemArray)
@@ -137,7 +124,7 @@ addToCart = async (itemID) => {
           console.log(err)
         }
         console.log(array)
-      } else {
+      } else { // if array is empty, adds the first item to array
         let array = []
         if (itemList[i].id == itemID) {
           array.push(itemList[i])
