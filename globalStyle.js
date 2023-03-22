@@ -10,7 +10,7 @@ const globalStyle = StyleSheet.create({
     justifyContent: "center",
     justifyContent: "space-evenly",
   },
-  container: {
+  navBarContainer: {
     position: "absolute",
     bottom: 0,
     width: "100%",
@@ -23,6 +23,9 @@ const globalStyle = StyleSheet.create({
     width: 36,
     height: 36,
     alignSelf: "center",
+  },
+  navButtonContainer: {
+    width: 54,
   },
   headerButtonRow: {
     alignContent: "space-between",

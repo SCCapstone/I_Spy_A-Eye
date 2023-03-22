@@ -18,6 +18,7 @@ export default class SettingsScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      settingsOrLogIn: "",
       currentEmail: "",
     };
   }
@@ -41,7 +42,14 @@ export default class SettingsScreen extends React.Component {
     });
   }
 
+  async updateNavBarText() {
+    this.setState({
+      settingsOrLogIn: await AsyncStorage.getItem("SettingsOrLogIn"),
+    });
+  }
+
   componentDidMount() {
+    this.updateNavBarText();
     this.updateCurrentEmailState();
     /**
      * The Billing Address and Delivery Address screens have back buttons and can
@@ -88,10 +96,11 @@ export default class SettingsScreen extends React.Component {
         >
           <Text style={globalStyle.wideButtonText}>Sign Out</Text>
         </Pressable>
-        <View style={globalStyle.container}>
-          <View style={globalStyle.buttons}>
+        <View style={globalStyle.navBarContainer}>
+          <View style={globalStyle.buttons} testID="Test_NavigationBar">
             <TouchableOpacity
               onPress={() => this.props.pageChange(PAGE_ID.search)}
+              style={globalStyle.navButtonContainer}
             >
               <Image
                 style={globalStyle.icon}
@@ -99,10 +108,11 @@ export default class SettingsScreen extends React.Component {
                 accessible={true}
                 accessibilityLabel={"Magnifying Glass Icon"}
               />
-              <Text>Search</Text>
+              <Text style={{ textAlign: "center" }}>Search</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => this.props.pageChange(PAGE_ID.cart)}
+              style={globalStyle.navButtonContainer}
             >
               <Image
                 style={globalStyle.icon}
@@ -110,10 +120,11 @@ export default class SettingsScreen extends React.Component {
                 accessible={true}
                 accessibilityLabel={"Shopping Cart Icon"}
               />
-              <Text>My Cart</Text>
+              <Text style={{ textAlign: "center" }}>My Cart</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => this.props.pageChange(PAGE_ID.orders)}
+              style={globalStyle.navButtonContainer}
             >
               <Image
                 style={globalStyle.icon}
@@ -121,10 +132,11 @@ export default class SettingsScreen extends React.Component {
                 accessible={true}
                 accessibilityLabel={"Reciept Icon"}
               />
-              <Text>Orders</Text>
+              <Text style={{ textAlign: "center" }}>Orders</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => this.props.pageChange(PAGE_ID.settings)}
+              style={globalStyle.navButtonContainer}
             >
               <Image
                 style={globalStyle.icon}
@@ -132,7 +144,9 @@ export default class SettingsScreen extends React.Component {
                 accessible={true}
                 accessibilityLabel={"Gear Icon"}
               />
-              <Text>Settings</Text>
+              <Text style={{ textAlign: "center" }}>
+                {this.state.settingsOrLogIn}
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
