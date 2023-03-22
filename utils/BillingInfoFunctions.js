@@ -33,12 +33,7 @@ function cardNumberIsValidOrEmpty(cardNumber) {
 }
 
 function expiryIsValidOrEmpty(expiry) {
-  let expiryMatchesRegex = expiry.match("(0[1-9]|1[0-2])\/[0-9][0-9]");
-  let isValidLength = false;
-  if (expiry.length === 0 || expiry.length === 5) {
-    isValidLength = true;
-  }
-  if (expiryMatchesRegex && isValidLength) {
+  if (expiry.match("(0[1-9]|1[0-2])\/[0-9][0-9]") || expiry.length === 0) {
     return true;
   } else {
     Alert.alert("The expiry you inputed is formatted incorrectly.");
@@ -50,5 +45,5 @@ export {
   nameIsValidOrEmpty,
   securityCodeIsValidOrEmpty,
   cardNumberIsValidOrEmpty,
-  expiryIsValidOrEmpty
+  expiryIsValidOrEmpty,
 };
