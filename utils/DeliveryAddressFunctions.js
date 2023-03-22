@@ -36,10 +36,12 @@ function zipCodeIsValidOrEmpty(zipCode) {
 }
 
 function stateIsValidOrEmpty(state) {
-  // All 50 state names and abbreviations are valid, plus Washington DC.
+  /**
+   *  All 48 state names and abbreviations from the continental US are valid,
+   *  plus Washington DC's name and abbreviation.
+   */
   if (
     state === "Alabama" ||
-    state === "Alaska" ||
     state === "Arizona" ||
     state === "Arkansas" ||
     state === "California" ||
@@ -48,7 +50,6 @@ function stateIsValidOrEmpty(state) {
     state === "Delaware" ||
     state === "Florida" ||
     state === "Georgia" ||
-    state === "Hawaii" ||
     state === "Idaho" ||
     state === "Illinois" ||
     state === "Indiana" ||
@@ -90,7 +91,6 @@ function stateIsValidOrEmpty(state) {
     state === "Wisconsin" ||
     state === "Wyoming" ||
     state === "AL" ||
-    state === "AK" ||
     state === "AZ" ||
     state === "AR" ||
     state === "CA" ||
@@ -100,7 +100,6 @@ function stateIsValidOrEmpty(state) {
     state === "DC" ||
     state === "FL" ||
     state === "GA" ||
-    state === "HI" ||
     state === "ID" ||
     state === "IL" ||
     state === "IN" ||
@@ -143,10 +142,23 @@ function stateIsValidOrEmpty(state) {
     state === ""
   ) {
     return true;
+    // There are no Kroger stores in Alaska and Hawaii, nor can they be driven to from another state.
+  } else if (
+    state === "Alaska" ||
+    state === "Hawaii" ||
+    state === "AK" ||
+    state === "HI"
+  ) {
+    Alert.alert("We're sorry. Unfortunately I Spy Shopper can't deliver groceries to your state.");
   } else {
     Alert.alert("You didn't enter a valid state.");
-    return false;
   }
+  return false;
 }
 
-export { addressIsValidOrEmpty, cityIsValidOrEmpty, zipCodeIsValidOrEmpty, stateIsValidOrEmpty };
+export {
+  addressIsValidOrEmpty,
+  cityIsValidOrEmpty,
+  zipCodeIsValidOrEmpty,
+  stateIsValidOrEmpty,
+};
