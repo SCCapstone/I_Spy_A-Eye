@@ -30,3 +30,8 @@ test("This expiry should be valid.", () => {
   const validExpiry = expiryIsValidOrEmpty("08/24");
   expect(validExpiry).toBe(true);
 });
+
+test("This expiry should be invalid because it is expired.", () => {
+  const validExpiry = expiryIsValidOrEmpty("08/22");
+  expect(validExpiry).toBe(false);
+});
