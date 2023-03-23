@@ -149,7 +149,7 @@ function stateIsValidOrEmpty(state) {
     state === "AK" ||
     state === "HI"
   ) {
-    Alert.alert("We're sorry. Unfortunately I Spy Shopper can't deliver groceries to your state.");
+    Alert.alert("Unfortunately, we can't deliver groceries to your state. Sorry.");
   } else {
     Alert.alert("You didn't enter a valid state.");
   }
