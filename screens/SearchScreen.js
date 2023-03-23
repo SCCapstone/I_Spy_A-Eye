@@ -116,7 +116,10 @@ addToCart = async (itemID) => {
       itemArray = JSON.parse(itemArray)
       if (itemArray) {
         let array = itemArray
-        array.push(itemList[i])
+        // checks to make sure you can't add the same item twice (checks by id)
+        if (!(array.filter(item => item.id === itemList[i].id).length > 0)) { // if id is not in array, then push
+          array.push(itemList[i])
+        }
 
         try {
           await AsyncStorage.setItem("product", JSON.stringify(array))

@@ -89,13 +89,6 @@ export default class CartScreen extends React.Component {
   }
 
   decrementValue = async (productID) => {
-    // const products = [...this.state.products]
-    // products[index].quantity = products[index].quantity - 1
-    // if(products[index].quantity <= 1) { // if less than or equal to 1
-    //   products[index].quantity = 1 // set to 1
-    // }
-    // this.setState({products})
-
     try {
       let arrayItems = await AsyncStorage.getItem("product")
       arrayItems = JSON.parse(arrayItems)
@@ -116,9 +109,6 @@ export default class CartScreen extends React.Component {
   }
 
   incrementValue = async (productID) => {
-    // const products = [...this.state.products] // empty array and copy everything over
-    // products[index].quantity = products[index].quantity + 1 // modify specific  index quantity
-    // this.setState({products}) // update products
     try {
       let arrayItems = await AsyncStorage.getItem("product")
       arrayItems = JSON.parse(arrayItems)
@@ -137,8 +127,6 @@ export default class CartScreen extends React.Component {
 
   // removes item from cart, dont want items to reappear so use async
   removeProduct = async (productID) => {
-    // const remove = this.state.products.filter((value, i) => value.id !== productID)
-    // this.setState({products: remove})
     try {
       let arrayItems = await AsyncStorage.getItem("product")
       arrayItems = JSON.parse(arrayItems)

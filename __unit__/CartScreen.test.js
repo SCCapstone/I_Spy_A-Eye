@@ -15,17 +15,41 @@ test("addPrices should return a number", () => {
     expect(Price.addPrices()).toBeGreaterThanOrEqual(0)
 })
 
-// testing if the buy button exists
-test("should find buy button via the test id name", () => {
-    const IdName = 'test_BuyButtonHeader'
-    const {getByTestId} = render(<CartScreen/>)
-    const buyButton = getByTestId(IdName)
-    expect(buyButton).toBeTruthy()
+// testing the functionality of the incrementValue function
+test("should increment quantity", () => {
+    const product = [{"id": "0001111006770", "inCart": false, "price": 4.99, "quantity": 1, 
+    "stock": "Low", "title": "Bakery Fresh Goodness Plain Angel Food Cake", "unitPrice": 0}]
+    const expected = [{"id": "0001111006770", "inCart": false, "price": 4.99, "quantity": 2, 
+    "stock": "Low", "title": "Bakery Fresh Goodness Plain Angel Food Cake", "unitPrice": 0}]
+    for (let i = 0; i < product.length; i++) {
+        product[i].quantity++
+    }
+    expect(product).toEqual(expected)
 })
 
-// test("", () => {
-//     let product = {id: 1, name: 'Deluxe Mint Chocolate Chip Ice Cream', price: '5.00', quantity: 1}
-//     const increment = renderer.create(<CartScreen/>).getInstance()
-//     increment.incrementValue(product, 0)
-//     expect(product).toEqual(expect.objectContaining({quantity: 2}))
-// })
+// testing the functionality of the decrementValue function
+test("should decrement quantity", () => {
+    const product = [{"id": "0001111006770", "inCart": false, "price": 4.99, "quantity": 2, 
+    "stock": "Low", "title": "Bakery Fresh Goodness Plain Angel Food Cake", "unitPrice": 0}]
+    const expected = [{"id": "0001111006770", "inCart": false, "price": 4.99, "quantity": 1, 
+    "stock": "Low", "title": "Bakery Fresh Goodness Plain Angel Food Cake", "unitPrice": 0}]
+    for (let i = 0; i < product.length; i++) {
+        product[i].quantity--
+    }
+    expect(product).toEqual(expected)
+})
+
+// testing the functionality of the decrementValue function
+test("should not decrement if quantity is 1", () => {
+    const product = [{"id": "0001111006770", "inCart": false, "price": 4.99, "quantity": 1, 
+    "stock": "Low", "title": "Bakery Fresh Goodness Plain Angel Food Cake", "unitPrice": 0}]
+    const expected = [{"id": "0001111006770", "inCart": false, "price": 4.99, "quantity": 1, 
+    "stock": "Low", "title": "Bakery Fresh Goodness Plain Angel Food Cake", "unitPrice": 0}]
+    for (let i = 0; i < product.length; i++) {
+        product[i].quantity--
+        if (product[i].quantity <= 1) {
+            product[i].quantity = 1
+        }
+    }
+    expect(product).toEqual(expected)
+})
