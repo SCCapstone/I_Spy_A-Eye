@@ -13,6 +13,8 @@ import { firebaseAuth } from "../utils/firebase";
 import globalStyle from "../globalStyle";
 require("firebase/auth");
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {OpenURLButton} from '../functions/RedirectButton'
+
 
 export default class SettingsScreen extends React.Component {
   constructor(props) {
@@ -96,6 +98,13 @@ export default class SettingsScreen extends React.Component {
         >
           <Text style={globalStyle.wideButtonText}>Sign Out</Text>
         </Pressable>
+        <View style={globalStyle.wideButtonStyle} >
+          <OpenURLButton url={'https://google.com'}>Tutorial</OpenURLButton>
+        </View>
+        <View style={globalStyle.container}>
+          <View style={globalStyle.buttons}>
+            <TouchableOpacity onPress={() => this.props.pageChange(1)}>
+
         <View style={globalStyle.navBarContainer}>
           <View style={globalStyle.buttons} testID="Test_NavigationBar">
             <TouchableOpacity

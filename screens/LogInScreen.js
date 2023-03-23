@@ -1,11 +1,14 @@
 import * as React from "react";
+
 import { PAGE_ID } from "../utils/constants";
-import { Text, Pressable, SafeAreaView, TextInput } from "react-native";
+import { Text, Pressable, SafeAreaView, TextInput, View } from "react-native";
 import globalStyle from "../globalStyle";
 import { firebaseAuth } from "../utils/firebase";
 import firebase from "firebase";
 require("firebase/auth");
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {OpenURLButton} from '../functions/RedirectButton'
+
 
 /**
  * This is the first screen users will see when they start the app. Users can login
@@ -110,6 +113,9 @@ export default class Login extends React.Component {
             Continue Without Signing in
           </Text>
         </Pressable>
+        <View style={globalStyle.wideButtonStyle} >
+          <OpenURLButton url={'https://google.com'}>Tutorial</OpenURLButton>
+        </View>
       </SafeAreaView>
     );
   }
