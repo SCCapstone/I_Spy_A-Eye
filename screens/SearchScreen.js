@@ -16,6 +16,8 @@ import { SafeAreaView } from "react-native";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import SectionedMultiSelect from 'react-native-sectioned-multi-select';
 import globalStyle from "../globalStyle";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { PAGE_ID } from "../utils/constants.js";
 
 // Holds data of all items
 var itemList = [];
@@ -23,6 +25,8 @@ var itemList = [];
 const produce = require("./produce.json");
 // Used for indexing itemList array when items are added to it.
 var itemIndex = 0;
+// Used for trimming the itemList to the exact number of elements needed to display the results
+var priorItemListLength = 0;
 // Add items to itemList from produce.json.
 for (let i = 0; i < produce.data.length; i++) {
   // If price cannot be parsed from json item, it will not be added to itemList.
@@ -41,6 +45,8 @@ for (let i = 0; i < produce.data.length; i++) {
     stock: "Low",
     quantity: 1,
     inCart: false,
+    countryOrigin: produce.data[i].countryOrigin,
+    category: produce.data[i].categories
   };
   itemIndex++;
 }
@@ -125,32 +131,48 @@ function incrementQuantity(itemID) {
   }
 }
 
+/*** SearchScreen class; handles all but the direct API querying and low-level item representation/management. ***/
 export default class SearchScreen extends React.Component {
   constructor(props) {
     super(props);
     // Set up default state for search bar input
     this.state = {
+      settingsOrLogIn: "",
       input: "",
       location: "01400376",
       filters: {
         selectedCountries: [],
         inStock: false,
         onSale: false,
-        favorited: false,
+        selectedCategories: [],
       },
       allAvailableCountries: [],   // The countries of origin of all products currently in results
-      sort: null,
+      allAvailableCategories: [],  // The product categories of all products currently in results
+      sort: null,                  // The current sort applied to the results (null if no sort is applied)
       isSortMenuOpen: false,
       isFilterMenuOpen: false,
       isFilterCountryMenuOpen: false,
+      isFilterCategoryMenuOpen: false,
       latestResults: [],
       unfilteredResults: [],      // A copy of the latest results in case filters are cleared (saves)
     };
   }
 
-  /* Filtering Functions */
+  async updateNavBarText() {
+    this.setState({
+      settingsOrLogIn: await AsyncStorage.getItem("SettingsOrLogIn")
+    });
+  }
+
+  componentDidMount() {
+    this.updateNavBarText();
+  }
+
+  /*** Filtering Functions ***/
+  /* Country Functions */
   // Given a list of product objects, returns an alphabetically sorted list of obtained countries of origin with no duplicates.
   countriesFromProducts = (productList) => {
+    if(productList == null) return [];          // If the list of products is null, then there's no need to look through them
     if(productList.length == 0) return [];      // If there are no products, then there's no need to look through them
 
     let countries = []
@@ -168,7 +190,7 @@ export default class SearchScreen extends React.Component {
   }
 
   // Updates the list of selectedCountries in the filters property of the class state when the selected countries change.
-  onSelectedItemsChange = (countries) => {
+  onSelectedItemsChangeCountries = (countries) => {
     this.setState((prevState) => {
       let filters = {...prevState.filters}    // Copy current filters applied
       filters.selectedCountries = countries  // Update with current selected countries
@@ -179,25 +201,135 @@ export default class SearchScreen extends React.Component {
   // Filters the current results by the selected countries, returning the filtered results.
   filterResultsByCountry = () => {
     let filteredResults = []
-    this.state.latestResults.forEach((product) => {
+    this.state.unfilteredResults.forEach((product) => {
       // If the product originates from one of the countries in the selected countries list, keep it
       if(this.state.filters.selectedCountries.indexOf(product.countryOrigin) > -1) filteredResults.push(product)
     })
     return filteredResults
   }
 
+  /* In Stock Functions */
   // Filters the current results by whether they're in stock, returning the filtered results.
   filterResultsByStock = () => {
     let filteredResults = []
-    this.state.latestResults.forEach((product) => {
+    this.state.unfilteredResults.forEach((product) => {
       // If the product has a stock that's not out of stock or unavailable, keep it
       if(product.stock != "N/A" && product.stock != "Temp. Out") filteredResults.push(product)
     })
     return filteredResults
   }
 
+  /* On Sale Functions */
+  // Filters the current results by whether they're on sale, returning the filtered results.
+  filterResultsBySale = () => {
+    let filteredResults = []
+    this.state.unfilteredResults.forEach((product) => {
+      // If the product's promo price is less than it's standard price, keep it
+      if(product.price < product.standardPrice) filteredResults.push(product)
+    })
+    return filteredResults
+  }
 
-  /* Sorting Functions */
+  /* Category Functions */
+  // Given a list of product objects, returns an alphabetically sorted list of obtained categories of origin with no duplicates.
+  categoriesFromProducts = (productList) => {
+    if(productList == null) return [];          // If the list of products is null, then there's no need to look through them
+    if(productList.length == 0) return [];      // If there are no products, then there's no need to look through them
+
+    let categories = []
+    productList.forEach((product) => {    
+      let currentCategoryList = product.category    // Note that every product can have multiple categories, so the data type is an array
+      if(typeof currentCategoryList == 'undefined') return   // Skip any products with invalid categories (typically if they don't have an array)
+      currentCategoryList.forEach((category) => {
+        if(categories.indexOf(category) == -1) categories.push(category)  // Add category to list if not present already
+      })
+    })
+    categories.sort((c1,c2) => c1.localeCompare(c2))   // Sort the list of categories
+
+    let categoryObjects = []
+    categories.forEach((category) => {    // MultipleSelectList requires this particular structure of object
+      categoryObjects.push({key: category, value: category})
+    }) 
+    return categoryObjects
+  }
+
+  // Updates the list of selectedCategories in the filters property of the class state when the selected categories change.
+  onSelectedItemsChangeCategories = (categories) => {
+    this.setState((prevState) => {
+      let filters = {...prevState.filters}    // Copy current filters applied
+      filters.selectedCategories = categories  // Update with current selected categories
+      return {filters};
+    })
+  }
+
+  // Filters the current results by the selected product categories, returning the filtered results.
+  filterResultsByCategory = () => {
+    let filteredResults = []
+    this.state.unfilteredResults.forEach((product) => {
+      // If the product is of one of the categories in the selected categories list, keep it
+      let productCategories = this.removeDuplicates(product.category)
+      productCategories.forEach((category) => {
+        if(this.state.filters.selectedCategories.indexOf(category) > -1) filteredResults.push(product)
+      })
+    })
+    return filteredResults
+  }
+
+  /* General Filter Functions */
+  // Updates the results with the appropriate filters applied according to the current state
+  updateFilteredResults = (productList) => {
+    let filteredResults = productList
+
+    // If the countries filter is applied
+    if(this.state.filters.selectedCountries.length != 0) { 
+      filteredResults.forEach((product) => {
+        if(this.state.filters.selectedCountries.indexOf(product.countryOrigin) > -1 && filteredResults.indexOf(product) < 0) filteredResults.push(product)
+      })
+    }
+
+    // If the in stock filter is applied
+    if(this.state.filters.inStock) {
+      filteredResults.forEach((product) => {
+        // If the product has a stock that's not out of stock or unavailable, keep it
+        if(product.stock != "N/A" && product.stock != "Temp. Out" && filteredResults.indexOf(product) < 0) filteredResults.push(product)
+      })
+    }
+
+    // If the on sale filter is applied
+    if(this.state.filters.onSale) {
+      filteredResults.forEach((product) => {
+        // If the product's promo price is less than it's standard price, keep it
+        if(product.price < product.standardPrice && filteredResults.indexOf(product) < 0) filteredResults.push(product)
+      })
+    }
+
+    // If the product category filter is applied
+    if(this.state.filters.selectedCategories.length != 0) { 
+      filteredResults.forEach((product) => {
+        if(this.state.filters.selectedCategories.indexOf(product.category) > -1 && filteredResults.indexOf(product) < 0) filteredResults.push(product)
+      })
+    }
+
+    // Apply the sort (if any) to the results before returning
+    let sortType = this.state.sort
+    if(sortType == 'Lowest Price') filteredResults = filteredResults.sort(this.sortPriceAsc)
+    else if(sortType == 'Highest Price') filteredResults = filteredResults.sort(this.sortPriceDesc)
+    else if(sortType == 'A-Z') filteredResults = filteredResults.sort(this.sortAlpha)
+    else if(sortType == 'Z-A') filteredResults = filteredResults.sort(this.sortAlphaReverse)
+    else if(sortType == 'Unit Price') filteredResults = filteredResults.sort(this.sortUnitPrice)
+
+    return filteredResults      // Remove duplicate products if they arise
+  }
+
+  // Removes duplicate values in an array, returning the trimmed array.
+  removeDuplicates(arr) {
+    arr = arr.filter((item, index, inputArr) => {
+      return inputArr.indexOf(item) == index
+    })
+    return arr
+  }
+
+  /*** Sorting Functions ***/
   // Input: Two product objects. Returns an integer based on lowest price comparison (price ascending).
   sortPriceAsc(p1, p2) {
     return p1.price - p2.price;   // Negative value means p1 is cheaper. Positive means p2 is cheaper. 0 means equal price.
@@ -227,6 +359,7 @@ export default class SearchScreen extends React.Component {
     return p1.unitPrice - p2.unitPrice;   // Negative value means p1 is cheaper. Positive means p2 is cheaper. 0 means equal price.
   }
 
+  /*** Display Function ***/
   render() {
     return (
       <SafeAreaView style={globalStyle.wholeScreen}>
@@ -257,17 +390,31 @@ export default class SearchScreen extends React.Component {
             {/* Search Button */}
             <Pressable
               style={styles.searchButtonStyle}
-              onPressIn={() => {
-                searchProducts(this.state);
-                if (itemList == null) {
+              onPressIn={async () => {
+                itemList = await searchProducts(this.state);
+                console.log("Item List:")
+                console.log(itemList)
+                if (itemList == null) {   // If itemList is null, alert the user and set it to an empty array before continuing
                   showAlert(
                     "No Products Found",
                     "Try using different keywords and/or a different set of filters."
                   );
+                  itemList = []
                 }
                 this.setState({ latestResults: itemList, unfilteredResults: itemList })
-                console.log(itemList)
-                console.log(this.state.latestResults)
+                this.setState({ 
+                  latestResults: itemList, 
+                  allAvailableCountries:      // Populate list with all available countries to select
+                    [{key: 'Countries', 
+                      value: 'Countries', 
+                      children: this.countriesFromProducts(itemList)
+                    }],
+                  allAvailableCategories:     // Populate list with all available categories to select
+                  [{key: 'Categories', 
+                    value: 'Categories', 
+                    children: this.categoriesFromProducts(itemList)
+                  }],
+                })
               }}
               // Set new results and update the list of countries those results are
               onPressOut={() => {
@@ -276,16 +423,8 @@ export default class SearchScreen extends React.Component {
                     selectedCountries: [],
                     inStock: false,
                     onSale: false,
-                    favorited: false,
+                    selectedCategories: [],
                   }
-                })
-                this.setState({ 
-                  latestResults: itemList, 
-                  allAvailableCountries: 
-                    [{key: 'Countries', 
-                      value: 'Countries', 
-                      children: this.countriesFromProducts(itemList)
-                    }],
                 })
               }}
               testID="Test_SearchButton"
@@ -327,11 +466,12 @@ export default class SearchScreen extends React.Component {
                   <View style={[globalStyle.headerButtonText,{flex: 0, flexWrap: "wrap", flexDirection: "row"}]}>
                     {/* Filter by Country of Origin */}
                     <Pressable 
-                      style={styles.sortSubmenuButton}
+                      // Change style depending on if the filter is applied
+                      style={[styles.sortSubmenuButton, this.state.filters.selectedCountries.length > 0 ? styles.sortSubmenuButtonActive : styles.sortSubmenuButtonDefault]}
                       testID="Test_FilterCountryButton"
                       onPress={() => {this.setState({ isFilterCountryMenuOpen : !this.state.isFilterCountryMenuOpen }); {/* Toggle sort submenu on press */} }}
                     >
-                      <Text style={styles.buttonText}>Country</Text>
+                      <Text style={[styles.sortButtonText, this.state.filters.selectedCountries.length > 0 ? styles.sortButtonTextActive : styles.sortButtonTextDefault]}>Country</Text>
                       <Modal
                         visible={this.state.isFilterCountryMenuOpen}
                         animationType="fade"
@@ -358,13 +498,32 @@ export default class SearchScreen extends React.Component {
                               showChips={false}
                               alwaysShowSelectText={true}
                               readOnlyHeadings={true}
-                              onSelectedItemsChange={this.onSelectedItemsChange}
+                              onSelectedItemsChange={this.onSelectedItemsChangeCountries}
                               selectedItems={this.state.filters.selectedCountries}
                               onConfirm={() => {
-                                itemList = this.filterResultsByCountry()      // Filter results on confirmation by selected countries
-                                this.setState({ latestResults : itemList })
+                                // If no countries were selected but the filter was confirmed, just reset the filter and results
+                                if(this.state.filters.selectedCountries.length == 0) {
+                                  // Update results with the country filter not applied
+                                  itemList = this.updateFilteredResults(this.state.unfilteredResults)
+                                  this.setState({ latestResults: itemList }) 
+                                }
+                                // Otherwise apply the country filter as expected
+                                else {
+                                  itemList = this.filterResultsByCountry()      // Filter results on confirmation by selected countries
+                                  this.setState({ latestResults : itemList })
+                                }
                               }}
-                              onCancel={() => {this.setState({latestResults : this.state.unfilteredResults})}}   // Reset results to last unfiltered copy
+                              onCancel={() => {
+                                 // On cancel, ensure country filter is reset first before updating results
+                                 this.setState((prevState) => {
+                                  let filters = {...prevState.filters}    // Copy current filters applied
+                                  filters.selectedCountries = []  // Reset selected countries
+                                  return {filters};
+                                })
+                                // Update results without the country filter
+                                itemList = this.updateFilteredResults(this.state.unfilteredResults)
+                                this.setState({ latestResults: itemList }) 
+                              }}  
                               searchPlaceholderText="Search countries of origin..."
                               modalWithTouchable={true}
                               styles={{
@@ -396,47 +555,165 @@ export default class SearchScreen extends React.Component {
 
                     {/* Filter by Whether it's in Stock */}
                     <Pressable
-                      style={styles.sortSubmenuButton}
+                      // Change style depending on if the filter is applied
+                      style={[styles.sortSubmenuButton, this.state.filters.inStock ? styles.sortSubmenuButtonActive : styles.sortSubmenuButtonDefault]}
                       testID="Test_FilterInStockButton"
                       onPress={
                         () => { 
-                          itemList = this.filterResultsByStock()
-                          this.setState({ latestResults: itemList }) 
-                          this.setState((prevState) => {
-                            let filters = {...prevState.filters}    // Copy current filters applied
-                            filters.inStock = true  // Update with current filter
-                            return {filters};
-                          })
+                          // If filter is already applied, deactivate it and update the results to account for it
+                          if(this.state.filters.inStock) {
+                            this.setState((prevState) => {
+                              let filters = {...prevState.filters}    // Copy current filters applied
+                              filters.inStock = false  // Reset the in stock filter
+                              return {filters};
+                            })
+
+                            // Update results with the in stock filter not applied
+                            itemList = this.updateFilteredResults(this.state.unfilteredResults)
+                            this.setState({ latestResults: itemList }) 
+                          }
+                          // Else if the filter is being applied
+                          else {
+                            // Update the results with the filter applied
+                            itemList = this.filterResultsByStock()
+                            this.setState({ latestResults: itemList }) 
+
+                            // Update state to reflect that the in stock filter is active
+                            this.setState((prevState) => {
+                              let filters = {...prevState.filters}    // Copy current filters applied
+                              filters.inStock = true  // Update with current filter
+                              return {filters};
+                            })
+                          }
                         }
                       }
                     >
-                      <Text style={styles.buttonText}>In Stock</Text>
+                      <Text style={[styles.sortButtonText, this.state.filters.inStock ? styles.sortButtonTextActive : styles.sortButtonTextDefault]}>In Stock</Text>
                     </Pressable>
 
                     {/* Filter by Whether it's on sale */}
                     <Pressable
-                      style={styles.sortSubmenuButton}
+                      // Change style depending on if the filter is applied
+                      style={[styles.sortSubmenuButton, this.state.filters.onSale ? styles.sortSubmenuButtonActive : styles.sortSubmenuButtonDefault]}
+
                       testID="Test_FilterOnSaleButton"
                       onPress={
                         () => { 
-                         // Placeholder
+                          // If filter is already applied, deactivate it and update the results to account for it
+                          if (this.state.filters.onSale) {
+                            this.setState((prevState) => {
+                              let filters = {...prevState.filters}    // Copy current filters applied
+                              filters.onSale = false  // Reset the on sale filter
+                              return {filters};
+                            })
+
+                             // Update results with the on sale filter not applied
+                             itemList = this.updateFilteredResults(this.state.unfilteredResults)
+                             this.setState({ latestResults: itemList }) 
+                          }
+                          // Else if the filter is being applied
+                          else {
+                            itemList = this.filterResultsBySale()
+                            this.setState({ latestResults: itemList }) 
+                            this.setState((prevState) => {
+                              let filters = {...prevState.filters}    // Copy current filters applied
+                              filters.onSale = true  // Update with current filter
+                              return {filters};
+                            })
+                          }
                         }
                       }
                     >
-                      <Text style={styles.buttonText}>On Sale</Text>
+                      <Text style={[styles.sortButtonText, this.state.filters.onSale ? styles.sortButtonTextActive : styles.sortButtonTextDefault]}>On Sale</Text>
                     </Pressable>
 
-                    {/* Filter by Favorited */}
-                    <Pressable
-                      style={styles.sortSubmenuButton}
-                      testID="Test_FilterByFavoritedButton"
-                      onPress={
-                        () => { 
-                         // Placeholder
-                        }
-                      }
+                    {/* Filter by Product Category */}
+                    <Pressable 
+                      // Change style depending on if the filter is applied
+                      style={[styles.sortSubmenuButton, this.state.filters.selectedCategories.length > 0 ? styles.sortSubmenuButtonActive : styles.sortSubmenuButtonDefault]}
+                      testID="Test_FilterCategoryButton"
+                      onPress={() => {this.setState({ isFilterCategoryMenuOpen : !this.state.isFilterCategoryMenuOpen }); {/* Toggle submenu on press */} }}
                     >
-                      <Text style={styles.buttonText}>Favorited</Text>
+                      <Text style={[styles.sortButtonText, this.state.filters.selectedCategories.length > 0 ? styles.sortButtonTextActive : styles.sortButtonTextDefault]}>Category</Text>
+                      <Modal
+                        visible={this.state.isFilterCategoryMenuOpen}
+                        animationType="fade"
+                        transparent={true}
+                        testID="Test_FilterCategorySubmenuModal"
+                        style={{flex: 0}}
+                      >
+                        <TouchableOpacity
+                          style={{flex:1, alignItems: "center", justifyContent: "center"}}
+                          onPress={() => { this.setState({ isFilterCategoryMenuOpen : false})}}
+                          testID="Test_FilterCategorySubmenuOpacity"
+                        >
+                          <View style={[styles.sortSubmenuDesign, {height: "50%"}]} testID="Test_FilterCategorySubmenu">
+                            <SectionedMultiSelect 
+                              items={this.state.allAvailableCategories}
+                              IconRenderer={Icon}
+                              uniqueKey="key"
+                              subKey="children"
+                              displayKey="value"
+                              selectText="Pick categories by tapping..."
+                              showDropDowns={true}
+                              expandDropDowns={true}
+                              showCancelButton={true}
+                              showChips={false}
+                              alwaysShowSelectText={true}
+                              readOnlyHeadings={true}
+                              onSelectedItemsChange={this.onSelectedItemsChangeCategories}
+                              selectedItems={this.state.filters.selectedCategories}
+                              onConfirm={() => {
+                                // If no categories were selected but the filter was confirmed, just reset the filter and results
+                                if(this.state.filters.selectedCategories.length == 0) {
+                                  // Update results with the country filter not applied
+                                  itemList = this.updateFilteredResults(this.state.unfilteredResults)
+                                  this.setState({ latestResults: itemList }) 
+                                }
+                                // Otherwise apply the country filter as expected
+                                else {
+                                  itemList = this.filterResultsByCategory()      // Filter results on confirmation by selected categories
+                                  this.setState({ latestResults : itemList })
+                                }
+                              }}
+                              onCancel={() => {
+                                 // On cancel, ensure category filter is reset first before updating results
+                                 this.setState((prevState) => {
+                                  let filters = {...prevState.filters}    // Copy current filters applied
+                                  filters.selectedCategories = []  // Reset selected categories
+                                  return {filters};
+                                })
+                                // Update results without the country filter
+                                itemList = this.updateFilteredResults(this.state.unfilteredResults)
+                                this.setState({ latestResults: itemList }) 
+                              }}  
+                              searchPlaceholderText="Search product categories..."
+                              modalWithTouchable={true}
+                              styles={{
+                                modalWrapper: {
+                                  backgroundColor: 'none',
+                                  animationType: 'fade',
+                                  flex: 1,
+                                  alignItems: 'center',
+                                  justifyContent: 'center'
+                                },
+                                backdrop: {
+                                  justifyContent: 'center',
+                                },
+                                container: {
+                                  borderColor: "#000000",
+                                  borderWidth: 10,
+                                  height: "50%",
+                                  width: "90%",
+                                  flex: 0,
+                                  alignSelf: 'center'
+                                }
+                              }}
+                              testID="Test_CategorySelectMenu"
+                            />
+                          </View>
+                        </TouchableOpacity>
+                      </Modal>
                     </Pressable>
                   </View>
                 </View>
@@ -466,10 +743,10 @@ export default class SearchScreen extends React.Component {
               >
                 <View style={styles.sortSubmenuDesign} testID="Test_SortSubmenu">
                   {/* Sorting Option Buttons */}
-                  <View style={[globalStyle.headerButtonText,{flex: 0, flexWrap: "wrap", flexDirection: "row"}]}>
+                  <View style={[globalStyle.headerButtonText, {flex: 1, flexWrap: "wrap", flexDirection: "row"}]}>
                     {/* Sort Lowest Price */}
                     <Pressable 
-                      style={styles.sortSubmenuButton}
+                      style={[styles.sortSubmenuButton, this.state.sort == 'Lowest Price' ? styles.sortSubmenuButtonActive : styles.sortSubmenuButtonDefault]}
                       testID="Test_SortLowestPriceButton"
                       onPress={
                         () => { 
@@ -481,12 +758,12 @@ export default class SearchScreen extends React.Component {
                         }
                       }
                     >
-                      <Text style={styles.buttonText}>Lowest Price</Text>
+                      <Text style={[styles.buttonText, this.state.sort == 'Lowest Price' ? styles.sortButtonTextActive : styles.sortButtonTextDefault]}>Lowest Price</Text>
                     </Pressable>
 
                     {/* Sort Highest Price */}
                     <Pressable
-                      style={styles.sortSubmenuButton}
+                      style={[styles.sortSubmenuButton, this.state.sort == 'Highest Price' ? styles.sortSubmenuButtonActive : styles.sortSubmenuButtonDefault]}
                       testID="Test_SortHighestPriceButton"
                       onPress={
                         () => { 
@@ -498,12 +775,12 @@ export default class SearchScreen extends React.Component {
                         }
                       }
                     >
-                      <Text style={styles.buttonText}>Highest Price</Text>
+                      <Text style={[styles.buttonText, this.state.sort == 'Highest Price' ? styles.sortButtonTextActive : styles.sortButtonTextDefault, {fontSize: 19}]}>Highest Price</Text>
                     </Pressable>
 
                     {/* Sort A-Z (Alphabetically) */}
                     <Pressable
-                      style={styles.sortSubmenuButton}
+                      style={[styles.sortSubmenuButton, this.state.sort == 'A-Z' ? styles.sortSubmenuButtonActive : styles.sortSubmenuButtonDefault]}
                       testID="Test_SortA-ZButton"
                       onPress={
                         () => { 
@@ -515,12 +792,12 @@ export default class SearchScreen extends React.Component {
                         }
                       }
                     >
-                      <Text style={styles.buttonText}>A-Z</Text>
+                      <Text style={[styles.buttonText, this.state.sort == 'A-Z' ? styles.sortButtonTextActive : styles.sortButtonTextDefault]}>A-Z</Text>
                     </Pressable>
 
                     {/* Sort Z-A (Reverse Alphabetically) */}
                     <Pressable
-                      style={styles.sortSubmenuButton}
+                      style={[styles.sortSubmenuButton, this.state.sort == 'Z-A' ? styles.sortSubmenuButtonActive : styles.sortSubmenuButtonDefault]}
                       testID="Test_SortZ-AButton"
                       onPress={
                         () => { 
@@ -532,24 +809,24 @@ export default class SearchScreen extends React.Component {
                         }
                       }
                     >
-                      <Text style={styles.buttonText}>Z-A</Text>
+                      <Text style={[styles.buttonText, this.state.sort == 'Z-A' ? styles.sortButtonTextActive : styles.sortButtonTextDefault]}>Z-A</Text>
                     </Pressable>
 
                      {/* Sort Unit Price */}
                      <Pressable
-                      style={[styles.sortSubmenuButton]}
+                      style={[styles.sortSubmenuButton, this.state.sort == 'Unit Price' ? styles.sortSubmenuButtonActive : styles.sortSubmenuButtonDefault]}
                       testID="Test_SortUnitPriceButton"
                       onPress={
                         () => { 
                           this.setState({ 
-                            sort: "UnitPrice", 
+                            sort: "Unit Price", 
                             latestResults: itemList.sort(this.sortUnitPrice),
                             unfilteredResults: itemList.sort(this.sortUnitPrice)
                           }) 
                         }
                       }
                     >
-                      <Text style={styles.buttonText}>Unit Price</Text>
+                      <Text style={[styles.buttonText, this.state.sort == 'Unit Price' ? styles.sortButtonTextActive : styles.sortButtonTextDefault]}>Unit Price</Text>
                     </Pressable>
 
                   </View>
@@ -596,43 +873,55 @@ export default class SearchScreen extends React.Component {
           testID="Test_SearchResults"
         />
 
-        <View style={globalStyle.container}>
+        <View style={globalStyle.navBarContainer}>
           <View style={globalStyle.buttons} testID="Test_NavigationBar">
-            <TouchableOpacity onPress={() => this.props.pageChange(1)}>
+            <TouchableOpacity 
+              onPress={() => this.props.pageChange(PAGE_ID.search)}
+              style={globalStyle.navButtonContainer}
+            >
               <Image
                 style={globalStyle.icon}
                 source={require("../assets/search.png")}
                 accessible={true}
                 accessibilityLabel={"Magnifying Glass Icon"}
               />
-              <Text>Search</Text>
+              <Text style={{textAlign: "center"}}>Search</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.props.pageChange(2)}>
+            <TouchableOpacity 
+              onPress={() => this.props.pageChange(PAGE_ID.cart)}
+              style={globalStyle.navButtonContainer}
+            >
               <Image
                 style={globalStyle.icon}
                 source={require("../assets/cart.png")}
                 accessible={true}
                 accessibilityLabel={"Shopping Cart Icon"}
               />
-              <Text>My Cart</Text>
+              <Text style={{textAlign: "center"}}>My Cart</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.props.pageChange(3)}>
+            <TouchableOpacity 
+              onPress={() => this.props.pageChange(PAGE_ID.orders)}
+              style={globalStyle.navButtonContainer}
+            >
               <Image
                 style={globalStyle.icon}
                 source={require("../assets/orders.png")}
                 accessible={true}
                 accessibilityLabel={"Reciept Icon"}
               />
-              <Text>Orders</Text>
+              <Text style={{textAlign: "center"}}>Orders</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.props.pageChange(4)}>
+            <TouchableOpacity 
+              onPress={() => this.props.pageChange(PAGE_ID.settings)} 
+              style={globalStyle.navButtonContainer}
+            >
               <Image
                 style={globalStyle.icon}
                 source={require("../assets/gear.png")}
                 accessible={true}
                 accessibilityLabel={"Gear Icon"}
               />
-              <Text>Settings</Text>
+              <Text style={{textAlign: "center"}}>{this.state.settingsOrLogIn}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -640,7 +929,8 @@ export default class SearchScreen extends React.Component {
     );
   }
 }
-{/* Search Functions */}
+
+{/*** Search Functions ***/}
 // Returns true if the input string meets the API's filter.term paramater requirements.
 function validInput(inputText) {
   // Search terms limited to max of 8 words (separated by spaces). Must also be >= 3 characters
@@ -697,15 +987,14 @@ async function searchProducts(state) {
     itemList[itemIndex] = {
       id: responseJSON.data[i].productId,
       title: responseJSON.data[i].description,
-      // TODO: figure out how to better parse JSON array so that price is not 0
       price: responseJSON.data[i].items[0].price.promo,
-      // TODO: remove placeholder
-      unitPrice: 0,
-      // TODO: remove placeholder
-      stock: null,
+      standardPrice: responseJSON.data[i].items[0].price.regular,
+      unitPrice: responseJSON.data[i].items[0].price.regularPerUnitEstimate,
+      stock: null,  // Stock field is populated with the logic below
       quantity: 1,
       inCart: false,
       countryOrigin: responseJSON.data[i].countryOrigin,
+      category: responseJSON.data[i].categories
     };
 
     // The stockLevel property is omitted when an item is out of stock, so catch for that case
@@ -724,6 +1013,11 @@ async function searchProducts(state) {
     itemIndex++;
   }
   itemIndex = 0;
+
+  // Trim excess results in cases where the prior search returned more items than the current search
+  let numExcessItems = priorItemListLength - responseJSON.data.length
+  if(numExcessItems > 0) itemList.splice(responseJSON.data.length - 1, numExcessItems)
+  priorItemListLength = responseJSON.data.length
 
   return itemList;
 }
@@ -797,7 +1091,6 @@ const styles = StyleSheet.create({
     alignContent: "space-between",
     alignItems: "center",
     backgroundColor: "white",
-    borderColor: "black",
     borderWidth: 10,
     justifyContent: "center",
     height: "25%",
@@ -805,12 +1098,31 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
   },
   sortSubmenuButton: {
-    backgroundColor: "black",
     borderRadius: 18,
-    paddingVertical: 10,
+    paddingVertical: 5,
     paddingHorizontal: 15,
     margin: 8,
     flex: 1,
     flexBasis: "33%",
-  }
+    borderWidth: 5,
+  },
+  sortSubmenuButtonActive: {
+    backgroundColor: "white",
+    borderColor: "black",
+  },
+  sortSubmenuButtonDefault: {
+    backgroundColor: "black",
+  },
+  sortButtonText: {
+    fontSize: 20,
+    textAlign: "center",
+    fontWeight: "bold",
+  },
+  sortButtonTextActive: {
+    color: "black",
+    padding: 1,
+  },
+  sortButtonTextDefault: {
+    color: "white",
+  },
 });

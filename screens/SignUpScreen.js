@@ -1,8 +1,9 @@
 import * as React from "react";
-import { Text, StyleSheet, Pressable, SafeAreaView, TextInput } from "react-native";
-import globalStyle from '../globalStyle';
-import {firebaseAuth} from '../firebase';
-import { newPasswordIsValid } from "../functions/SignUpScreenFunctions";
+import { Text, Pressable, SafeAreaView, TextInput } from "react-native";
+import globalStyle from "../globalStyle";
+import { firebaseAuth } from "../utils/firebase";
+import { newPasswordIsValid } from "../utils/SignUpScreenFunctions";
+import { PAGE_ID } from "../utils/constants";
 
 export default class SignUp extends React.Component {
   // Holds the values of the text input fields on this screen.
@@ -29,11 +30,11 @@ export default class SignUp extends React.Component {
           const user = userCredentials.user;
           alert("You have successfully registered!");
           console.log(user.email, " successfully registered.");
-          this.props.pageChange(0);
+          this.props.pageChange(PAGE_ID.login);
         })
         .catch((error) => alert(error.message));
     }
-  };
+  }
 
   render() {
     return (
@@ -41,12 +42,12 @@ export default class SignUp extends React.Component {
         <Text style={globalStyle.headerText}>Create an Account</Text>
         <Pressable
           style={globalStyle.backButtonStyle}
-          onPress={() => this.props.pageChange(0)}
+          onPress={() => this.props.pageChange(PAGE_ID.login)}
         >
           <Text style={globalStyle.backButtonText}>&lt; Back</Text>
         </Pressable>
         <TextInput
-          style={globalStyle.loginSignUpInputContainer}
+          style={globalStyle.wideInputContainer}
           placeholder="Email"
           placeholderTextColor={"#000"}
           onChangeText={(newEmailInput) =>
@@ -54,7 +55,7 @@ export default class SignUp extends React.Component {
           }
         />
         <TextInput
-          style={globalStyle.loginSignUpInputContainer}
+          style={globalStyle.wideInputContainer}
           placeholder="Password"
           placeholderTextColor={"#000"}
           secureTextEntry={true}
@@ -63,7 +64,7 @@ export default class SignUp extends React.Component {
           }
         />
         <TextInput
-          style={globalStyle.loginSignUpInputContainer}
+          style={globalStyle.wideInputContainer}
           placeholder="Confirm Password"
           placeholderTextColor={"#000"}
           secureTextEntry={true}
@@ -79,10 +80,11 @@ export default class SignUp extends React.Component {
           <Text style={globalStyle.wideButtonText}>Sign Up</Text>
         </Pressable>
         <Text style={globalStyle.paragraph}>
-          Your password must be at least 8 characters long. it must contain an uppercase
-          letter, a lowercase letter, a number, and a non-alphanumeric character.
+          Your password must be at least 8 characters long. it must contain an
+          uppercase letter, a lowercase letter, a number, and a non-alphanumeric
+          character.
         </Text>
       </SafeAreaView>
-    )
+    );
   }
 }

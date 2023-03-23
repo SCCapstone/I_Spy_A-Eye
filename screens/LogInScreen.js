@@ -1,15 +1,20 @@
 import * as React from "react";
-import { Text, StyleSheet, Pressable, SafeAreaView, TextInput, View } from "react-native";
-import globalStyle from '../globalStyle';
-import {firebaseAuth} from '../firebase';
+
+import { PAGE_ID } from "../utils/constants";
+import { Text, Pressable, SafeAreaView, TextInput, View } from "react-native";
+import globalStyle from "../globalStyle";
+import { firebaseAuth } from "../utils/firebase";
+import firebase from "firebase";
+require("firebase/auth");
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import {OpenURLButton} from '../functions/RedirectButton'
+
 
 /**
  * This is the first screen users will see when they start the app. Users can login
  * and be redirected to the search screen, or they can click the Sign Up button and
- * be redirected to the Create an Account screen. 
+ * be redirected to the Create an Account screen.
  */
-
 export default class Login extends React.Component {
   // Holds the values of the text input fields on this screen.
   constructor(props) {
@@ -20,9 +25,28 @@ export default class Login extends React.Component {
     };
   }
 
+  // Function to redirect users to search screen if they are already signed in.
+  componentDidMount() {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        var userID = user.uid;
+        AsyncStorage.setItem("userID", userID);
+        AsyncStorage.setItem("userEmail", user.email);
+        console.log(`Current user ID: ${userID}`);
+        this.props.pageChange(PAGE_ID.search);
+      } else {
+        console.log("No user is logged in.");
+        AsyncStorage.setItem("userID", "none");
+        // Determines what text to render for the navbar
+        AsyncStorage.setItem("SettingsOrLogIn", "Log In");
+      }
+    });
+  }
+
   /**
    * This function handles logging in through Firebase. If a login is successful,
-   * the user is redirected to the Search Screen.
+   * the user is redirected to the Search Screen. Async storage is also updated
+   * to allow for easy access to Firestore.
    * @param {*} state the values of the text fields on this page.
    */
   login(state) {
@@ -30,19 +54,24 @@ export default class Login extends React.Component {
       .signInWithEmailAndPassword(state.emailInput, state.passwordInput)
       .then((userCredentials) => {
         const user = userCredentials.user;
-        alert("Successfully logged in.");
         console.log(user.email, " successfully logged in.");
-        this.props.pageChange(1);
+        var userID = user.uid;
+        AsyncStorage.setItem("userID", userID);
+        AsyncStorage.setItem("userEmail", user.email);
+        // Determins what text to render in Navbar
+        AsyncStorage.setItem("SettingsOrLogIn", "Settings");
+        console.log(`Current user ID: ${userID}`);
+        this.props.pageChange(PAGE_ID.search);
       })
       .catch((error) => alert(error.message));
-  };
+  }
 
   render() {
     return (
       <SafeAreaView style={globalStyle.wholeScreen}>
         <Text style={globalStyle.headerText}>I Spy Shopper</Text>
         <TextInput
-          style={globalStyle.loginSignUpInputContainer}
+          style={globalStyle.wideInputContainer}
           placeholder="Email"
           placeholderTextColor={"#000"}
           onChangeText={(newEmailInput) =>
@@ -51,7 +80,7 @@ export default class Login extends React.Component {
           testID="Test_EmailTextBar"
         />
         <TextInput
-          style={globalStyle.loginSignUpInputContainer}
+          style={globalStyle.wideInputContainer}
           placeholder="Password"
           placeholderTextColor={"#000"}
           secureTextEntry={true}
@@ -70,22 +99,24 @@ export default class Login extends React.Component {
         </Pressable>
         <Pressable
           style={globalStyle.wideButtonStyle}
-          onPress={() => this.props.pageChange(6)}
+          onPress={() => this.props.pageChange(PAGE_ID.sign_up)}
           testID="Test_SignUpButton"
         >
           <Text style={globalStyle.wideButtonText}>Sign Up</Text>
         </Pressable>
         <Pressable
           style={globalStyle.wideButtonStyle}
-          onPress={() => this.props.pageChange(1)}
+          onPress={() => this.props.pageChange(PAGE_ID.search)}
           testID="Test_SignInSkip"
         >
-          <Text style={globalStyle.wideButtonText}>Continue Without Signing in</Text>
+          <Text style={globalStyle.wideButtonText}>
+            Continue Without Signing in
+          </Text>
         </Pressable>
         <View style={globalStyle.wideButtonStyle} >
           <OpenURLButton url={'https://google.com'}>Tutorial</OpenURLButton>
         </View>
       </SafeAreaView>
-    )
+    );
   }
 }

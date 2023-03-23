@@ -1,9 +1,10 @@
 import * as React from "react";
 import { Text, View, TouchableOpacity, Image, Pressable } from "react-native";
 import { SafeAreaView } from "react-native";
-import { firebaseAuth } from "../firebase";
+import { firebaseAuth } from "../utils/firebase";
 import globalStyle from "../globalStyle";
-require('firebase/auth');
+require("firebase/auth");
+import { PAGE_ID } from "../utils/constants";
 
 /**
  * This screen is shown when a user not signed in clicks the settings button on the navbar.
@@ -28,6 +29,14 @@ export default class NotSignedInSettings extends React.Component {
     return (
       <SafeAreaView style={globalStyle.wholeScreen}>
         <Text style={globalStyle.headerText}>Settings</Text>
+        {/*Horizontal line*/}
+        <View
+          style={{
+            borderBottomColor: "black",
+            borderBottomWidth: 10,
+            marginTop: 20,
+          }}
+        />
         <Pressable
           style={globalStyle.wideButtonStyle}
           onPress={() => this.signOut()}
@@ -37,43 +46,55 @@ export default class NotSignedInSettings extends React.Component {
         <Text style={globalStyle.paragraph}>
           Sign in to access settings and make purchases.
         </Text>
-        <View style={globalStyle.container}>
-          <View style={globalStyle.buttons}>
-            <TouchableOpacity onPress={() => this.props.pageChange(1)}>
+        <View style={globalStyle.navBarContainer}>
+          <View style={globalStyle.buttons} testID="Test_NavigationBar">
+            <TouchableOpacity 
+              onPress={() => this.props.pageChange(PAGE_ID.search)}
+              style={globalStyle.navButtonContainer}
+            >
               <Image
                 style={globalStyle.icon}
                 source={require("../assets/search.png")}
                 accessible={true}
                 accessibilityLabel={"Magnifying Glass Icon"}
               />
-              <Text>Search</Text>
+              <Text style={{textAlign: "center"}}>Search</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.props.pageChange(2)}>
+            <TouchableOpacity 
+              onPress={() => this.props.pageChange(PAGE_ID.cart)}
+              style={globalStyle.navButtonContainer}
+            >
               <Image
                 style={globalStyle.icon}
                 source={require("../assets/cart.png")}
                 accessible={true}
                 accessibilityLabel={"Shopping Cart Icon"}
               />
-              <Text>My Cart</Text>
+              <Text style={{textAlign: "center"}}>My Cart</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.props.pageChange(3)}>
+            <TouchableOpacity 
+              onPress={() => this.props.pageChange(PAGE_ID.orders)}
+              style={globalStyle.navButtonContainer}
+            >
               <Image
                 style={globalStyle.icon}
                 source={require("../assets/orders.png")}
                 accessible={true}
                 accessibilityLabel={"Reciept Icon"}
               />
-              <Text>Orders</Text>
+              <Text style={{textAlign: "center"}}>Orders</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.props.pageChange(4)}>
+            <TouchableOpacity 
+              onPress={() => this.props.pageChange(PAGE_ID.settings)} 
+              style={globalStyle.navButtonContainer}
+            >
               <Image
                 style={globalStyle.icon}
                 source={require("../assets/gear.png")}
                 accessible={true}
                 accessibilityLabel={"Gear Icon"}
               />
-              <Text>Settings</Text>
+              <Text style={{textAlign: "center"}}>Log In</Text>
             </TouchableOpacity>
           </View>
         </View>

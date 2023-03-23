@@ -1,5 +1,5 @@
 import "react-native";
-import { newPasswordIsValid } from "../functions/SignUpScreenFunctions";
+import { newPasswordIsValid } from "../utils/SignUpScreenFunctions";
 
 
 test("The Password and Confirm Password field must have matching input.", () => {
@@ -39,5 +39,20 @@ test("This password should be accepted: ßpaSsword1", () => {
 
 test("This password should be accepted: ßpaS8wOrd1", () => {
   const validPasswordChoice = newPasswordIsValid("ßpaS8wOrd1", "ßpaS8wOrd1");
+  expect(validPasswordChoice).toBe(true); 
+})
+
+test("This password should be accepted: ßpaS8wOrd10000000000000000000000", () => {
+  const validPasswordChoice = newPasswordIsValid("ßpaS8wOrd10000000000000000000000", "ßpaS8wOrd10000000000000000000000");
+  expect(validPasswordChoice).toBe(true); 
+})
+
+test("Passwords longer than 32 chars should be rejected.", () => {
+  const validPasswordChoice = newPasswordIsValid("ßpaS8wOrd100000000000000000000001", "ßpaS8wOrd100000000000000000000001");
+  expect(validPasswordChoice).toBe(false); 
+})
+
+test("This password should be accepted: PassWord123☘️", () => {
+  const validPasswordChoice = newPasswordIsValid("PassWord123☘️", "PassWord123☘️");
   expect(validPasswordChoice).toBe(true); 
 })
