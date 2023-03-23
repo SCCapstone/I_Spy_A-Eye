@@ -101,10 +101,6 @@ export default class SettingsScreen extends React.Component {
         <View style={globalStyle.wideButtonStyle} >
           <OpenURLButton url={'https://google.com'}>Tutorial</OpenURLButton>
         </View>
-        <View style={globalStyle.container}>
-          <View style={globalStyle.buttons}>
-            <TouchableOpacity onPress={() => this.props.pageChange(1)}>
-
         <View style={globalStyle.navBarContainer}>
           <View style={globalStyle.buttons} testID="Test_NavigationBar">
             <TouchableOpacity
