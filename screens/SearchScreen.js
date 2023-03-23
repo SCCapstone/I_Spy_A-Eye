@@ -93,8 +93,8 @@ const Item = ({ id, title, price, unitPrice, stock, quantity }) => (
       </Pressable> */}
 
       <Pressable style={styles.remove} >
-            <Text style={{color: 'white', fontSize: 19, fontWeight:'bold'}}>Add to Cart</Text>
-          </Pressable>
+        <Text style={{color: 'white', fontSize: 19, fontWeight:'bold'}} onPress={() => addToCart(id)}>Add to Cart</Text>
+      </Pressable>
     </View>
   </View>
 );
@@ -112,6 +112,42 @@ const renderItem = ({ id, item, price, unitPrice, stock, quantity }) => (
     />
   </>
 );
+
+addToCart = async (itemID) => {
+  for (let i = 0; i < itemList.length; i++) { // loop through item list array
+    // if array is not empty and has item(s) already in there
+    if (itemList[i].id == itemID) {
+      let itemArray = await AsyncStorage.getItem("product")
+      itemArray = JSON.parse(itemArray)
+      if (itemArray) {
+        let array = itemArray
+        // checks to make sure you can't add the same item twice (checks by id)
+        if (!(array.filter(item => item.id === itemList[i].id).length > 0)) { // if id is not in array, then push
+          array.push(itemList[i])
+        }
+
+        try {
+          await AsyncStorage.setItem("product", JSON.stringify(array))
+        } catch (err) {
+          console.log(err)
+        }
+        console.log(array)
+      } else { // if array is empty, adds the first item to array
+        let array = []
+        if (itemList[i].id == itemID) {
+          array.push(itemList[i])
+          
+          try {
+            await AsyncStorage.setItem("product", JSON.stringify(array))
+          } catch {
+            console.log(err)
+          }
+        }
+        console.log(array)
+      }
+    }
+  }
+}
 
 // For future functionality of decrementing the quantity of an item to add to cart.
 function decrementQuantity(itemID) {

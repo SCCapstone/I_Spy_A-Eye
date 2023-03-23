@@ -6,7 +6,7 @@ import { PAGE_ID } from "../utils/constants.js";
 
 /*
   TODOS:
-    Grab each product by id and add
+    figure out how to prevent same item from being added to array (cart)
 */
 
 class ListItem extends React.Component {
@@ -18,7 +18,7 @@ class ListItem extends React.Component {
       <View>
         {/*Item title, depends on what the user adds to the cart, allows user to go to the details screen*/}
         <Pressable>
-          <Text style={{fontSize: 28, fontWeight: 'bold', textAlign: 'center', marginTop: 10}}>{item.name}</Text>
+          <Text style={{fontSize: 28, fontWeight: 'bold', textAlign: 'center', marginTop: 10}}>{item.title}</Text>
         </Pressable>
 
         {/*Price, quantity, and remove button*/}
@@ -57,43 +57,9 @@ class ListItem extends React.Component {
 export default class CartScreen extends React.Component {
   constructor(props) {
     super(props)
-    // gets called when app is launched
-    this.getData()
-    //products being saved to state
     this.state = {
       settingsOrLogIn: "",
-      products: [
-        {
-          id: 1,
-          name: 'Deluxe Mint Chocolate Chip Ice Cream',
-          price: '5.00',
-          quantity: 1
-        },
-        {
-          id: 2,
-          name: '1% Lowfat Milk',
-          price: '2.00',
-          quantity: 1
-        },
-        {
-          id: 3,
-          name: 'Barbecue Flavored Potato Chips',
-          price: '10.00',
-          quantity: 1
-        },
-        {
-          id: 4,
-          name: "Bakery Fresh Goodness Peanut Butter Cookies",
-          price: "3.00",
-          quantity: 1
-        },
-        {
-          id: 5,
-          name: "Kellogg's Club Original Crackers Snack Stacks",
-          price: "2.50",
-          quantity: 1
-        }
-      ]
+      products: []
     }
   }
 
@@ -103,30 +69,65 @@ export default class CartScreen extends React.Component {
     });
   }
 
-  componentDidMount() {
+  // when component loads on the screen
+  componentDidMount = async () => {
     this.updateNavBarText();
-  }
-
-  decrementValue = async (item, index) => {
-    const products = [...this.state.products]
-    products[index].quantity = products[index].quantity - 1
-    if(products[index].quantity <= 1) { // if less than or equal to 1
-      products[index].quantity = 1 // set to 1
-    }
-    this.setState({products})
     try {
-      await AsyncStorage.setItem("decrement", JSON.stringify(products))
+      // grab data from local storage
+      const products = JSON.parse(await AsyncStorage.getItem("cart"))
+      this.addProduct()
+
+      // if products is not empty
+      if (products !== null) {
+        this.setState({products})
+      }
     } catch (err) {
       console.log(err)
     }
   }
 
-  incrementValue = async (item, index) => {
-    const products = [...this.state.products] // empty array and copy everything over
-    products[index].quantity = products[index].quantity + 1 // modify specific  index quantity
-    this.setState({products}) // update products
+  // invoked immediately after updating occurs (ex: removing)
+  // saving data
+  componentDidUpdate = async (prevProps, prevState) => {
+    // if the previous state changes are not the same as current state changes
+    if (prevState.length !== this.state.products.length) {
+      // something did change, save everything in products to local storage
+      await AsyncStorage.setItem("cart", JSON.stringify(this.state.products))
+    }
+  }
+
+  decrementValue = async (productID) => {
     try {
-      await AsyncStorage.setItem("increment", JSON.stringify(products))
+      let arrayItems = await AsyncStorage.getItem("product")
+      arrayItems = JSON.parse(arrayItems)
+      let array = arrayItems
+      for (let i = 0; i < array.length; i++) {
+        if (array[i].id == productID) {
+          array[i].quantity--
+          if (array[i].quantity <= 1) {
+            array[i].quantity = 1
+          }
+          await AsyncStorage.setItem("product", JSON.stringify(array))
+          this.setState({products: array})
+        }
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  incrementValue = async (productID) => {
+    try {
+      let arrayItems = await AsyncStorage.getItem("product")
+      arrayItems = JSON.parse(arrayItems)
+      let array = arrayItems
+      for (let i = 0; i < array.length; i++) {
+        if (array[i].id == productID) {
+          array[i].quantity++
+          await AsyncStorage.setItem("product", JSON.stringify(array))
+          this.setState({products: array})
+        }
+      }
     } catch (err) {
       console.log(err)
     }
@@ -135,45 +136,26 @@ export default class CartScreen extends React.Component {
   // removes item from cart, dont want items to reappear so use async
   removeProduct = async (productID) => {
     try {
-      const remove = this.state.products.filter((value, i) => value.id !== productID)
-      this.setState({products: remove})
-      // saves into AsyncStorage when remove button is clicked
-      await AsyncStorage.setItem("ProductKey", JSON.stringify(remove))
+      let arrayItems = await AsyncStorage.getItem("product")
+      arrayItems = JSON.parse(arrayItems)
+      let array = this.state.products.filter((e) => {
+        return e.id !== productID
+      })
+      await AsyncStorage.setItem("product", JSON.stringify(array))
+      this.setState({products: array})
     } catch (err) {
       console.log(err)
     }
   }
 
-  addProduct = async (id) => {
-    try{
-      
-    } catch (err) {
-      console.log(err)
+  // adds product to cart
+  addProduct = async () => {
+    let items = await AsyncStorage.getItem("product") // grab the array from search screen
+    items = JSON.parse(items) // parse it
+    if (items) { // if items is not null (empty)
+      this.setState({products: items}) // set the state
     }
-  }
-
-  // retrieve the key
-  getData = async () => {
-    try {
-      const value = await AsyncStorage.getItem("ProductKey")
-      const increment = await AsyncStorage.getItem("increment")
-      const decrement = await AsyncStorage.getItem("decrement")
-      // dont want to set state to null
-      if (value !== null) {
-        // set to our state
-        this.setState({products: JSON.parse(value)})
-      }
-      if (increment !== null) {
-        AsyncStorage.clear()
-        this.setState({products: JSON.parse(increment)})
-      }
-      if (decrement !== null) {
-        AsyncStorage.clear()
-        this.setState({products: JSON.parse(decrement)})
-      }
-    } catch (err) {
-      console.log(err)
-    }
+    console.log(this.state.products)
   }
 
   // Add the total prices of each product
@@ -238,12 +220,12 @@ export default class CartScreen extends React.Component {
             renderItem={({item, index}) =>
               <ListItem 
                 item={item}
-                decrementValue={() => this.decrementValue(item, index)}
-                incrementValue={() => this.incrementValue(item, index)}
+                decrementValue={() => this.decrementValue(item.id)}
+                incrementValue={() => this.incrementValue(item.id)}
                 removeProduct={() => this.removeProduct(item.id)}
               />
             }
-            keyExtractor={item => item.id}
+            keyExtractor={(item) => item.id}
             testID="test_ItemsInCart"
           />
         </View>
