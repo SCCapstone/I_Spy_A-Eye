@@ -2,6 +2,7 @@ import React from "react";
 import { Text, View, StyleSheet, TouchableOpacity, Image, Pressable, FlatList, TextInput, SafeAreaView } from "react-native";
 import globalStyle from "../globalStyle"
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { PAGE_ID } from "../utils/constants.js";
 
 /*
   TODOS:
@@ -57,13 +58,20 @@ export default class CartScreen extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      // products being saved to state
+      settingsOrLogIn: "",
       products: []
     }
   }
 
+  async updateNavBarText() {
+    this.setState({
+      settingsOrLogIn: await AsyncStorage.getItem("SettingsOrLogIn")
+    });
+  }
+
   // when component loads on the screen
   componentDidMount = async () => {
+    this.updateNavBarText();
     try {
       // grab data from local storage
       const products = JSON.parse(await AsyncStorage.getItem("cart"))
@@ -222,43 +230,55 @@ export default class CartScreen extends React.Component {
           />
         </View>
 
-        <View style={globalStyle.container}>
-          <View style={globalStyle.buttons}>
-            <TouchableOpacity onPress={() => this.props.pageChange(1)}>
+        <View style={globalStyle.navBarContainer}>
+          <View style={globalStyle.buttons} testID="Test_NavigationBar">
+            <TouchableOpacity 
+              onPress={() => this.props.pageChange(PAGE_ID.search)}
+              style={globalStyle.navButtonContainer}
+            >
               <Image
                 style={globalStyle.icon}
                 source={require("../assets/search.png")}
                 accessible={true}
                 accessibilityLabel={"Magnifying Glass Icon"}
               />
-              <Text>Search</Text>
+              <Text style={{textAlign: "center"}}>Search</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.props.pageChange(2)}>
+            <TouchableOpacity 
+              onPress={() => this.props.pageChange(PAGE_ID.cart)}
+              style={globalStyle.navButtonContainer}
+            >
               <Image
                 style={globalStyle.icon}
                 source={require("../assets/cart.png")}
                 accessible={true}
                 accessibilityLabel={"Shopping Cart Icon"}
               />
-              <Text>My Cart</Text>
+              <Text style={{textAlign: "center"}}>My Cart</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.props.pageChange(3)}>
+            <TouchableOpacity 
+              onPress={() => this.props.pageChange(PAGE_ID.orders)}
+              style={globalStyle.navButtonContainer}
+            >
               <Image
                 style={globalStyle.icon}
                 source={require("../assets/orders.png")}
                 accessible={true}
                 accessibilityLabel={"Reciept Icon"}
               />
-              <Text>Orders</Text>
+              <Text style={{textAlign: "center"}}>Orders</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.props.pageChange(4)}>
+            <TouchableOpacity 
+              onPress={() => this.props.pageChange(PAGE_ID.settings)} 
+              style={globalStyle.navButtonContainer}
+            >
               <Image
                 style={globalStyle.icon}
                 source={require("../assets/gear.png")}
                 accessible={true}
                 accessibilityLabel={"Gear Icon"}
               />
-              <Text>Settings</Text>
+              <Text style={{textAlign: "center"}}>{this.state.settingsOrLogIn}</Text>
             </TouchableOpacity>
           </View>
         </View>

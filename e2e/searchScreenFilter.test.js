@@ -14,7 +14,7 @@ describe('Example', () => {
     await expect(element(by.id('Test_FilterCountryButton'))).toBeVisible()
     await expect(element(by.id('Test_FilterInStockButton'))).toBeVisible();
     await expect(element(by.id('Test_FilterOnSaleButton'))).toBeVisible();
-    await expect(element(by.id('Test_FilterByFavoritedButton'))).toBeVisible();
+    await expect(element(by.id('Test_FilterCategoryButton'))).toBeVisible();
   });
 
   // Successfully exit the menu after tapping outside of its area
@@ -38,6 +38,23 @@ describe('Example', () => {
     await element(by.id('Test_FilterCountrySubmenuOpacity')).longPress();
     await expect(element(by.id('Test_FilterCountrySubmenuModal'))).not.toExist();
     await expect(element(by.id('Test_FilterCountryButton'))).toExist();
+  });
+
+  
+  // Successfully load the category submenu
+  it('should load the category filter submenu when the category filter button is pressed', async () => {
+    await element(by.id('Test_FilterButton')).longPress();
+    await element(by.id('Test_FilterCategoryButton')).longPress();
+    await expect(element(by.id('Test_FilterCategorySubmenu'))).toExist();
+  });
+  
+  // Successfully exit the category submenu after tapping outside of its area to reach the original filter submenu
+  it('should remove the category filter submenu after tapping outside it', async () => {
+    await element(by.id('Test_FilterButton')).longPress();
+    await element(by.id('Test_FilterCategoryButton')).longPress();
+    await element(by.id('Test_FilterCategorySubmenuOpacity')).longPress();
+    await expect(element(by.id('Test_FilterCategorySubmenuModal'))).not.toExist();
+    await expect(element(by.id('Test_FilterCategoryButton'))).toExist();
   });
 
 });
