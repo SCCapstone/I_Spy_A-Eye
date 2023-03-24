@@ -154,7 +154,7 @@ export default class BillingInfoScreen extends React.Component {
               }
               value={this.state.cardNumberInput}
             />
-            <View style={{ flexDirection: "row" }}>
+            <View style={globalStyle.date_codes}>
               <View style={globalStyle.date_codeContainter}>
                 <Text style={globalStyle.paragraph}>Expiry Date</Text>
                 <TextInput
