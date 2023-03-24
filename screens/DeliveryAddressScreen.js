@@ -11,7 +11,7 @@ import {
   SafeAreaView,
   TextInput,
   ScrollView,
-  View
+  View,
 } from "react-native";
 import globalStyle from "../globalStyle";
 import firebase from "firebase";
@@ -130,8 +130,7 @@ export default class DeliveryAddress extends React.Component {
               this.setState({ cityInput: newCityInput })
             }
           />
-          <View style={{ flexDirection: "row",     justifyContent: "center",
-    justifyContent: "space-evenly" }}>
+          <View style={globalStyle.date_codes}>
             <View style={globalStyle.date_codeContainter}>
               <Text style={globalStyle.paragraph}>Zip Code</Text>
               <TextInput
