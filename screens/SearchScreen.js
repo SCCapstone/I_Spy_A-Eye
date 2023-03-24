@@ -446,9 +446,10 @@ export default class SearchScreen extends React.Component {
                   );
                   itemList = []
                 }
-                this.setState({ latestResults: itemList, unfilteredResults: itemList })
                 this.setState({ 
                   latestResults: itemList, 
+                  unfilteredResults: itemList,
+                  sort: null,                 // Reset applied sort 
                   allAvailableCountries:      // Populate list with all available countries to select
                     [{key: 'Countries', 
                       value: 'Countries', 
