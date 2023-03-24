@@ -105,7 +105,8 @@ const renderItem = ({ id, item, price, unitPrice, stock, quantity }) => (
       id={item.id}
       title={item.title}
       price={item.price}
-      unitPrice={item.unitPrice}
+       // Display unitPrice only if it's not arbitrary or null or undefined
+      unitPrice={item.unitPrice == Number.MAX_SAFE_INTEGER || item.unitPrice == null ? "N/A" : item.unitPrice}   
       stock={item.stock}
       quantity={item.quantity}
       inCart={item.inCart}
@@ -393,6 +394,14 @@ export default class SearchScreen extends React.Component {
   // Input: Two product objects. Returns an integer based on unit price ascending (whichever has the lowest unit price).
   sortUnitPrice(p1, p2) {
     return p1.unitPrice - p2.unitPrice;   // Negative value means p1 is cheaper. Positive means p2 is cheaper. 0 means equal price.
+  }
+
+  // Input: List of products. Returns the same list of products except all null or undefined unit prices are set to an arbitrarily high value.
+  updateUndefinedUPrice(productList) {
+    productList.forEach((product) => {
+      if(product.unitPrice == null) product.unitPrice = Number.MAX_SAFE_INTEGER
+    })
+    return productList
   }
 
   /*** Display Function ***/
@@ -854,10 +863,12 @@ export default class SearchScreen extends React.Component {
                       testID="Test_SortUnitPriceButton"
                       onPress={
                         () => { 
+                          // Update null and undefined unit prices to an arbitrary max value before sorting to put those products at the end of the sorting.
+                          itemList = this.updateUndefinedUPrice(itemList)   
                           this.setState({ 
                             sort: "Unit Price", 
-                            latestResults: itemList.sort(this.sortUnitPrice),
-                            unfilteredResults: itemList.sort(this.sortUnitPrice)
+                            unfilteredResults: itemList.sort(this.sortUnitPrice),
+                            latestResults: itemList.sort(this.sortUnitPrice)
                           }) 
                         }
                       }
