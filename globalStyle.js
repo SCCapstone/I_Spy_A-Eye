@@ -131,6 +131,22 @@ const globalStyle = StyleSheet.create({
     marginLeft: 8,
     marginRight: 8,
   },
+  date_code: {
+    paddingHorizontal: 25,
+    borderWidth: 7,
+    borderRadius: 20,
+    paddingVertical: 5,
+    fontWeight: "bold",
+    fontSize: 18,
+    maxHeight: 60,
+    minHeight: 50,
+  },
+  date_codeContainter: {
+    marginLeft: 8,
+    marginRight: 8,
+    minWidth: "40%",
+    maxWidth: "40%",
+  },
 
 });
 
