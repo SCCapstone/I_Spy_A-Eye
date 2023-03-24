@@ -57,9 +57,9 @@ const globalStyle = StyleSheet.create({
     marginTop: 8,
   },
   subHeaderText: {
-    fontWeight: "bold", 
+    fontWeight: "bold",
     fontSize: 30,
-    marginLeft: 8
+    marginLeft: 8,
   },
   inputContainer: {
     borderWidth: 7,
@@ -131,7 +131,26 @@ const globalStyle = StyleSheet.create({
     marginLeft: 8,
     marginRight: 8,
   },
-
+  date_code: {
+    paddingHorizontal: 25,
+    borderWidth: 7,
+    borderRadius: 20,
+    paddingVertical: 5,
+    fontWeight: "bold",
+    fontSize: 18,
+    maxHeight: 60,
+    minHeight: 50,
+  },
+  date_codeContainter: {
+    marginLeft: 8,
+    marginRight: 8,
+    minWidth: "40%",
+  },
+  date_codes: {
+    flexDirection: "row",
+    justifyContent: "center",
+    justifyContent: "space-evenly",
+  },
 });
 
 export default globalStyle;

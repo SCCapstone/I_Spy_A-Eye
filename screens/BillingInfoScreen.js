@@ -154,25 +154,25 @@ export default class BillingInfoScreen extends React.Component {
               }
               value={this.state.cardNumberInput}
             />
-            <View style={{ flexDirection: "row" }}>
-              <View style={style.date_codeContainter}>
+            <View style={globalStyle.date_codes}>
+              <View style={globalStyle.date_codeContainter}>
                 <Text style={globalStyle.paragraph}>Expiry Date</Text>
                 <TextInput
                   placeholder="MM/YY"
                   placeholderTextColor={"#000"}
-                  style={style.date_code}
+                  style={globalStyle.date_code}
                   value={this.state.expiryInput}
                   onChangeText={(newExpiryInput) =>
                     this.setState({ expiryInput: newExpiryInput })
                   }
                 />
               </View>
-              <View style={style.date_codeContainter}>
+              <View style={globalStyle.date_codeContainter}>
                 <Text style={globalStyle.paragraph}>Security Code</Text>
                 <TextInput
                   placeholder="###"
                   placeholderTextColor={"#000"}
-                  style={style.date_code}
+                  style={globalStyle.date_code}
                   keyboardType={"numeric"}
                   value={this.state.securityCodeInput}
                   onChangeText={(newSecurityCodeInput) =>
@@ -212,22 +212,6 @@ const style = StyleSheet.create({
     fontSize: 45,
     marginTop: 25,
     marginHorizontal: 75,
-  },
-  date_code: {
-    paddingHorizontal: 25,
-    borderWidth: 7,
-    borderRadius: 20,
-    paddingVertical: 5,
-    fontWeight: "bold",
-    fontSize: 18,
-    maxHeight: 60,
-    minHeight: 50,
-  },
-  date_codeContainter: {
-    marginLeft: 8,
-    marginRight: 8,
-    minWidth: "40%",
-    maxWidth: "40%",
   },
   confirmButton: {
     backgroundColor: "black",

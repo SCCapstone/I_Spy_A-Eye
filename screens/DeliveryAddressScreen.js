@@ -3,7 +3,7 @@ import {
   addressIsValidOrEmpty,
   cityIsValidOrEmpty,
   zipCodeIsValidOrEmpty,
-  stateIsValidOrEmpty
+  stateIsValidOrEmpty,
 } from "../utils/DeliveryAddressFunctions";
 import {
   Text,
@@ -11,6 +11,7 @@ import {
   SafeAreaView,
   TextInput,
   ScrollView,
+  View,
 } from "react-native";
 import globalStyle from "../globalStyle";
 import firebase from "firebase";
@@ -129,25 +130,30 @@ export default class DeliveryAddress extends React.Component {
               this.setState({ cityInput: newCityInput })
             }
           />
-          <Text style={globalStyle.paragraph}>Zip Code</Text>
-          <TextInput
-            style={globalStyle.billingDeliveryInput}
-            placeholder="#####"
-            value={this.state.zipCodeInput}
-            placeholderTextColor={"#000"}
-            onChangeText={(newZipCodeInput) =>
-              this.setState({ zipCodeInput: newZipCodeInput })
-            }
-          />
-          <Text style={globalStyle.paragraph}>State</Text>
-          <TextInput
-            style={globalStyle.billingDeliveryInput}
-            value={this.state.stateInput}
-            onChangeText={(newStateInput) =>
-              this.setState({ stateInput: newStateInput })
-            }
-          />
-
+          <View style={globalStyle.date_codes}>
+            <View style={globalStyle.date_codeContainter}>
+              <Text style={globalStyle.paragraph}>Zip Code</Text>
+              <TextInput
+                style={globalStyle.date_code}
+                placeholder="#####"
+                value={this.state.zipCodeInput}
+                placeholderTextColor={"#000"}
+                onChangeText={(newZipCodeInput) =>
+                  this.setState({ zipCodeInput: newZipCodeInput })
+                }
+              />
+            </View>
+            <View style={globalStyle.date_codeContainter}>
+              <Text style={globalStyle.paragraph}>State</Text>
+              <TextInput
+                style={globalStyle.date_code}
+                value={this.state.stateInput}
+                onChangeText={(newStateInput) =>
+                  this.setState({ stateInput: newStateInput })
+                }
+              />
+            </View>
+          </View>
           <Pressable
             style={globalStyle.wideButtonStyle}
             onPress={() =>
