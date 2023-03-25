@@ -8,6 +8,7 @@ import {
   Image,
   Pressable,
   ScrollView,
+  ImageBackground,
 } from "react-native";
 import { SafeAreaView } from "react-native";
 import globalStyle from "../globalStyle";
@@ -92,12 +93,13 @@ export default class SettingsScreen extends React.Component {
           }}
         />
         <ScrollView stickyHeaderIndices={[0]}>
-        <View
-            style={{
-              borderBottomColor: "rgba(0,0,0,0.18)",
-              borderBottomWidth: 5
-            }}
-          />
+          <View style={{height: 5}}>
+            <ImageBackground
+              style={{ width: "100%", height: "100%" }}
+              source={require("../assets/shadow.png")}
+              imageStyle={{ resizeMode: "repeat" }}
+            ></ImageBackground>
+          </View>
           <Text style={globalStyle.subHeaderText}>Personal:</Text>
           <Text style={style.signedInText}>{this.state.currentEmail}</Text>
           <Pressable
