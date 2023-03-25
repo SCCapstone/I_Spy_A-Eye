@@ -108,38 +108,40 @@ export default class SettingsScreen extends React.Component {
             <OpenURLButton url={"https://google.com"}>Tutorial</OpenURLButton>
           </View>
           <Text style={globalStyle.subHeaderText}>Other:</Text>
-          <View style={{ flexDirection: "row" }}>
-            <RadioButton
+          <RadioButton.Group>
+            <RadioButton.Item
               color="#000"
               uncheckedColor="#000"
               value="10"
+              label="10 items per page"
               status={checked === "10" ? "checked" : "unchecked"}
               onPress={() => {
                 this.setState({ checked: "10" });
               }}
             />
-            <Text>10</Text>
-            <RadioButton
+            <RadioButton.Item
               color="#000"
               uncheckedColor="#000"
               value="20"
+              label="20 items per page"
               status={checked === "20" ? "checked" : "unchecked"}
               onPress={() => {
                 this.setState({ checked: "20" });
               }}
             />
-            <Text>20</Text>
-            <RadioButton
+            <RadioButton.Item
               color="#000"
               uncheckedColor="#000"
               value="30"
+              label="30 items per page"
               status={checked === "30" ? "checked" : "unchecked"}
               onPress={() => {
                 this.setState({ checked: "30" });
               }}
             />
-            <Text>30</Text>
-          </View>
+          </RadioButton.Group>
+          {/* Empty space so that the navbar doesn't cover the bottom of the settings page */}
+          <View style={{ minHeight: 80 }}></View>
         </ScrollView>
         <View style={globalStyle.navBarContainer}>
           <View style={globalStyle.buttons} testID="Test_NavigationBar">
