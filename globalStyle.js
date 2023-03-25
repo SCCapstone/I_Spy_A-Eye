@@ -80,7 +80,7 @@ const globalStyle = StyleSheet.create({
     marginLeft: 8,
     marginRight: 8,
   },
-  backButtonStyle: {
+  smallButtonStyle: {
     backgroundColor: "#000",
     borderRadius: 20,
     paddingHorizontal: 8,
@@ -89,7 +89,7 @@ const globalStyle = StyleSheet.create({
     maxWidth: 110,
     marginLeft: 8,
   },
-  backButtonText: {
+  smallButtonText: {
     textAlignVertical: "center",
     color: "#fff",
     fontSize: 20,

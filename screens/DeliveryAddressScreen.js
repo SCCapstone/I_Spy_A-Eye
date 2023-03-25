@@ -107,11 +107,11 @@ export default class DeliveryAddress extends React.Component {
       <SafeAreaView style={globalStyle.wholeScreen}>
         <Text style={globalStyle.headerText}>Delivery Address</Text>
         <Pressable
-          style={globalStyle.backButtonStyle}
+          style={globalStyle.smallButtonStyle}
           // Returns user back to previous page.
           onPress={() => this.returnToPreviousPage()}
         >
-          <Text style={globalStyle.backButtonText}>&lt; Back</Text>
+          <Text style={globalStyle.smallButtonText}>&lt; Back</Text>
         </Pressable>
         <ScrollView>
           <Text style={globalStyle.paragraph}>Street Address</Text>

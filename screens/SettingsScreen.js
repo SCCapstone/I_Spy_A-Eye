@@ -23,7 +23,8 @@ export default class SettingsScreen extends React.Component {
     this.state = {
       settingsOrLogIn: "",
       currentEmail: "",
-      checked: "10",
+      // This variable controls what radio button is currently selected.
+      checked: "20",
     };
   }
 
@@ -142,8 +143,15 @@ export default class SettingsScreen extends React.Component {
               }}
             />
           </RadioButton.Group>
+          <Pressable
+            style={globalStyle.smallButtonStyle}
+            // Returns user back to previous page.
+            onPress={() => this.returnToPreviousPage()}
+          >
+            <Text style={globalStyle.smallButtonText}>Save</Text>
+          </Pressable>
           {/* Empty space so that the navbar doesn't cover the bottom of the settings page */}
-          <View style={{ minHeight: 80 }}></View>
+          <View style={{ minHeight: 100 }}></View>
         </ScrollView>
         <View style={globalStyle.navBarContainer}>
           <View style={globalStyle.buttons} testID="Test_NavigationBar">
@@ -212,6 +220,6 @@ const style = StyleSheet.create({
   subSubHeaderText: {
     fontWeight: "bold",
     fontSize: 22,
-    textAlign: "center"
+    textAlign: "center",
   },
 });

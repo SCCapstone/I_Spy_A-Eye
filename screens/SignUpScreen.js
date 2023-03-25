@@ -41,10 +41,10 @@ export default class SignUp extends React.Component {
       <SafeAreaView style={globalStyle.wholeScreen}>
         <Text style={globalStyle.headerText}>Create an Account</Text>
         <Pressable
-          style={globalStyle.backButtonStyle}
+          style={globalStyle.smallButtonStyle}
           onPress={() => this.props.pageChange(PAGE_ID.login)}
         >
-          <Text style={globalStyle.backButtonText}>&lt; Back</Text>
+          <Text style={globalStyle.smallButtonText}>&lt; Back</Text>
         </Pressable>
         <TextInput
           style={globalStyle.wideInputContainer}
