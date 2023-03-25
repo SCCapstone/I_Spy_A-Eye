@@ -91,7 +91,13 @@ export default class SettingsScreen extends React.Component {
             marginTop: 20,
           }}
         />
-        <ScrollView>
+        <ScrollView stickyHeaderIndices={[0]}>
+        <View
+            style={{
+              borderBottomColor: "rgba(0,0,0,0.18)",
+              borderBottomWidth: 5
+            }}
+          />
           <Text style={globalStyle.subHeaderText}>Personal:</Text>
           <Text style={style.signedInText}>{this.state.currentEmail}</Text>
           <Pressable
