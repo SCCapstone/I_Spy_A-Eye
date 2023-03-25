@@ -35,7 +35,7 @@ export default class NotSignedInSettings extends React.Component {
   render() {
     return (
       <SafeAreaView style={globalStyle.wholeScreen}>
-        <Text style={globalStyle.headerText}>Settings</Text>
+        <Text style={globalStyle.headerText} accessibilityRole="header">Settings</Text>
         {/*Horizontal line*/}
         <View
           style={{
@@ -54,10 +54,11 @@ export default class NotSignedInSettings extends React.Component {
         <Pressable
           style={globalStyle.wideButtonStyle}
           onPress={() => this.signOut()}
+          accessibilityRole="button"
         >
           <Text style={globalStyle.wideButtonText}>Log In</Text>
         </Pressable>
-        <Text style={globalStyle.paragraph}>
+        <Text style={globalStyle.paragraph} accessibilityRole="text">
           Sign in to access settings and make purchases.
         </Text>
         <View style={globalStyle.navBarContainer}>

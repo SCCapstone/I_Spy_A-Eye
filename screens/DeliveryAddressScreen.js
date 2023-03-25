@@ -105,11 +105,14 @@ export default class DeliveryAddress extends React.Component {
   render() {
     return (
       <SafeAreaView style={globalStyle.wholeScreen}>
-        <Text style={globalStyle.headerText}>Delivery Address</Text>
+        <Text style={globalStyle.headerText} accessibilityRole="header">
+          Delivery Address
+        </Text>
         <Pressable
           style={globalStyle.smallButtonStyle}
           // Returns user back to previous page.
           onPress={() => this.returnToPreviousPage()}
+          accessibilityRole="button"
         >
           <Text style={globalStyle.smallButtonText}>&lt; Back</Text>
         </Pressable>
@@ -164,6 +167,7 @@ export default class DeliveryAddress extends React.Component {
                 this.state.stateInput
               )
             }
+            accessibilityRole="button"
           >
             <Text style={globalStyle.wideButtonText}>Update</Text>
           </Pressable>

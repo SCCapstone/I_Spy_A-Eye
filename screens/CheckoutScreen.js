@@ -94,7 +94,7 @@ export default class CheckoutScreen extends React.Component {
     AsyncStorage.setItem("previousPage", "5");
   }
 
-  // Function to "make a purchase" if all info is filled out. 
+  // Function to "make a purchase" if all info is filled out.
   confirm = () => {
     if (
       this.state.addressDelivery !== "" &&
@@ -109,7 +109,9 @@ export default class CheckoutScreen extends React.Component {
       alert("Thank you for your purchase!");
       this.props.pageChange(PAGE_ID.orders);
     } else {
-      alert("You haven't filled out all the required information to make a purchase.");
+      alert(
+        "You haven't filled out all the required information to make a purchase."
+      );
     }
   };
 
@@ -127,11 +129,14 @@ export default class CheckoutScreen extends React.Component {
                   marginLeft: 10,
                   marginTop: 20,
                 }}
+                accessibilityRole="button"
               >
                 {"<"}
               </Text>
             </Pressable>
-            <Text style={style.header}>Checkout</Text>
+            <Text style={style.header} accessibilityRole="header">
+              Checkout
+            </Text>
           </View>
 
           {/*Horizontal line*/}
@@ -144,13 +149,13 @@ export default class CheckoutScreen extends React.Component {
           />
           {/* OverScroll being enabled ruins shadow effect */}
           <ScrollView stickyHeaderIndices={[0]} overScrollMode="never">
-          <View style={{height: 5}}>
-            <ImageBackground
-              style={{ width: "100%", height: "100%" }}
-              source={require("../assets/shadow.png")}
-              imageStyle={{ resizeMode: "repeat" }}
-            ></ImageBackground>
-          </View>
+            <View style={{ height: 5 }}>
+              <ImageBackground
+                style={{ width: "100%", height: "100%" }}
+                source={require("../assets/shadow.png")}
+                imageStyle={{ resizeMode: "repeat" }}
+              ></ImageBackground>
+            </View>
             {/*The user can input the delivery address*/}
             <Text style={globalStyle.subHeaderText}>Delivery Address</Text>
             <Text style={globalStyle.paragraph}>
@@ -163,6 +168,7 @@ export default class CheckoutScreen extends React.Component {
             <Pressable
               style={globalStyle.headerButtonStyle}
               onPress={() => this.props.pageChange(PAGE_ID.delivery_address)}
+              accessibilityRole="button"
             >
               <Text style={globalStyle.headerButtonText}>Change</Text>
             </Pressable>

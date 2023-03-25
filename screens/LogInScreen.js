@@ -7,8 +7,7 @@ import { firebaseAuth } from "../utils/firebase";
 import firebase from "firebase";
 require("firebase/auth");
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {OpenURLButton} from '../functions/RedirectButton'
-
+import { OpenURLButton } from "../functions/RedirectButton";
 
 /**
  * This is the first screen users will see when they start the app. Users can login
@@ -69,7 +68,9 @@ export default class Login extends React.Component {
   render() {
     return (
       <SafeAreaView style={globalStyle.wholeScreen}>
-        <Text style={globalStyle.headerText}>I Spy Shopper</Text>
+        <Text style={globalStyle.headerText} accessibilityRole="header">
+          I Spy Shopper
+        </Text>
         <TextInput
           style={globalStyle.wideInputContainer}
           placeholder="Email"
@@ -94,6 +95,7 @@ export default class Login extends React.Component {
           style={globalStyle.wideButtonStyle}
           onPress={() => this.login(this.state)}
           testID="Test_LogInButton"
+          accessibilityRole="button"
         >
           <Text style={globalStyle.wideButtonText}>Log In</Text>
         </Pressable>
@@ -101,6 +103,7 @@ export default class Login extends React.Component {
           style={globalStyle.wideButtonStyle}
           onPress={() => this.props.pageChange(PAGE_ID.sign_up)}
           testID="Test_SignUpButton"
+          accessibilityRole="button"
         >
           <Text style={globalStyle.wideButtonText}>Sign Up</Text>
         </Pressable>
@@ -108,13 +111,14 @@ export default class Login extends React.Component {
           style={globalStyle.wideButtonStyle}
           onPress={() => this.props.pageChange(PAGE_ID.search)}
           testID="Test_SignInSkip"
+          accessibilityRole="button"
         >
           <Text style={globalStyle.wideButtonText}>
             Continue Without Signing in
           </Text>
         </Pressable>
-        <View style={globalStyle.wideButtonStyle} >
-          <OpenURLButton url={'https://google.com'}>Tutorial</OpenURLButton>
+        <View style={globalStyle.wideButtonStyle}>
+          <OpenURLButton url={"https://google.com"}>Tutorial</OpenURLButton>
         </View>
       </SafeAreaView>
     );

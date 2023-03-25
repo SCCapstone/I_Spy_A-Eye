@@ -39,10 +39,13 @@ export default class SignUp extends React.Component {
   render() {
     return (
       <SafeAreaView style={globalStyle.wholeScreen}>
-        <Text style={globalStyle.headerText}>Create an Account</Text>
+        <Text style={globalStyle.headerText} accessibilityRole="header">
+          Create an Account
+        </Text>
         <Pressable
           style={globalStyle.smallButtonStyle}
           onPress={() => this.props.pageChange(PAGE_ID.login)}
+          accessibilityRole="button"
         >
           <Text style={globalStyle.smallButtonText}>&lt; Back</Text>
         </Pressable>
@@ -76,6 +79,7 @@ export default class SignUp extends React.Component {
         <Pressable
           style={globalStyle.wideButtonStyle}
           onPress={() => this.signUp(this.state)}
+          accessibilityRole="button"
         >
           <Text style={globalStyle.wideButtonText}>Sign Up</Text>
         </Pressable>

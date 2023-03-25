@@ -83,7 +83,9 @@ export default class SettingsScreen extends React.Component {
     const { checked } = this.state;
     return (
       <SafeAreaView style={globalStyle.wholeScreen}>
-        <Text style={globalStyle.headerText}>Settings</Text>
+        <Text style={globalStyle.headerText} accessibilityRole="header">
+          Settings
+        </Text>
         {/*Horizontal line*/}
         <View
           style={{
@@ -101,7 +103,9 @@ export default class SettingsScreen extends React.Component {
               imageStyle={{ resizeMode: "repeat" }}
             ></ImageBackground>
           </View>
-          <Text style={globalStyle.subHeaderText}>Personal:</Text>
+          <Text style={globalStyle.subHeaderText} accessibilityRole="header">
+            Personal:
+          </Text>
           <Text style={style.signedInText}>{this.state.currentEmail}</Text>
           <Pressable
             style={globalStyle.wideButtonStyle}
@@ -138,7 +142,9 @@ export default class SettingsScreen extends React.Component {
             <OpenURLButton url={"https://google.com"}>Tutorial</OpenURLButton>
           </View>
           <View style={{ minHeight: 24 }}></View>
-          <Text style={globalStyle.subHeaderText}>Other:</Text>
+          <Text style={globalStyle.subHeaderText} accessibilityRole="header">
+            Other:
+          </Text>
           <Text style={style.subSubHeaderText}>Search Results Per Page</Text>
           <RadioButton.Group accessibilityRole="radiogroup">
             <RadioButton.Item
@@ -238,9 +244,7 @@ export default class SettingsScreen extends React.Component {
                 accessible={true}
                 accessibilityLabel="Gear Icon"
               />
-              <Text style={{ textAlign: "center" }}>
-                Settings
-              </Text>
+              <Text style={{ textAlign: "center" }}>Settings</Text>
             </TouchableOpacity>
           </View>
         </View>

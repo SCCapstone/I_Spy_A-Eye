@@ -3,7 +3,7 @@ import {
   nameIsValidOrEmpty,
   securityCodeIsValidOrEmpty,
   cardNumberIsValidOrEmpty,
-  expiryIsValidOrEmpty
+  expiryIsValidOrEmpty,
 } from "../utils/BillingInfoFunctions";
 import {
   View,
@@ -110,7 +110,10 @@ export default class BillingInfoScreen extends React.Component {
       <SafeAreaView style={globalStyle.wholeScreen}>
         <View style={style.container}>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Pressable onPress={() => this.returnToPreviousPage()}>
+            <Pressable
+              onPress={() => this.returnToPreviousPage()}
+              accessibilityRole="button"
+            >
               <Text
                 style={{
                   fontWeight: "bold",
@@ -122,7 +125,9 @@ export default class BillingInfoScreen extends React.Component {
                 {"<"}
               </Text>
             </Pressable>
-            <Text style={style.header}>Billing Info</Text>
+            <Text style={style.header} accessibilityRole="header">
+              Billing Info
+            </Text>
           </View>
 
           {/*Horizontal line*/}
@@ -134,14 +139,14 @@ export default class BillingInfoScreen extends React.Component {
             }}
           />
           {/* OverScroll being enabled ruins shadow effect */}
-          <ScrollView stickyHeaderIndices={[0]} overScrollMode="never" >
-          <View style={{height: 5}}>
-            <ImageBackground
-              style={{ width: "100%", height: "100%" }}
-              source={require("../assets/shadow.png")}
-              imageStyle={{ resizeMode: "repeat" }}
-            ></ImageBackground>
-          </View>
+          <ScrollView stickyHeaderIndices={[0]} overScrollMode="never">
+            <View style={{ height: 5 }}>
+              <ImageBackground
+                style={{ width: "100%", height: "100%" }}
+                source={require("../assets/shadow.png")}
+                imageStyle={{ resizeMode: "repeat" }}
+              ></ImageBackground>
+            </View>
             {/*The user can input billing information*/}
             <Text style={globalStyle.paragraph}>Name on Card</Text>
             <TextInput
@@ -201,6 +206,7 @@ export default class BillingInfoScreen extends React.Component {
                   this.state.securityCodeInput
                 )
               }
+              accessibilityRole="button"
             >
               <Text style={globalStyle.wideButtonText}>Update</Text>
             </Pressable>
