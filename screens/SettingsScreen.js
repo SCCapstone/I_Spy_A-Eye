@@ -107,13 +107,15 @@ export default class SettingsScreen extends React.Component {
           <View style={globalStyle.wideButtonStyle}>
             <OpenURLButton url={"https://google.com"}>Tutorial</OpenURLButton>
           </View>
+          <View style={{ minHeight: 24 }}></View>
           <Text style={globalStyle.subHeaderText}>Other:</Text>
+          <Text style={style.subSubHeaderText}>Search Results Per Page</Text>
           <RadioButton.Group>
             <RadioButton.Item
               color="#000"
               uncheckedColor="#000"
               value="10"
-              label="10 items per page"
+              label="10 products per page"
               status={checked === "10" ? "checked" : "unchecked"}
               onPress={() => {
                 this.setState({ checked: "10" });
@@ -123,7 +125,7 @@ export default class SettingsScreen extends React.Component {
               color="#000"
               uncheckedColor="#000"
               value="20"
-              label="20 items per page"
+              label="20 products per page"
               status={checked === "20" ? "checked" : "unchecked"}
               onPress={() => {
                 this.setState({ checked: "20" });
@@ -133,7 +135,7 @@ export default class SettingsScreen extends React.Component {
               color="#000"
               uncheckedColor="#000"
               value="30"
-              label="30 items per page"
+              label="30 products per page"
               status={checked === "30" ? "checked" : "unchecked"}
               onPress={() => {
                 this.setState({ checked: "30" });
@@ -206,5 +208,10 @@ const style = StyleSheet.create({
   signedInText: {
     marginLeft: 8,
     fontSize: 17,
+  },
+  subSubHeaderText: {
+    fontWeight: "bold",
+    fontSize: 22,
+    textAlign: "center"
   },
 });
