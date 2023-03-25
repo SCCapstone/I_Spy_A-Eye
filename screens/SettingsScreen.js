@@ -9,6 +9,7 @@ import {
   Pressable,
   ScrollView,
   ImageBackground,
+  ToastAndroid,
 } from "react-native";
 import { SafeAreaView } from "react-native";
 import globalStyle from "../globalStyle";
@@ -35,6 +36,7 @@ export default class SettingsScreen extends React.Component {
       firebase.firestore().collection("productsPerPage").doc(user.uid).set({
         number: productsPerPageInput,
       });
+      ToastAndroid.show("Saved!", 400);
     });
   }
 
