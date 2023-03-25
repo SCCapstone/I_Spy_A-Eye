@@ -39,6 +39,7 @@
     "react-native": "0.71.1",
     "react-native-base64": "^0.2.1",
     "react-native-config": "^1.4.11",
+    "react-native-paper": "^5.5.1",
     "react-native-randombytes": "^3.6.1",
     "react-native-sectioned-multi-select": "^0.9.1",
     "react-native-testing-library": "^6.0.0",

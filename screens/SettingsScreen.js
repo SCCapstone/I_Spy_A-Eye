@@ -7,14 +7,15 @@ import {
   TouchableOpacity,
   Image,
   Pressable,
+  ScrollView,
 } from "react-native";
 import { SafeAreaView } from "react-native";
 import { firebaseAuth } from "../utils/firebase";
 import globalStyle from "../globalStyle";
 require("firebase/auth");
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {OpenURLButton} from '../functions/RedirectButton'
-
+import { OpenURLButton } from "../functions/RedirectButton";
+import { RadioButton } from "react-native-paper";
 
 export default class SettingsScreen extends React.Component {
   constructor(props) {
@@ -22,6 +23,7 @@ export default class SettingsScreen extends React.Component {
     this.state = {
       settingsOrLogIn: "",
       currentEmail: "",
+      checked: "10",
     };
   }
 
@@ -62,6 +64,7 @@ export default class SettingsScreen extends React.Component {
   }
 
   render() {
+    const { checked } = this.state;
     return (
       <SafeAreaView style={globalStyle.wholeScreen}>
         <Text style={globalStyle.headerText}>Settings</Text>
@@ -73,34 +76,71 @@ export default class SettingsScreen extends React.Component {
             marginTop: 20,
           }}
         />
-        <Text style={globalStyle.subHeaderText}>Personal:</Text>
-        <Text style={style.signedInText}>{this.state.currentEmail}</Text>
-        <Pressable
-          style={globalStyle.wideButtonStyle}
-          onPress={() => this.props.pageChange(PAGE_ID.delivery_address)}
-        >
-          <Text style={globalStyle.wideButtonText}>
-            Change Delivery Address
-          </Text>
-        </Pressable>
-        <Pressable
-          style={globalStyle.wideButtonStyle}
-          onPress={() => this.props.pageChange(PAGE_ID.billing_info)}
-        >
-          <Text style={globalStyle.wideButtonText}>Change Billing Info</Text>
-        </Pressable>
-        <Pressable style={globalStyle.wideButtonStyle}>
-          <Text style={globalStyle.wideButtonText}>Clear Shopping History</Text>
-        </Pressable>
-        <Pressable
-          style={globalStyle.wideButtonStyle}
-          onPress={() => this.signOut()}
-        >
-          <Text style={globalStyle.wideButtonText}>Sign Out</Text>
-        </Pressable>
-        <View style={globalStyle.wideButtonStyle} >
-          <OpenURLButton url={'https://google.com'}>Tutorial</OpenURLButton>
-        </View>
+        <ScrollView>
+          <Text style={globalStyle.subHeaderText}>Personal:</Text>
+          <Text style={style.signedInText}>{this.state.currentEmail}</Text>
+          <Pressable
+            style={globalStyle.wideButtonStyle}
+            onPress={() => this.props.pageChange(PAGE_ID.delivery_address)}
+          >
+            <Text style={globalStyle.wideButtonText}>
+              Change Delivery Address
+            </Text>
+          </Pressable>
+          <Pressable
+            style={globalStyle.wideButtonStyle}
+            onPress={() => this.props.pageChange(PAGE_ID.billing_info)}
+          >
+            <Text style={globalStyle.wideButtonText}>Change Billing Info</Text>
+          </Pressable>
+          <Pressable style={globalStyle.wideButtonStyle}>
+            <Text style={globalStyle.wideButtonText}>
+              Clear Shopping History
+            </Text>
+          </Pressable>
+          <Pressable
+            style={globalStyle.wideButtonStyle}
+            onPress={() => this.signOut()}
+          >
+            <Text style={globalStyle.wideButtonText}>Sign Out</Text>
+          </Pressable>
+          <View style={globalStyle.wideButtonStyle}>
+            <OpenURLButton url={"https://google.com"}>Tutorial</OpenURLButton>
+          </View>
+          <Text style={globalStyle.subHeaderText}>Other:</Text>
+          <View style={{ flexDirection: "row" }}>
+            <RadioButton
+              color="#000"
+              uncheckedColor="#000"
+              value="10"
+              status={checked === "10" ? "checked" : "unchecked"}
+              onPress={() => {
+                this.setState({ checked: "10" });
+              }}
+            />
+            <Text>10</Text>
+            <RadioButton
+              color="#000"
+              uncheckedColor="#000"
+              value="20"
+              status={checked === "20" ? "checked" : "unchecked"}
+              onPress={() => {
+                this.setState({ checked: "20" });
+              }}
+            />
+            <Text>20</Text>
+            <RadioButton
+              color="#000"
+              uncheckedColor="#000"
+              value="30"
+              status={checked === "30" ? "checked" : "unchecked"}
+              onPress={() => {
+                this.setState({ checked: "30" });
+              }}
+            />
+            <Text>30</Text>
+          </View>
+        </ScrollView>
         <View style={globalStyle.navBarContainer}>
           <View style={globalStyle.buttons} testID="Test_NavigationBar">
             <TouchableOpacity
