@@ -13,6 +13,7 @@ import {
   Pressable,
   TextInput,
   ScrollView,
+  ImageBackground,
 } from "react-native";
 import globalStyle from "../globalStyle";
 import firebase from "firebase";
@@ -132,7 +133,14 @@ export default class BillingInfoScreen extends React.Component {
               marginTop: 20,
             }}
           />
-          <ScrollView>
+          <ScrollView stickyHeaderIndices={[0]}>
+          <View style={{height: 5}}>
+            <ImageBackground
+              style={{ width: "100%", height: "100%" }}
+              source={require("../assets/shadow.png")}
+              imageStyle={{ resizeMode: "repeat" }}
+            ></ImageBackground>
+          </View>
             {/*The user can input billing information*/}
             <Text style={globalStyle.paragraph}>Name on Card</Text>
             <TextInput
