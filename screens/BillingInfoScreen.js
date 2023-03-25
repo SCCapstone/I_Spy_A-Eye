@@ -133,7 +133,8 @@ export default class BillingInfoScreen extends React.Component {
               marginTop: 20,
             }}
           />
-          <ScrollView stickyHeaderIndices={[0]}>
+          {/* OverScroll being enabled ruins shadow effect */}
+          <ScrollView stickyHeaderIndices={[0]} overScrollMode="never" >
           <View style={{height: 5}}>
             <ImageBackground
               style={{ width: "100%", height: "100%" }}
