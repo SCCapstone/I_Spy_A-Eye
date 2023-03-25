@@ -94,7 +94,7 @@ export default class SettingsScreen extends React.Component {
         />
         {/* OverScroll being enabled ruins shadow effect */}
         <ScrollView stickyHeaderIndices={[0]} overScrollMode="never">
-          <View style={{height: 5}}>
+          <View style={{ height: 5 }}>
             <ImageBackground
               style={{ width: "100%", height: "100%" }}
               source={require("../assets/shadow.png")}
@@ -106,6 +106,7 @@ export default class SettingsScreen extends React.Component {
           <Pressable
             style={globalStyle.wideButtonStyle}
             onPress={() => this.props.pageChange(PAGE_ID.delivery_address)}
+            accessibilityRole="button"
           >
             <Text style={globalStyle.wideButtonText}>
               Change Delivery Address
@@ -114,10 +115,14 @@ export default class SettingsScreen extends React.Component {
           <Pressable
             style={globalStyle.wideButtonStyle}
             onPress={() => this.props.pageChange(PAGE_ID.billing_info)}
+            accessibilityRole="button"
           >
             <Text style={globalStyle.wideButtonText}>Change Billing Info</Text>
           </Pressable>
-          <Pressable style={globalStyle.wideButtonStyle}>
+          <Pressable
+            style={globalStyle.wideButtonStyle}
+            accessibilityRole="button"
+          >
             <Text style={globalStyle.wideButtonText}>
               Clear Shopping History
             </Text>
@@ -125,6 +130,7 @@ export default class SettingsScreen extends React.Component {
           <Pressable
             style={globalStyle.wideButtonStyle}
             onPress={() => this.signOut()}
+            accessibilityRole="button"
           >
             <Text style={globalStyle.wideButtonText}>Sign Out</Text>
           </Pressable>
@@ -134,7 +140,7 @@ export default class SettingsScreen extends React.Component {
           <View style={{ minHeight: 24 }}></View>
           <Text style={globalStyle.subHeaderText}>Other:</Text>
           <Text style={style.subSubHeaderText}>Search Results Per Page</Text>
-          <RadioButton.Group>
+          <RadioButton.Group accessibilityRole="radiogroup">
             <RadioButton.Item
               color="#000"
               uncheckedColor="#000"
@@ -144,6 +150,7 @@ export default class SettingsScreen extends React.Component {
               onPress={() => {
                 this.setState({ checked: "10" });
               }}
+              accessibilityRole="radio"
             />
             <RadioButton.Item
               color="#000"
@@ -154,6 +161,7 @@ export default class SettingsScreen extends React.Component {
               onPress={() => {
                 this.setState({ checked: "20" });
               }}
+              accessibilityRole="radio"
             />
             <RadioButton.Item
               color="#000"
@@ -164,6 +172,7 @@ export default class SettingsScreen extends React.Component {
               onPress={() => {
                 this.setState({ checked: "30" });
               }}
+              accessibilityRole="radio"
             />
           </RadioButton.Group>
           <Pressable
@@ -182,48 +191,52 @@ export default class SettingsScreen extends React.Component {
             <TouchableOpacity
               onPress={() => this.props.pageChange(PAGE_ID.search)}
               style={globalStyle.navButtonContainer}
+              accessibilityRole="menuitem"
             >
               <Image
                 style={globalStyle.icon}
                 source={require("../assets/search.png")}
                 accessible={true}
-                accessibilityLabel={"Magnifying Glass Icon"}
+                accessibilityLabel="Magnifying Glass Icon"
               />
               <Text style={{ textAlign: "center" }}>Search</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => this.props.pageChange(PAGE_ID.cart)}
               style={globalStyle.navButtonContainer}
+              accessibilityRole="menuitem"
             >
               <Image
                 style={globalStyle.icon}
                 source={require("../assets/cart.png")}
                 accessible={true}
-                accessibilityLabel={"Shopping Cart Icon"}
+                accessibilityLabel="Shopping Cart Icon"
               />
               <Text style={{ textAlign: "center" }}>My Cart</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => this.props.pageChange(PAGE_ID.orders)}
               style={globalStyle.navButtonContainer}
+              accessibilityRole="menuitem"
             >
               <Image
                 style={globalStyle.icon}
                 source={require("../assets/orders.png")}
                 accessible={true}
-                accessibilityLabel={"Reciept Icon"}
+                accessibilityLabel="Reciept Icon"
               />
               <Text style={{ textAlign: "center" }}>Orders</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => this.props.pageChange(PAGE_ID.settings)}
               style={globalStyle.navButtonContainer}
+              accessibilityRole="menuitem"
             >
               <Image
                 style={globalStyle.icon}
                 source={require("../assets/gear.png")}
                 accessible={true}
-                accessibilityLabel={"Gear Icon"}
+                accessibilityLabel="Gear Icon"
               />
               <Text style={{ textAlign: "center" }}>
                 {this.state.settingsOrLogIn}
