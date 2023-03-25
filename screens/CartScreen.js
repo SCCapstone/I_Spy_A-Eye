@@ -232,53 +232,59 @@ export default class CartScreen extends React.Component {
 
         <View style={globalStyle.navBarContainer}>
           <View style={globalStyle.buttons} testID="Test_NavigationBar">
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={() => this.props.pageChange(PAGE_ID.search)}
               style={globalStyle.navButtonContainer}
+              accessibilityRole="menuitem"
             >
               <Image
                 style={globalStyle.icon}
                 source={require("../assets/search.png")}
                 accessible={true}
-                accessibilityLabel={"Magnifying Glass Icon"}
+                accessibilityLabel="Magnifying Glass Icon"
               />
-              <Text style={{textAlign: "center"}}>Search</Text>
+              <Text style={{ textAlign: "center" }}>Search</Text>
             </TouchableOpacity>
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={() => this.props.pageChange(PAGE_ID.cart)}
               style={globalStyle.navButtonContainer}
+              accessibilityRole="menuitem"
             >
               <Image
                 style={globalStyle.icon}
                 source={require("../assets/cart.png")}
                 accessible={true}
-                accessibilityLabel={"Shopping Cart Icon"}
+                accessibilityLabel="Shopping Cart Icon"
               />
-              <Text style={{textAlign: "center"}}>My Cart</Text>
+              <Text style={{ textAlign: "center" }}>My Cart</Text>
             </TouchableOpacity>
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={() => this.props.pageChange(PAGE_ID.orders)}
               style={globalStyle.navButtonContainer}
+              accessibilityRole="menuitem"
             >
               <Image
                 style={globalStyle.icon}
                 source={require("../assets/orders.png")}
                 accessible={true}
-                accessibilityLabel={"Reciept Icon"}
+                accessibilityLabel="Reciept Icon"
               />
-              <Text style={{textAlign: "center"}}>Orders</Text>
+              <Text style={{ textAlign: "center" }}>Orders</Text>
             </TouchableOpacity>
-            <TouchableOpacity 
-              onPress={() => this.props.pageChange(PAGE_ID.settings)} 
+            <TouchableOpacity
+              onPress={() => this.props.pageChange(PAGE_ID.settings)}
               style={globalStyle.navButtonContainer}
+              accessibilityRole="menuitem"
             >
               <Image
                 style={globalStyle.icon}
                 source={require("../assets/gear.png")}
                 accessible={true}
-                accessibilityLabel={"Gear Icon"}
+                accessibilityLabel="Gear Icon"
               />
-              <Text style={{textAlign: "center"}}>{this.state.settingsOrLogIn}</Text>
+              <Text style={{ textAlign: "center" }}>
+                {this.state.settingsOrLogIn}
+              </Text>
             </TouchableOpacity>
           </View>
         </View>

@@ -239,7 +239,7 @@ export default class SettingsScreen extends React.Component {
                 accessibilityLabel="Gear Icon"
               />
               <Text style={{ textAlign: "center" }}>
-                {this.state.settingsOrLogIn}
+                Settings
               </Text>
             </TouchableOpacity>
           </View>
