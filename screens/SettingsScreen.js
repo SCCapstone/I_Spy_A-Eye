@@ -10,9 +10,10 @@ import {
   ScrollView,
 } from "react-native";
 import { SafeAreaView } from "react-native";
-import { firebaseAuth } from "../utils/firebase";
 import globalStyle from "../globalStyle";
+import firebase from "firebase";
 require("firebase/auth");
+import { deAuthUser } from "../utils/SettingsScreenFunctions";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { OpenURLButton } from "../functions/RedirectButton";
 import { RadioButton } from "react-native-paper";
@@ -28,18 +29,25 @@ export default class SettingsScreen extends React.Component {
     };
   }
 
-  /**
-   * Function to sign out users through Firebase. After a successful sign out, the user
-   * is redirected to the Log In screen.
-   */
-  signOut = () => {
-    firebaseAuth
-      .signOut()
-      .then(() => {
-        this.props.pageChange(PAGE_ID.login);
-      })
-      .catch((error) => alert(error.message));
-  };
+  async saveProductsPerPageInFirestore(productsPerPageInput) {
+    firebase.auth().onAuthStateChanged(function (user) {
+      firebase.firestore().collection("productsPerPage").doc(user.uid).set({
+        number: productsPerPageInput,
+      });
+    });
+  }
+
+  async getProductsPerPage() {
+    let res = await firebase
+      .firestore()
+      .collection("productsPerPage")
+      .doc(await AsyncStorage.getItem("userID"))
+      .get();
+    this.setState({
+      checked:
+        res._delegate._document.data.value.mapValue.fields.number.stringValue,
+    });
+  }
 
   async updateCurrentEmailState() {
     this.setState({
@@ -62,6 +70,12 @@ export default class SettingsScreen extends React.Component {
      * variable will allow those screens to determine which screen to go back to.
      */
     AsyncStorage.setItem("previousPage", "4");
+    this.getProductsPerPage();
+  }
+
+  signOut() {
+    deAuthUser();
+    this.props.pageChange(PAGE_ID.login);
   }
 
   render() {
@@ -145,8 +159,9 @@ export default class SettingsScreen extends React.Component {
           </RadioButton.Group>
           <Pressable
             style={globalStyle.smallButtonStyle}
-            // Returns user back to previous page.
-            onPress={() => this.returnToPreviousPage()}
+            onPress={() =>
+              this.saveProductsPerPageInFirestore(this.state.checked)
+            }
           >
             <Text style={globalStyle.smallButtonText}>Save</Text>
           </Pressable>
