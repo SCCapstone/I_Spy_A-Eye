@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, View, StyleSheet, TouchableOpacity, Image, Pressable, FlatList, TextInput, SafeAreaView } from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity, Image, Pressable, FlatList, TextInput, SafeAreaView, ImageBackground } from "react-native";
 import globalStyle from "../globalStyle"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { PAGE_ID } from "../utils/constants.js";
@@ -223,6 +223,20 @@ export default class CartScreen extends React.Component {
           >
             Grand Total: ${grandTotal}
           </Text>
+        {/* This is the shadow of the horizontal line. The translate Y value comes from 
+        the marginTop value and borderBottomWidth value of the horizontal line added 
+        together, plus the shadow height as well. */}
+        <View style={{ 
+          height: 5,
+          position: 'relative',
+          transform: [{translateY: 35}],}}
+        >
+          <ImageBackground
+            style={{ width: "100%", height: "100%" }}
+            source={require("../assets/shadow.png")}
+            imageStyle={{ resizeMode: "repeat" }}
+          ></ImageBackground>
+        </View>
 
           {/*Horizontal line*/}
           <View
@@ -230,12 +244,6 @@ export default class CartScreen extends React.Component {
               borderBottomColor: "black",
               borderBottomWidth: 10,
               marginTop: 20,
-            }}
-          />
-          <View
-            style={{
-              borderBottomColor: "lightgrey",
-              borderBottomWidth: 5,
             }}
           />
 
