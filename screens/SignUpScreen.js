@@ -84,7 +84,7 @@ export default class SignUp extends React.Component {
           <Text style={globalStyle.wideButtonText}>Sign Up</Text>
         </Pressable>
         <Text style={globalStyle.paragraph}>
-          Your password must be at least 8 characters long. it must contain an
+          Your password must be at least 8 characters long. It must contain an
           uppercase letter, a lowercase letter, a number, and a non-alphanumeric
           character.
         </Text>

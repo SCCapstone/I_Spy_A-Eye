@@ -6,6 +6,7 @@ import {
   Image,
   Pressable,
   ImageBackground,
+  StyleSheet,
 } from "react-native";
 import { SafeAreaView } from "react-native";
 import { firebaseAuth } from "../utils/firebase";
@@ -35,7 +36,9 @@ export default class NotSignedInSettings extends React.Component {
   render() {
     return (
       <SafeAreaView style={globalStyle.wholeScreen}>
-        <Text style={globalStyle.headerText} accessibilityRole="header">Settings</Text>
+        <Text style={globalStyle.headerText} accessibilityRole="header">
+          Settings
+        </Text>
         {/*Horizontal line*/}
         <View
           style={{
@@ -51,6 +54,10 @@ export default class NotSignedInSettings extends React.Component {
             imageStyle={{ resizeMode: "repeat" }}
           ></ImageBackground>
         </View>
+        <Text style={globalStyle.paragraph} accessibilityRole="text">
+          Sign in to access settings and make purchases. If you don't have an
+          account yet, it is quick and easy to make one.
+        </Text>
         <Pressable
           style={globalStyle.wideButtonStyle}
           onPress={() => this.signOut()}
@@ -58,9 +65,19 @@ export default class NotSignedInSettings extends React.Component {
         >
           <Text style={globalStyle.wideButtonText}>Log In</Text>
         </Pressable>
-        <Text style={globalStyle.paragraph} accessibilityRole="text">
-          Sign in to access settings and make purchases.
-        </Text>
+        <Pressable
+          style={globalStyle.wideButtonStyle}
+          onPress={() => this.props.pageChange(PAGE_ID.sign_up)}
+          accessibilityRole="button"
+        >
+          <Text style={globalStyle.wideButtonText}>Sign Up</Text>
+        </Pressable>
+        <Image
+          style={style.logo}
+          source={require("../assets/ispylogofinal.png")}
+          accessible={true}
+          accessibilityLabel="I Spy Shopper logo"
+        />
         <View style={globalStyle.navBarContainer}>
           <View style={globalStyle.buttons} testID="Test_NavigationBar">
             <TouchableOpacity
@@ -121,3 +138,13 @@ export default class NotSignedInSettings extends React.Component {
     );
   }
 }
+
+const style = StyleSheet.create({
+  logo: {
+    marginTop: 30,
+    width: 60,
+    height: 60,
+    alignSelf: "center",
+  },
+});
+
