@@ -144,7 +144,20 @@ const globalStyle = StyleSheet.create({
   date_codeContainter: {
     marginLeft: 8,
     marginRight: 8,
-    minWidth: "40%",
+    minWidth: "45%",
+    maxWidth: "45%",
+  },
+  date_codeContainter_right: {
+    marginLeft: 8,
+    marginRight: 8,
+    minWidth: "60%",
+    maxWidth: "60%",
+  },
+  date_codeContainter_left: {
+    marginLeft: 8,
+    marginRight: 8,
+    minWidth: "35%",
+    maxWidth: "35%",
   },
   date_codes: {
     flexDirection: "row",

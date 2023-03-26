@@ -134,7 +134,7 @@ export default class DeliveryAddress extends React.Component {
             }
           />
           <View style={globalStyle.date_codes}>
-            <View style={globalStyle.date_codeContainter}>
+            <View style={globalStyle.date_codeContainter_left}>
               <Text style={globalStyle.paragraph}>Zip Code</Text>
               <TextInput
                 style={globalStyle.date_code}
@@ -146,11 +146,13 @@ export default class DeliveryAddress extends React.Component {
                 }
               />
             </View>
-            <View style={globalStyle.date_codeContainter}>
+            <View style={globalStyle.date_codeContainter_right}>
               <Text style={globalStyle.paragraph}>State</Text>
               <TextInput
                 style={globalStyle.date_code}
+                placeholder="Name or Abbreviation"
                 value={this.state.stateInput}
+                placeholderTextColor={"#000"}
                 onChangeText={(newStateInput) =>
                   this.setState({ stateInput: newStateInput })
                 }
