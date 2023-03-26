@@ -4,6 +4,7 @@ import globalStyle from "../globalStyle";
 import { firebaseAuth } from "../utils/firebase";
 import { newPasswordIsValid } from "../utils/SignUpScreenFunctions";
 import { PAGE_ID } from "../utils/constants";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default class SignUp extends React.Component {
   // Holds the values of the text input fields on this screen.
@@ -14,6 +15,13 @@ export default class SignUp extends React.Component {
       passwordInput: "",
       confirmPasswordInput: "",
     };
+  }
+
+  // Returns user back to previous screen.
+  async returnToPreviousPage() {
+    this.props.pageChange(
+      parseInt(await AsyncStorage.getItem("previousPage"), 10)
+    );
   }
 
   /**
@@ -44,7 +52,7 @@ export default class SignUp extends React.Component {
         </Text>
         <Pressable
           style={globalStyle.smallButtonStyle}
-          onPress={() => this.props.pageChange(PAGE_ID.login)}
+          onPress={() => this.returnToPreviousPage()}
           accessibilityRole="button"
         >
           <Text style={globalStyle.smallButtonText}>&lt; Back</Text>

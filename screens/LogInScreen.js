@@ -40,6 +40,13 @@ export default class Login extends React.Component {
         AsyncStorage.setItem("SettingsOrLogIn", "Log In");
       }
     });
+
+    /**
+     * The sign up screen has a back button and that screen can be accessed
+     * from this screen and the Not Signed In Settings screen. The previousPage
+     * variable will allow those screens to determine which screen to go back to.
+     */
+    AsyncStorage.setItem("previousPage", "0");
   }
 
   /**

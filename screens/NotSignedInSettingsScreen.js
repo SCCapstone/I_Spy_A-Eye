@@ -9,10 +9,9 @@ import {
   StyleSheet,
 } from "react-native";
 import { SafeAreaView } from "react-native";
-import { firebaseAuth } from "../utils/firebase";
 import globalStyle from "../globalStyle";
-require("firebase/auth");
 import { PAGE_ID } from "../utils/constants";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 /**
  * This screen is shown when a user not signed in clicks the settings button on the navbar.
@@ -20,18 +19,16 @@ import { PAGE_ID } from "../utils/constants";
  */
 
 export default class NotSignedInSettings extends React.Component {
-  /**
-   * Function to sign out users through Firebase. After a successful sign out, the user
-   * is redirected to the Log In screen.
-   */
-  signOut = () => {
-    firebaseAuth
-      .signOut()
-      .then(() => {
-        this.props.pageChange(0);
-      })
-      .catch((error) => alert(error.message));
-  };
+
+  componentDidMount() {
+    /**
+     * The sign up screen has a back button and that screen can be accessed
+     * from this screen and the Log In screen. The previousPage variable 
+     * will allow those screens to determine which screen to go back to.
+     */
+    AsyncStorage.setItem("previousPage", "4");
+  }
+
 
   render() {
     return (
@@ -60,7 +57,7 @@ export default class NotSignedInSettings extends React.Component {
         </Text>
         <Pressable
           style={globalStyle.wideButtonStyle}
-          onPress={() => this.signOut()}
+          onPress={() => this.props.pageChange(PAGE_ID.login)}
           accessibilityRole="button"
         >
           <Text style={globalStyle.wideButtonText}>Log In</Text>
