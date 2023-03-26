@@ -7,6 +7,7 @@ import {
   Image,
   SafeAreaView,
   FlatList,
+  ImageBackground
 } from "react-native";
 import globalStyle from "../globalStyle";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -39,18 +40,29 @@ export default class Page3 extends React.Component {
             Orders
           </Text>
 
+        {/* This is the shadow of the horizontal line. The translate Y value comes from 
+        the marginTop value and borderBottomWidth value of the horizontal line added 
+        together, plus the shadow height as well. The total of this value has 0.1 subtracted
+        from it so the shadow overlaps slightly with the black bar so that there isn't
+        a think white line in the middle. */}
+        <View style={{ 
+          height: 5,
+          position: 'relative',
+          transform: [{translateY: 19.9}],}}
+        >
+          <ImageBackground
+            style={{ width: "100%", height: "100%" }}
+            source={require("../assets/shadow.png")}
+            imageStyle={{ resizeMode: "repeat" }}
+          ></ImageBackground>
+        </View>
+
           {/*Horizontal line*/}
           <View
             style={{
               borderBottomColor: "black",
               borderBottomWidth: 10,
               marginTop: 5,
-            }}
-          />
-          <View
-            style={{
-              borderBottomColor: "lightgrey",
-              borderBottomWidth: 5,
             }}
           />
 
