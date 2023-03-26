@@ -35,7 +35,9 @@ export default class Page3 extends React.Component {
       <SafeAreaView style={globalStyle.wholeScreen}>
         <View style={style.container}>
           {/*Header*/}
-          <Text style={style.header}>Orders</Text>
+          <Text style={style.header} accessibilityRole="header">
+            Orders
+          </Text>
 
           {/*Horizontal line*/}
           <View

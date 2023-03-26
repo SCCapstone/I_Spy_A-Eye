@@ -184,47 +184,72 @@ export default class CartScreen extends React.Component {
       <SafeAreaView style={globalStyle.wholeScreen}>
         <View style={style.container}>
           {/*Header*/}
-          <Text style={style.header} testID="test_CartTextHeader">Cart</Text>
+          <Text
+            style={style.header}
+            testID="test_CartTextHeader"
+            accessibilityRole="header"
+          >
+            Cart
+          </Text>
 
-          <Text style={{fontSize: 23, marginHorizontal: 20, marginBottom: 17}} testID="test_GroceryTextHeader">Grocery Total: ${this.addPrices()}</Text>
+          <Text
+            style={{ fontSize: 23, marginHorizontal: 20, marginBottom: 17 }}
+            testID="test_GroceryTextHeader"
+          >
+            Grocery Total: ${this.addPrices()}
+          </Text>
 
-          <View style={{flexDirection: 'row'}}>
-            <Text style={{fontSize: 23, marginHorizontal: 20, marginRight: 30}} testID="test_DeliveryTextHeader">Delivery Price:${deliveryPrice}.00</Text>
+          <View style={{ flexDirection: "row" }}>
+            <Text
+              style={{ fontSize: 23, marginHorizontal: 20, marginRight: 30 }}
+              testID="test_DeliveryTextHeader"
+            >
+              Delivery Price:${deliveryPrice}.00
+            </Text>
 
             {/*Takes user to the checkout screen*/}
-            <Pressable testID="test_BuyButtonHeader" style={style.button} onPress={() => this.props.pageChange(5)}>
+            <Pressable
+              testID="test_BuyButtonHeader"
+              style={style.button}
+              onPress={() => this.props.pageChange(5)}
+            >
               <Text style={style.buttonText}>Buy</Text>
             </Pressable>
           </View>
 
-          <Text style={{fontSize: 23, marginHorizontal: 20}} testID="test_GrandTotalHeader">Grand Total:     ${grandTotal}</Text>
+          <Text
+            style={{ fontSize: 23, marginHorizontal: 20 }}
+            testID="test_GrandTotalHeader"
+          >
+            Grand Total: ${grandTotal}
+          </Text>
 
           {/*Horizontal line*/}
           <View
             style={{
-              borderBottomColor: 'black',
+              borderBottomColor: "black",
               borderBottomWidth: 10,
-              marginTop: 20
+              marginTop: 20,
             }}
           />
           <View
             style={{
-              borderBottomColor: 'lightgrey',
-              borderBottomWidth: 5
+              borderBottomColor: "lightgrey",
+              borderBottomWidth: 5,
             }}
           />
 
           <FlatList
-            contentContainerStyle={{paddingBottom: 75}}
+            contentContainerStyle={{ paddingBottom: 75 }}
             data={this.state.products}
-            renderItem={({item, index}) =>
-              <ListItem 
+            renderItem={({ item, index }) => (
+              <ListItem
                 item={item}
                 decrementValue={() => this.decrementValue(item.id)}
                 incrementValue={() => this.incrementValue(item.id)}
                 removeProduct={() => this.removeProduct(item.id)}
               />
-            }
+            )}
             keyExtractor={(item) => item.id}
             testID="test_ItemsInCart"
           />
