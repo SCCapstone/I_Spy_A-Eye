@@ -61,6 +61,13 @@ export default class SettingsScreen extends React.Component {
     AsyncStorage.setItem("previousPage", "4");
   }
 
+  clearOrderHistory = async () => {
+    let ordersArray = await AsyncStorage.getItem("clearing")
+    ordersArray = JSON.parse(ordersArray)
+    ordersArray = []
+    await AsyncStorage.setItem("removeOrders", JSON.stringify(ordersArray))
+  }
+
   render() {
     return (
       <SafeAreaView style={globalStyle.wholeScreen}>
@@ -89,7 +96,7 @@ export default class SettingsScreen extends React.Component {
         >
           <Text style={globalStyle.wideButtonText}>Change Billing Info</Text>
         </Pressable>
-        <Pressable style={globalStyle.wideButtonStyle}>
+        <Pressable style={globalStyle.wideButtonStyle} onPress={() => this.clearOrderHistory()}>
           <Text style={globalStyle.wideButtonText}>Clear Shopping History</Text>
         </Pressable>
         <Pressable

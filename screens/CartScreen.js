@@ -4,11 +4,6 @@ import globalStyle from "../globalStyle"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { PAGE_ID } from "../utils/constants.js";
 
-/*
-  TODOS:
-    figure out how to prevent same item from being added to array (cart)
-*/
-
 class ListItem extends React.Component {
 
   render() {
@@ -16,7 +11,7 @@ class ListItem extends React.Component {
 
     return(
       <View>
-        {/*Item title, depends on what the user adds to the cart, allows user to go to the details screen*/}
+        {/*Item title, depends on what the user adds to the cart*/}
         <Pressable>
           <Text style={{fontSize: 28, fontWeight: 'bold', textAlign: 'center', marginTop: 10}}>{item.title}</Text>
         </Pressable>
@@ -168,6 +163,17 @@ export default class CartScreen extends React.Component {
     return totalPrice
   }
 
+  // temporary function, just until firestore works properly
+  buyButton = async () => {
+    let arrayItems = await AsyncStorage.getItem("product")
+    arrayItems = JSON.parse(arrayItems)
+    let orders = arrayItems
+    if (orders) {
+      await AsyncStorage.setItem("orders", JSON.stringify(orders))
+    }
+    this.props.pageChange(PAGE_ID.orders)
+  }
+
   render() {
     let deliveryPrice = 5
     let grandTotal = 0
@@ -192,7 +198,7 @@ export default class CartScreen extends React.Component {
             <Text style={{fontSize: 23, marginHorizontal: 20, marginRight: 30}} testID="test_DeliveryTextHeader">Delivery Price:${deliveryPrice}.00</Text>
 
             {/*Takes user to the checkout screen*/}
-            <Pressable testID="test_BuyButtonHeader" style={style.button} onPress={() => this.props.pageChange(5)}>
+            <Pressable testID="test_BuyButtonHeader" style={style.button} onPress={() => this.buyButton()}>
               <Text style={style.buttonText}>Buy</Text>
             </Pressable>
           </View>

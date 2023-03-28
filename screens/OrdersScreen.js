@@ -12,11 +12,33 @@ import globalStyle from "../globalStyle";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { PAGE_ID } from "../utils/constants.js";
 
+class ListItem extends React.Component {
+  render() {
+    const {item} = this.props
+
+    return(
+      <View>
+        <Text style={{fontSize: 28, fontWeight: 'bold', textAlign: 'center', marginTop: 10}}>{item.title}</Text>
+
+        {/*Horizontal line*/}
+        <View
+          style={{
+            borderBottomColor: 'black',
+            borderBottomWidth: 10,
+            marginTop: 20
+          }}
+        />
+      </View>
+    )
+  }
+}
+
 export default class Page3 extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       settingsOrLogIn: "",
+      orders: []
     };
   }
 
@@ -26,8 +48,43 @@ export default class Page3 extends React.Component {
     });
   }
 
-  componentDidMount() {
+  componentDidMount = async () => {
     this.updateNavBarText();
+    try {
+      const orders = await AsyncStorage.getItem("ordersScreen")
+      this.displayOrders()
+      //this.removingOrders()
+
+      if (orders) {
+        this.setState({orders})
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  componentDidUpdate = async (prevProps, prevState) => {
+    if (prevState.length !== this.state.orders.length) {
+      // something did change, save everything in products to local storage
+      await AsyncStorage.setItem("ordersScreen", JSON.stringify(this.state.orders))
+    }
+  }
+
+  displayOrders = async () => {
+    let arrayItems = await AsyncStorage.getItem("orders")
+    arrayItems = JSON.parse(arrayItems)
+    let array = arrayItems
+    if (array) {
+      await AsyncStorage.setItem("clearing", JSON.stringify(array))
+      this.setState({orders: array})
+    }
+    console.log(this.state.orders)
+  }
+
+  removingOrders = async () => {
+    let ordersArray = await AsyncStorage.getItem("removeOrders")
+    ordersArray = JSON.parse(ordersArray)
+    this.setState({orders: ordersArray})
   }
 
   render() {
@@ -53,70 +110,13 @@ export default class Page3 extends React.Component {
           />
 
           <FlatList
-            data={[
-              {
-                date: "October 12, 2022",
-                store: "Kroger - 1240 Blackberry Street, Columbia SC, 29132",
-                total: "$0.00",
-                status: "delivered",
-              },
-            ]}
-            renderItem={({ item }) => (
-              <View>
-                {/*List of orders*/}
-                <Text
-                  style={{
-                    fontWeight: "bold",
-                    fontSize: 20,
-                    marginHorizontal: 10,
-                  }}
-                >
-                  {item.date}
-                </Text>
-
-                <View style={{ flexDirection: "row" }}>
-                  <Text
-                    style={{
-                      fontWeight: "bold",
-                      fontSize: 20,
-                      marginHorizontal: 10,
-                    }}
-                  >
-                    Store:{" "}
-                  </Text>
-                  <Text style={{ flex: 1, fontSize: 20 }}>{item.store}</Text>
-                </View>
-
-                <View style={{ flexDirection: "row" }}>
-                  <Text style={{ fontSize: 20, marginHorizontal: 10 }}>
-                    Order Total:
-                  </Text>
-                  <Text style={{ fontSize: 20 }}>{item.total}</Text>
-                </View>
-
-                <View style={{ flexDirection: "row" }}>
-                  <Text
-                    style={{
-                      fontWeight: "bold",
-                      fontSize: 20,
-                      marginHorizontal: 10,
-                    }}
-                  >
-                    Status:
-                  </Text>
-                  <Text style={{ fontSize: 20 }}>{item.status}</Text>
-                </View>
-
-                {/*Horizontal line*/}
-                <View
-                  style={{
-                    borderBottomColor: "black",
-                    borderBottomWidth: 10,
-                    marginTop: 20,
-                  }}
-                />
-              </View>
-            )}
+            data={this.state.orders}
+            renderItem={({item, index}) =>
+              <ListItem
+                item={item}
+              />
+            }
+            keyExtractor={(item) => item.id}
           />
         </View>
 
