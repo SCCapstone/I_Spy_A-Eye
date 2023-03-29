@@ -106,12 +106,14 @@ export default class CheckoutScreen extends React.Component {
       this.state.securityCodeBilling !== ""
     ) {
       alert("Thank you for your purchase!");
-      // let arrayItems = await AsyncStorage.getItem("product")
-      // arrayItems = JSON.parse(arrayItems)
-      // let orders = arrayItems
-      // if (orders) {
-      //   await AsyncStorage.setItem("orders", JSON.stringify(orders))
-      // }
+      let arrayItems = await AsyncStorage.getItem("product")
+      arrayItems = JSON.parse(arrayItems)
+      let orders = arrayItems
+      if (orders) {
+        await AsyncStorage.setItem("orders", JSON.stringify(orders))
+      }
+      // await AsyncStorage.removeItem("product")
+      // this.setState({products: []})
       this.props.pageChange(PAGE_ID.orders);
     } else {
       alert("You haven't filled out all the required information to make a purchase.");

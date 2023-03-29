@@ -62,10 +62,13 @@ export default class SettingsScreen extends React.Component {
   }
 
   clearOrderHistory = async () => {
-    let ordersArray = await AsyncStorage.getItem("clearing")
+    let ordersArray = await AsyncStorage.getItem("orders")
     ordersArray = JSON.parse(ordersArray)
-    ordersArray = []
-    await AsyncStorage.setItem("removeOrders", JSON.stringify(ordersArray))
+    //ordersArray = []
+    //await AsyncStorage.setItem("removeOrders", JSON.stringify(ordersArray))
+    await AsyncStorage.removeItem("orders")
+    this.setState({orders: []})
+    this.props.pageChange(PAGE_ID.orders)
   }
 
   render() {

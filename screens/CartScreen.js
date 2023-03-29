@@ -163,15 +163,8 @@ export default class CartScreen extends React.Component {
     return totalPrice
   }
 
-  // temporary function, just until firestore works properly
   buyButton = async () => {
-    let arrayItems = await AsyncStorage.getItem("product")
-    arrayItems = JSON.parse(arrayItems)
-    let orders = arrayItems
-    if (orders) {
-      await AsyncStorage.setItem("orders", JSON.stringify(orders))
-    }
-    this.props.pageChange(PAGE_ID.orders)
+    this.props.pageChange(PAGE_ID.checkout)
   }
 
   render() {

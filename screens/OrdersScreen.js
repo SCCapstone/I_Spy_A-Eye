@@ -19,6 +19,10 @@ class ListItem extends React.Component {
     return(
       <View>
         <Text style={{fontSize: 28, fontWeight: 'bold', textAlign: 'center', marginTop: 10}}>{item.title}</Text>
+        <View style={{flexDirection: 'row', marginTop: 20, alignItems: 'center', justifyContent: 'space-between'}}>
+          <Text style={{backgroundColor: 'black', color: 'white', fontSize: 25, marginHorizontal: 20}}>${item.price}</Text>
+          <Text style={{fontSize: 25, marginRight: 20}}>Quantity: {item.quantity}</Text>
+        </View>
 
         {/*Horizontal line*/}
         <View
@@ -48,14 +52,15 @@ export default class Page3 extends React.Component {
     });
   }
 
+  // when component loads on the screen
   componentDidMount = async () => {
     this.updateNavBarText();
     try {
-      const orders = await AsyncStorage.getItem("ordersScreen")
+      // grab data from local storage
+      const orders = JSON.parse(await AsyncStorage.getItem("ordersScreen"))
       this.displayOrders()
-      //this.removingOrders()
 
-      if (orders) {
+      if (orders != null) {
         this.setState({orders})
       }
     } catch (err) {
@@ -63,7 +68,10 @@ export default class Page3 extends React.Component {
     }
   }
 
+  // invoked immediately after updating occurs (ex: removing)
+  // saving data
   componentDidUpdate = async (prevProps, prevState) => {
+    // if the previous state changes are not the same as current state changes
     if (prevState.length !== this.state.orders.length) {
       // something did change, save everything in products to local storage
       await AsyncStorage.setItem("ordersScreen", JSON.stringify(this.state.orders))
@@ -75,7 +83,7 @@ export default class Page3 extends React.Component {
     arrayItems = JSON.parse(arrayItems)
     let array = arrayItems
     if (array) {
-      await AsyncStorage.setItem("clearing", JSON.stringify(array))
+      //await AsyncStorage.setItem("clearing", JSON.stringify(array))
       this.setState({orders: array})
     }
     console.log(this.state.orders)
@@ -116,7 +124,7 @@ export default class Page3 extends React.Component {
                 item={item}
               />
             }
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item, index) => index.toString()}
           />
         </View>
 
