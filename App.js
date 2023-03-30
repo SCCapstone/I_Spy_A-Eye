@@ -9,6 +9,7 @@ import SettingsScreen from "./screens/SettingsScreen";
 import NotSignedInSettings from "./screens/NotSignedInSettingsScreen";
 import CheckoutScreen from "./screens/CheckoutScreen";
 import DeliveryAddress from "./screens/DeliveryAddressScreen";
+import LocationScreen from "./screens/LocationScreen"
 import BillingInfoScreen from "./screens/BillingInfoScreen";
 import base64 from "react-native-base64";
 import { CLIENT_ID, CLIENT_SECRET } from "@env";
@@ -100,6 +101,10 @@ export default class App extends React.Component {
           <SearchScreen
             pageChange={(pageNum) => this.setState({ page: pageNum })}
           />
+        );
+      case PAGE_ID.location:
+        return (
+          <LocationScreen pageChange={(pageNum) => this.setState({ page: pageNum })} />
         );
       case PAGE_ID.cart:
         return (

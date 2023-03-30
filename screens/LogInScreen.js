@@ -32,7 +32,7 @@ export default class Login extends React.Component {
         AsyncStorage.setItem("userID", userID);
         AsyncStorage.setItem("userEmail", user.email);
         console.log(`Current user ID: ${userID}`);
-        this.props.pageChange(PAGE_ID.search);
+        this.props.pageChange(PAGE_ID.location);
       } else {
         console.log("No user is logged in.");
         AsyncStorage.setItem("userID", "none");
@@ -67,7 +67,7 @@ export default class Login extends React.Component {
         // Determins what text to render in Navbar
         AsyncStorage.setItem("SettingsOrLogIn", "Settings");
         console.log(`Current user ID: ${userID}`);
-        this.props.pageChange(PAGE_ID.search);
+        this.props.pageChange(PAGE_ID.location);
       })
       .catch((error) => alert(error.message));
   }
@@ -116,7 +116,7 @@ export default class Login extends React.Component {
         </Pressable>
         <Pressable
           style={globalStyle.wideButtonStyle}
-          onPress={() => this.props.pageChange(PAGE_ID.search)}
+          onPress={() => this.props.pageChange(PAGE_ID.location)}
           testID="Test_SignInSkip"
           accessibilityRole="button"
         >
