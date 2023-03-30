@@ -26,6 +26,7 @@ export default class SettingsScreen extends React.Component {
     this.state = {
       settingsOrLogIn: "",
       currentEmail: "",
+      currentLocation: "",
       // This variable controls what radio button is currently selected.
       checked: "20",
     };
@@ -58,6 +59,12 @@ export default class SettingsScreen extends React.Component {
     });
   }
 
+  async updateCurrentLocationState() {
+    this.setState({
+      currentLocation: `Location: ${await AsyncStorage.getItem("selectedLocation")}`,
+    });
+  }
+
   async updateNavBarText() {
     this.setState({
       settingsOrLogIn: await AsyncStorage.getItem("SettingsOrLogIn"),
@@ -67,6 +74,7 @@ export default class SettingsScreen extends React.Component {
   componentDidMount() {
     this.updateNavBarText();
     this.updateCurrentEmailState();
+    this.updateCurrentLocationState();
     /**
      * The Billing Address and Delivery Address screens have back buttons and can
      * be accessed from this screen and the Checkout screen. The previousPage
@@ -109,6 +117,7 @@ export default class SettingsScreen extends React.Component {
             Personal:
           </Text>
           <Text style={style.signedInText}>{this.state.currentEmail}</Text>
+          <Text style={style.signedInText}>{this.state.currentLocation}</Text>
           <Pressable
             style={globalStyle.wideButtonStyle}
             onPress={() => this.props.pageChange(PAGE_ID.delivery_address)}
@@ -135,14 +144,20 @@ export default class SettingsScreen extends React.Component {
           </Pressable>
           <Pressable
             style={globalStyle.wideButtonStyle}
+            onPress={() => this.props.pageChange(PAGE_ID.location)}
+            testID="Test_LocationChange"
+          >
+            <Text style={globalStyle.wideButtonText}>
+              Change Location
+            </Text>
+          </Pressable>
+          <Pressable
+            style={globalStyle.wideButtonStyle}
             onPress={() => this.signOut()}
             accessibilityRole="button"
           >
             <Text style={globalStyle.wideButtonText}>Sign Out</Text>
           </Pressable>
-          <View style={globalStyle.wideButtonStyle}>
-            <OpenURLButton url={"https://google.com"}>Tutorial</OpenURLButton>
-          </View>
           <View style={{ minHeight: 24 }}></View>
           <Text style={globalStyle.subHeaderText} accessibilityRole="header">
             Other:
@@ -191,6 +206,9 @@ export default class SettingsScreen extends React.Component {
           >
             <Text style={globalStyle.smallButtonText}>Save</Text>
           </Pressable>
+          <View style={globalStyle.wideButtonStyle}>
+            <OpenURLButton url={"https://google.com"}>Tutorial</OpenURLButton>
+          </View>
           {/* Empty space so that the navbar doesn't cover the bottom of the settings page */}
           <View style={{ minHeight: 100 }}></View>
         </ScrollView>

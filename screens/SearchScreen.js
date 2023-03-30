@@ -176,7 +176,7 @@ export default class SearchScreen extends React.Component {
     this.state = {
       settingsOrLogIn: "",
       input: "",
-      location: "01400376",
+      location: " ",
       filters: {
         selectedCountries: [],
         inStock: false,
@@ -201,8 +201,16 @@ export default class SearchScreen extends React.Component {
     });
   }
 
+  async updateCurrentLocationState() {
+    this.setState({
+      location: `${await AsyncStorage.getItem("locationID")}`,
+    });
+  }
+
+
   componentDidMount() {
     this.updateNavBarText();
+    this.updateCurrentLocationState();
   }
 
   /*** Filtering Functions ***/
@@ -1006,6 +1014,7 @@ function validInput(inputText) {
 // Input: class state. Returns JSON response if the API call is successful, null otherwise. TO-DO: Filter/sort results after fetch
 async function searchProducts(state) {
   // Confirm input is valid before querying
+  itemList=[]
   if (!validInput(state.input)) {
     showAlert(
       "Invalid Input",
