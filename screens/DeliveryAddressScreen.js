@@ -60,11 +60,11 @@ export default class DeliveryAddress extends React.Component {
   }
 
   /**
-   * Function to update the current user's
-   * @param {*} addressInput
-   * @param {*} cityInput
-   * @param {*} zipCodeInput
-   * @param {*} stateInput
+   * Function to update the current user's deleivery address in Firestore.
+   * @param {*} addressInput the address of the current user
+   * @param {*} cityInput the city of the current user
+   * @param {*} zipCodeInput the zip code of the current user
+   * @param {*} stateInput the state of the current user
    */
   async saveDeliveryAddressFirestore(
     addressInput,
