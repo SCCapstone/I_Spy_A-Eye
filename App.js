@@ -11,6 +11,7 @@ import CheckoutScreen from "./screens/CheckoutScreen";
 import DeliveryAddress from "./screens/DeliveryAddressScreen";
 import LocationScreen from "./screens/LocationScreen"
 import BillingInfoScreen from "./screens/BillingInfoScreen";
+import ProductScreen from "./screens/ProductScreen"
 import base64 from "react-native-base64";
 import { CLIENT_ID, CLIENT_SECRET } from "@env";
 import firebase from "firebase";
@@ -95,6 +96,10 @@ export default class App extends React.Component {
       case PAGE_ID.login:
         return (
           <Login pageChange={(pageNum) => this.setState({ page: pageNum })} />
+        );
+      case PAGE_ID.product:
+        return (
+          <ProductScreen pageChange={(pageNum) => this.setState({ page: pageNum })} />
         );
       case PAGE_ID.search:
         return (

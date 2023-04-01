@@ -38,7 +38,7 @@ export default class SignUp extends React.Component {
           const user = userCredentials.user;
           alert("You have successfully registered!");
           console.log(user.email, " successfully registered.");
-          this.props.pageChange(PAGE_ID.login);
+          this.props.pageChange(PAGE_ID.location);
         })
         .catch((error) => alert(error.message));
     }

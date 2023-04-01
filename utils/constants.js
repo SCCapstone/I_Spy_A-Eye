@@ -13,4 +13,5 @@ export const PAGE_ID = {
   delivery_address: 7,
   billing_info: 8,
   location: 9,
+  product: 10
 };
