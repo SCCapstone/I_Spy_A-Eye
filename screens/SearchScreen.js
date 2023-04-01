@@ -117,7 +117,7 @@ const renderItem = ({ id, item, price, unitPrice, stock, quantity }) => (
       title={item.title}
       price={item.price}
       // Display unitPrice only if it's not arbitrary or null or undefined
-      unitPrice={item.unitPrice == Number.MAX_SAFE_INTEGER || item.unitPrice == null ? "N/A" : item.unitPrice}
+      unitPrice={item.unitPrice == Number.MAX_SAFE_INTEGER || item.unitPrice == null ? " " : `$${item.unitPrice} per Oz`}
       stock={item.stock}
       quantity={item.quantity}
       inCart={item.inCart}

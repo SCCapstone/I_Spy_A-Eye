@@ -6,8 +6,6 @@ import { PAGE_ID } from "../utils/constants.js";
 import { token } from "../App.js";
 import { Button } from "react-native-paper";
 
-
-
   function showAlert(alertTitle, alertMsg) {
     Alert.alert(alertTitle, alertMsg, [{ text: "OK" }], { cancelable: true });
   }
@@ -99,7 +97,7 @@ import { Button } from "react-native-paper";
                         <Text></Text>
                         <View style={styles.PriceInfoBox}>
                                 <Text style={styles.PriceText}>${this.state.productPrice}</Text>
-                                <Text style= {styles.PriceText}>${this.state.productUnitPrice} per oz</Text>
+                                <Text style= {styles.PriceText}>{this.state.productUnitPrice}</Text>
                         </View>
                         <View style={styles.StockInfoBox}>
                                 <Text style={styles.PriceText}>Stock: {this.state.productStock}</Text>
