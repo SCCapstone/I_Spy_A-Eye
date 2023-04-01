@@ -131,7 +131,11 @@ export default class CheckoutScreen extends React.Component {
         <View style={style.container}>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             {/*Takes user back to the cart screen*/}
-            <Pressable onPress={() => this.props.pageChange(PAGE_ID.cart)}>
+            <Pressable
+              onPress={() => this.props.pageChange(PAGE_ID.cart)}
+              accessibilityLabel="Go Back"
+              accessibilityRole="button"
+            >
               <Text
                 style={{
                   fontWeight: "bold",
@@ -139,7 +143,6 @@ export default class CheckoutScreen extends React.Component {
                   marginLeft: 10,
                   marginTop: 20,
                 }}
-                accessibilityRole="button"
               >
                 {"<"}
               </Text>

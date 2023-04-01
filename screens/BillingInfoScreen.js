@@ -112,6 +112,7 @@ export default class BillingInfoScreen extends React.Component {
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <Pressable
               onPress={() => this.returnToPreviousPage()}
+              accessibilityLabel="Go back"
               accessibilityRole="button"
             >
               <Text
