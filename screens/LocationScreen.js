@@ -12,7 +12,7 @@ var itemIndex = 0;
 var name = 0;
 
 async function searchLocations(state) {  
-    let callURL = `https://api.kroger.com/v1/locations?filter.zipCode.near=${state.ZipCode}&filter.limit=5&filter.radiusInMiles=25`;
+    let callURL = `https://api.kroger.com/v1/locations?filter.zipCode.near=${state.ZipCode}&filter.limit=4&filter.radiusInMiles=25`;
     let options = {
       method: "GET",
       headers: {
@@ -45,9 +45,12 @@ async function searchLocations(state) {
 
   const Item = ({ id, chain, address, city, state, zip }) => {
     return (<View style={styles.item}>
-      <Text style={{ fontWeight: "bold", fontSize: 16 }}>{chain}{'-'}{address}{', '}{'\n'}{city}{' '}{state}{', '}{zip}</Text>
+      <Text style={{fontSize: 16}}>{chain}{'\n'}{address}{', '}{'\n'}{city}{' '}{state}{', '}{zip}</Text>
       <Pressable style={styles.remove}onPress={() => {AsyncStorage.setItem("selectedLocation",`${chain}-    ${address}, ${city} ${state}, ${zip}`)
                                                       AsyncStorage.setItem("locationID",id)
+                                                      showAlert(
+                                                        `${chain} ${address}, ${city} ${state}, ${zip} Selected!`
+                                                      );
                                                       }}>
           <Text style={{color: 'white', fontSize: 19, fontWeight:'bold'}}>Select</Text>
       </Pressable>
@@ -156,26 +159,28 @@ export default class SettingsScreen extends React.Component {
                       }}
                     />
                   </View>
-                   <FlatList
+                  <View>
+                    <FlatList
                       data={itemList}
                       renderItem= {renderItem}
                       keyExtractor={(item) => item.id}
                       extraData={this.state}
                       testID="Test_Locations"
                     />
-                </View>   
-                <View style={styles.Bottombutton}>
-                    <Pressable
-                      style={globalStyle.wideButtonStyle}
-                      onPress={() => this.props.pageChange(PAGE_ID.search)}
-                      testID="Test_Continue"
-                      disabled={this.state.StoreID=="" ? true: false}
-                    >
-                      <Text style={globalStyle.wideButtonText}>
-                        Continue
-                      </Text>
-                    </Pressable>
+                  </View>     
                 </View>
+                  <View style={styles.fixedButton}>
+                      <Pressable
+                        style={globalStyle.wideButtonStyle}
+                        onPress={() => this.props.pageChange(PAGE_ID.search)}
+                        testID="Test_Continue"
+                        disabled={this.state.StoreID=="" ? true: false}
+                      >
+                        <Text style={globalStyle.wideButtonText}>
+                          Continue
+                        </Text>
+                      </Pressable>
+                  </View>    
     </SafeAreaView>
         )
     }
@@ -281,5 +286,11 @@ const styles = StyleSheet.create({
       },
       sortButtonTextDefault: {
         color: "white",
+      },
+      fixedButton: {
+        position: "absolute",
+        bottom: 0,
+        width: "100%",
+        padding: 17,
       }
     });
