@@ -21,7 +21,10 @@ expo start --android            // starts the app with a specific emulator on yo
 
 You might have to type 'r' in the terminal if the app doesn't immediately bundle.
 ## Deployment
-
+To compile the APK, navigate inside the android folder and run:
+```
+./gradlew assembleRelease
+```
 ## Testing
 ### - General Set Up -
 The testing technologies used require React Native CLI and a properly set up Android development enviroment. Running the command 
