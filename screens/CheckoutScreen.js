@@ -60,7 +60,11 @@ export default class CheckoutScreen extends React.Component {
     });
   }
 
-  // Function to get the current user's billing info stored in Firestore.
+  /**
+   * Function to get the current user's billing info stored in Firestore.
+   * The card number text and the security code text will be obfuscated for
+   * displaying on this screen.
+   */
   async getBillingInfo() {
     let res = await firebase
       .firestore()

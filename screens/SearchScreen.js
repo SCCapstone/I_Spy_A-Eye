@@ -195,6 +195,10 @@ export default class SearchScreen extends React.Component {
     };
   }
 
+  /**
+   * Function to change the text on the button with a gear on the navbar.
+   * Text can either be "Settings" or "Log In".
+   */
   async updateNavBarText() {
     this.setState({
       settingsOrLogIn: await AsyncStorage.getItem("SettingsOrLogIn")
