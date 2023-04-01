@@ -466,10 +466,12 @@ export default class SearchScreen extends React.Component {
               style={[
                 globalStyle.inputContainer,
                 {
-                  flex: 3.2,
+                  // flex: 3.2,
                   marginRight: 10,
                   fontWeight: "bold",
                   fontSize: 18,
+                  maxWidth: "70%",
+                  minWidth: "70%"
                 },
               ]}
               placeholder="I'm looking for..."
@@ -1141,6 +1143,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     paddingVertical: 17,
     paddingHorizontal: 10,
+    maxWidth: 105,
   },
   searchButtonText: {
     color: "white",
