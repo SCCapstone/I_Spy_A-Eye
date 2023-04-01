@@ -179,7 +179,7 @@ export default class CheckoutScreen extends React.Component {
               {this.state.zipCodeDelivery}
             </Text>
             <Pressable
-              style={globalStyle.headerButtonStyle}
+              style={style.mediumWidthButton}
               onPress={() => this.props.pageChange(PAGE_ID.delivery_address)}
               accessibilityRole="button"
             >
@@ -209,7 +209,7 @@ export default class CheckoutScreen extends React.Component {
               {this.state.expiryBilling}
             </Text>
             <Pressable
-              style={globalStyle.headerButtonStyle}
+              style={style.mediumWidthButton}
               onPress={() => this.props.pageChange(PAGE_ID.billing_info)}
             >
               <Text style={globalStyle.headerButtonText}>Change</Text>
@@ -296,4 +296,12 @@ const style = StyleSheet.create({
     marginRight: 8,
     marginBottom: 16,
   },
+  mediumWidthButton: {
+    backgroundColor: "#000",
+    borderRadius: 20,
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    marginHorizontal: 4,
+    maxWidth: "45%"
+  }
 });
