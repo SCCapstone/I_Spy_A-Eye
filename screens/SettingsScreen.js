@@ -75,14 +75,7 @@ export default class SettingsScreen extends React.Component {
     });
   }
 
-  async updateNavBarText() {
-    this.setState({
-      settingsOrLogIn: await AsyncStorage.getItem("SettingsOrLogIn"),
-    });
-  }
-
   componentDidMount() {
-    this.updateNavBarText();
     this.updateCurrentEmailState();
     this.updateCurrentLocationState();
     /**
