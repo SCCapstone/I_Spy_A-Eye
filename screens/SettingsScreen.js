@@ -41,6 +41,10 @@ export default class SettingsScreen extends React.Component {
     });
   }
 
+  /**
+   * Function to get the user's products per page setting stored in Firestore.
+   * The state of the radio buttons are updated from the retrieved value.
+   */
   async getProductsPerPage() {
     let res = await firebase
       .firestore()
@@ -53,6 +57,10 @@ export default class SettingsScreen extends React.Component {
     });
   }
 
+  /**
+   * Function to get the current user's email address and update the Text component
+   * displaying this info.
+   */
   async updateCurrentEmailState() {
     this.setState({
       currentEmail: `Signed in as: ${await AsyncStorage.getItem("userEmail")}`,
@@ -61,7 +69,9 @@ export default class SettingsScreen extends React.Component {
 
   async updateCurrentLocationState() {
     this.setState({
-      currentLocation: `Location: ${await AsyncStorage.getItem("selectedLocation")}`,
+      currentLocation: `Location: ${await AsyncStorage.getItem(
+        "selectedLocation"
+      )}`,
     });
   }
 
@@ -147,9 +157,7 @@ export default class SettingsScreen extends React.Component {
             onPress={() => this.props.pageChange(PAGE_ID.location)}
             testID="Test_LocationChange"
           >
-            <Text style={globalStyle.wideButtonText}>
-              Change Location
-            </Text>
+            <Text style={globalStyle.wideButtonText}>Change Location</Text>
           </Pressable>
           <Pressable
             style={globalStyle.wideButtonStyle}
