@@ -1,6 +1,10 @@
 import React from "react";
 import { PAGE_ID } from "../utils/constants";
 import {
+  showOnlyFourDigitsOfCardNumber,
+  replaceSecurityCodeWithAsterisks,
+} from "../utils/CheckoutScreenFunctions";
+import {
   View,
   Text,
   SafeAreaView,
@@ -68,18 +72,20 @@ export default class CheckoutScreen extends React.Component {
         res._delegate._document.data.value.mapValue.fields.name.stringValue,
     });
     this.setState({
-      cardNumberBilling:
+      cardNumberBilling: showOnlyFourDigitsOfCardNumber(
         res._delegate._document.data.value.mapValue.fields.cardNumber
-          .stringValue,
+          .stringValue
+      ),
     });
     this.setState({
       expiryBilling:
         res._delegate._document.data.value.mapValue.fields.expiry.stringValue,
     });
     this.setState({
-      securityCodeBilling:
+      securityCodeBilling: replaceSecurityCodeWithAsterisks(
         res._delegate._document.data.value.mapValue.fields.securityCode
-          .stringValue,
+          .stringValue
+      ),
     });
   }
 
