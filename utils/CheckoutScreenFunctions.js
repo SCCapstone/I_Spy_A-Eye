@@ -14,7 +14,7 @@ function showOnlyFourDigitsOfCardNumber(cardNumber) {
   if (cardNumber === "") {
     return "";
   }
-  return "************" + cardNumber.substring(6, 10);
+  return "************" + cardNumber.substring(12, 16);
 }
 
 /**
