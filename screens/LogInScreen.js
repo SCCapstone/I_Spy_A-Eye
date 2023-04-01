@@ -21,18 +21,29 @@ export default class Login extends React.Component {
     this.state = {
       emailInput: "",
       passwordInput: "",
+      location: ""
     };
+  }
+
+  async updateCurrentLocationState() {
+    this.setState({
+      location: `${await AsyncStorage.getItem("locationID")}`,
+    });
   }
 
   // Function to redirect users to search screen if they are already signed in.
   componentDidMount() {
+    this.updateCurrentLocationState();
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         var userID = user.uid;
         AsyncStorage.setItem("userID", userID);
         AsyncStorage.setItem("userEmail", user.email);
         console.log(`Current user ID: ${userID}`);
-        this.props.pageChange(PAGE_ID.location);
+        if(this.location!="")
+          this.props.pageChange(PAGE_ID.search);
+        else
+          this.props.pageChange(PAGE_ID.location);
       } else {
         console.log("No user is logged in.");
         AsyncStorage.setItem("userID", "none");

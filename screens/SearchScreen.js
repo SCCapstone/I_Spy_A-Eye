@@ -10,7 +10,8 @@ import {
   TouchableOpacity,
   View,
   FlatList,
-  Modal
+  Modal,
+  ToastAndroid
 } from "react-native";
 import { SafeAreaView } from "react-native";
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -54,49 +55,59 @@ for (let i = 0; i < produce.data.length; i++) {
 itemIndex = 0;
 
 // Template view for each item in flatlist.
-const Item = ({ id, title, price, unitPrice, stock, quantity }) => (
-  <View style={styles.item}>
-    <Text style={styles.title}>{title}</Text>
-    {/* TODO: make price and stock align to edges of Item view */}
-    <View style={{ flexDirection: "row", justifyContent: "space-evenly" }}>
-      <Text style={styles.price}>${price}</Text>
-      <Text style={{ fontSize: 25 }}>{unitPrice}</Text>
-      <Text style={{ fontSize: 25 }}>Stock: {stock}</Text>
+const Item = ({ id, title, price, unitPrice, stock, quantity, image }) => (
+  <Pressable onPress={() => {AsyncStorage.setItem("productID",id)
+                            AsyncStorage.setItem("productName",title)
+                            AsyncStorage.setItem("productPrice",`${price}`)
+                            AsyncStorage.setItem("productUnitPrice",`${unitPrice}`)
+                            AsyncStorage.setItem("productStock",stock)
+                            AsyncStorage.setItem("productImage",image)
+                            AsyncStorage.setItem("isSelectedItem",'true')
+                            ToastAndroid.show(`${title} selected press details to see more info`, 1000);
+  }}>
+    <View style={styles.item}>
+      <Text style={styles.title}>{title}</Text>
+      {/* TODO: make price and stock align to edges of Item view */}
+      <View style={{ flexDirection: "row", justifyContent: "space-evenly" }}>
+        <Text style={styles.price}>${price}</Text>
+        <Text style={{ fontSize: 25 }}>{unitPrice}</Text>
+        <Text style={{ fontSize: 25 }}>Stock: {stock}</Text>
+      </View>
+      {/*Price, quantity, and remove button*/}
+      <View
+        style={{
+          flexDirection: "row",
+          marginTop: 20,
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        {/* Decrement quantity button*/}
+        {/* <Pressable onPress={() => decrementQuantity(id)}>
+          <Text style={{ fontWeight: "bold", fontSize: 30 }}>{"<"}</Text>
+        </Pressable> */}
+
+        {/*No longer pulling quantity off of the state*/}
+        {/* <TextInput style={{ fontSize: 25 }} keyboardType="numeric">
+          {quantity}
+        </TextInput> */}
+
+        {/* Increment quantity button*/}
+        {/* <Pressable>
+          <Text
+            onPress={() => incrementQuantity(id)}
+            style={{ fontWeight: "bold", fontSize: 30, marginRight: 70 }}
+          >
+            {">"}
+          </Text>
+        </Pressable> */}
+
+        <Pressable style={styles.remove} >
+          <Text style={{ color: 'white', fontSize: 19, fontWeight: 'bold' }} onPress={() => addToCart(id)}>Add to Cart</Text>
+        </Pressable>
+      </View>
     </View>
-    {/*Price, quantity, and remove button*/}
-    <View
-      style={{
-        flexDirection: "row",
-        marginTop: 20,
-        alignItems: "center",
-        justifyContent: "space-between",
-      }}
-    >
-      {/* Decrement quantity button*/}
-      {/* <Pressable onPress={() => decrementQuantity(id)}>
-        <Text style={{ fontWeight: "bold", fontSize: 30 }}>{"<"}</Text>
-      </Pressable> */}
-
-      {/*No longer pulling quantity off of the state*/}
-      {/* <TextInput style={{ fontSize: 25 }} keyboardType="numeric">
-        {quantity}
-      </TextInput> */}
-
-      {/* Increment quantity button*/}
-      {/* <Pressable>
-        <Text
-          onPress={() => incrementQuantity(id)}
-          style={{ fontWeight: "bold", fontSize: 30, marginRight: 70 }}
-        >
-          {">"}
-        </Text>
-      </Pressable> */}
-
-      <Pressable style={styles.remove} >
-        <Text style={{ color: 'white', fontSize: 19, fontWeight: 'bold' }} onPress={() => addToCart(id)}>Add to Cart</Text>
-      </Pressable>
-    </View>
-  </View>
+  </Pressable>
 );
 
 const renderItem = ({ id, item, price, unitPrice, stock, quantity }) => (
@@ -110,6 +121,7 @@ const renderItem = ({ id, item, price, unitPrice, stock, quantity }) => (
       stock={item.stock}
       quantity={item.quantity}
       inCart={item.inCart}
+      image={item.image}
     />
   </>
 );
@@ -190,6 +202,7 @@ export default class SearchScreen extends React.Component {
       isFilterMenuOpen: false,
       isFilterCountryMenuOpen: false,
       isFilterCategoryMenuOpen: false,
+      changePage:"false",
       latestResults: [],
       unfilteredResults: [],      // A copy of the latest results in case filters are cleared (saves)
     };
@@ -201,16 +214,33 @@ export default class SearchScreen extends React.Component {
     });
   }
 
+  async productScreen() {
+    this.setState({
+      changePage: await AsyncStorage.getItem("isSelectedItem")
+    });
+  }
+
   async updateCurrentLocationState() {
     this.setState({
       location: `${await AsyncStorage.getItem("locationID")}`,
     });
   }
 
+  async changingPage() {
+    if(this.changePage=="true")
+      this.props.pageChange(PAGE_ID.product);
+  }
 
   componentDidMount() {
     this.updateNavBarText();
     this.updateCurrentLocationState();
+    this.productScreen();
+    this.changingPage();
+  }
+
+
+  moving = () => {
+    this.props.pageChange(PAGE_ID.product);
   }
 
   /*** Filtering Functions ***/
@@ -897,8 +927,8 @@ export default class SearchScreen extends React.Component {
               </TouchableOpacity>
             </Modal>
             {/* Scan Button */}
-            <Pressable style={globalStyle.headerButtonStyle} testID="Test_ScanButton">
-              <Text style={globalStyle.headerButtonText}>Scan</Text>
+            <Pressable style={globalStyle.headerButtonStyle} disabled={this.state.StoreID=="" ? true: false} onPress={() => this.props.pageChange(PAGE_ID.product)}testID="Test_ScanButton">
+              <Text style={globalStyle.headerButtonText}>Details</Text>
             </Pressable>
           </View>
         </View>
@@ -1038,7 +1068,7 @@ async function searchProducts(state) {
   let response = await fetch(callURL, options);
   // Variable to hold the response from the Kroger API in a string
   let responseJSON = await response.json();
-
+  console.log(responseJSON)
   // If failed request, Alert the user and return null
   if (!response.ok) {
     let errorHeader =
@@ -1060,6 +1090,8 @@ async function searchProducts(state) {
       price: responseJSON.data[i].items[0].price.promo,
       standardPrice: responseJSON.data[i].items[0].price.regular,
       unitPrice: responseJSON.data[i].items[0].price.regularPerUnitEstimate,
+      image: responseJSON.data[i].images[0].sizes[0].url,
+      images: null,
       stock: null,  // Stock field is populated with the logic below
       quantity: 1,
       inCart: false,
