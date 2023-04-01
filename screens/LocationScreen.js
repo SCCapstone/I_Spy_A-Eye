@@ -114,10 +114,11 @@ export default class SettingsScreen extends React.Component {
                         style={[
                             globalStyle.inputContainer,
                             {
-                            flex: 3.2,
                             marginRight: 10,
                             fontWeight: "bold",
                             fontSize: 18,
+                            minWidth: "70%",
+                            maxWidth: "70%"
                             },
                         ]}
                         placeholder="Zipcode"
