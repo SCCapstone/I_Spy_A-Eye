@@ -255,16 +255,6 @@ const style = StyleSheet.create({
     marginTop: 25,
     marginHorizontal: 75,
   },
-  input: {
-    backgroundColor: "white",
-    width: 350,
-    borderColor: "black",
-    borderWidth: 1,
-    borderRadius: 5,
-    padding: 10,
-    margin: 10,
-    marginLeft: 25,
-  },
   date_code: {
     backgroundColor: "white",
     borderColor: "black",
