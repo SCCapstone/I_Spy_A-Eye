@@ -20,15 +20,26 @@ import SectionedMultiSelect from 'react-native-sectioned-multi-select';
 import globalStyle from "../globalStyle";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { PAGE_ID } from "../utils/constants.js";
+import SettingsScreen from "./SettingsScreen.js";
 
 // Holds data of all items
 var itemList = [];
+
 // Json file that holds respose query for produce. Is shown automatically without the user searching. 
 const produce = require("./produce.json");
+
 // Used for indexing itemList array when items are added to it.
 var itemIndex = 0;
+
 // Used for trimming the itemList to the exact number of elements needed to display the results
 var priorItemListLength = 0;
+
+// Variables for handling pagination of results
+let settingsScreenInst = new SettingsScreen()   
+var itemsPerPage = parseInt(settingsScreenInst.state.checked)     // Used for tracking the user specified (or default) number of products per page
+var pageNumIndex = 0           // Used for tracking the current page of items in the query
+var totalQueryResults = 0;     // Used for tracking to total number of results from a query
+
 // Add items to itemList from produce.json.
 for (let i = 0; i < produce.data.length; i++) {
   // If price cannot be parsed from json item, it will not be added to itemList.
@@ -409,6 +420,31 @@ export default class SearchScreen extends React.Component {
     return arr
   }
 
+  // Input: None. Removes currently selected countries/categories that aren't in the available choices for either.
+  validateCountryCategoryChoices() {
+    let validatedCountries = []
+    let validatedCategories = []
+
+    // If a selected country is still available, keep it.
+    this.state.filters.selectedCountries.forEach((country) => {
+      if(this.state.allAvailableCountries.indexOf(country) >= 0) validatedCountries.push(country) 
+    })
+
+    // If a selected category is still available, keep it.
+    this.state.filters.selectedCategories.forEach((category) => {
+      if(this.state.allAvailableCategories.indexOf(category) >= 0) validatedCategories.push(category) 
+    })
+
+    // Update state with the validated selections
+    this.setState((prevState) => {
+      let filters = {...prevState.filters}    // Copy current filters applied
+      filters.selectedCountries = validatedCountries   // Update with validated countries
+      filters.selectedCategories = validatedCategories  // Update with validated categories
+      return {filters};
+    })
+  }
+
+
   /*** Sorting Functions ***/
   // Input: Two product objects. Returns an integer based on lowest price comparison (price ascending).
   sortPriceAsc(p1, p2) {
@@ -446,6 +482,152 @@ export default class SearchScreen extends React.Component {
     })
     return productList
   }
+
+  /*** Search Products ***/
+  // Input: class state. Returns array of items if the API call is successful, null otherwise.
+  async searchProducts(searchState) {
+    // Confirm input is valid before querying
+    if (!validInput(searchState.input)) {
+      showAlert(
+        "Invalid Input",
+        "Input must be 3 characters or more, and have at most 8 words."
+      );
+      return null;
+    }
+
+    // Update number of items to display per result page if there's a discrepancy
+    let settingsScreenInst = new SettingsScreen()  
+    let storedItemsPerPage = parseInt(settingsScreenInst.state.checked)
+    if(itemsPerPage != storedItemsPerPage) itemsPerPage = storedItemsPerPage 
+
+    // Build query
+    let callURL = `https://api.kroger.com/v1/products?filter.term=${searchState.input}&filter.limit=${itemsPerPage}&filter.start=${(itemsPerPage*pageNumIndex)+1}
+                    &filter.locationId=${searchState.location}&filter.fulfillment=dth`;
+
+    // Fetch results
+    let options = {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        Authorization: "Bearer " + token,
+      },
+    };
+
+    let response = await fetch(callURL, options);
+    // Variable to hold the response from the Kroger API in a string
+    let responseJSON = await response.json();
+
+    // If failed request, Alert the user and return null
+    if (!response.ok) {
+      let errorHeader =
+        "Error " + response.status.toString() + ": " + responseJSON.code;
+      showAlert(errorHeader, responseJSON.errors.reason);
+      return null;
+    }
+
+    // Grab and update the total number of results
+    totalQueryResults = responseJSON.meta.pagination.total
+
+    // Iterates through responseJSON and stores items into itemList
+    for (let i = 0; i < responseJSON.data.length; i++) {
+      // Skip adding item if price accont be parsed.
+      if (responseJSON.data[i].items[0].price.promo === 0) {
+        continue;
+      }
+      // Add to array by index
+      itemList[itemIndex] = {
+        id: responseJSON.data[i].productId,
+        title: responseJSON.data[i].description,
+        price: responseJSON.data[i].items[0].price.promo,
+        standardPrice: responseJSON.data[i].items[0].price.regular,
+        unitPrice: responseJSON.data[i].items[0].price.regularPerUnitEstimate,
+        stock: null,  // Stock field is populated with the logic below
+        quantity: 1,
+        inCart: false,
+        countryOrigin: responseJSON.data[i].countryOrigin,
+        category: responseJSON.data[i].categories
+      };
+
+      // The stockLevel property is omitted when an item is out of stock, so catch for that case
+      try {
+        const stockLevel = responseJSON.data[i].items[0].inventory.stockLevel
+        if(stockLevel == "TEMPORARILY_OUT_OF_STOCK") {
+          itemList[itemIndex].stock = "Temp. Out"
+        }
+        else {
+          itemList[itemIndex].stock = stockLevel[0] + stockLevel.slice(1).toLocaleLowerCase()   // Proper capitalization, not ALL CAPS
+        }
+      } catch(missingPropError) {         // If stockLevel is unavailable, say so
+        itemList[itemIndex].stock = "N/A"
+      }
+      
+      itemIndex++;
+    }
+    itemIndex = 0;
+
+    // Trim excess results in cases where the prior search returned more items than the current search
+    let numExcessItems = priorItemListLength - responseJSON.data.length
+    if(numExcessItems > 0) itemList.splice(responseJSON.data.length - 1, numExcessItems)
+    priorItemListLength = responseJSON.data.length
+
+    return itemList;
+  }
+
+  /*** Result Page Navigation ***/
+  // Input: Boolean. Output: If isForward is true, navigate forward one page in the results. Otherwise, navigate backwards one page.
+  async navigateSearchResults(isForward) {
+    let nextStartIndex;
+    try {
+      // Calculate new start index with the incremented page index. Account for bidirectional movement. +1 since products are indexed starting at 1 in the API.
+      nextStartIndex = isForward ? ((pageNumIndex+1)*itemsPerPage)+1 : ((pageNumIndex-1)*itemsPerPage)+1
+    } catch(e) {  // If isForward is null or some other unexpected value, stop early
+      return;
+    }
+
+    // If the next start index exceeds the total number of results (or the API limit), alert the user and return early
+    if(nextStartIndex > totalQueryResults || nextStartIndex > 1000) {
+      showAlert(
+        "Last Page Reached",
+        "Sorry that you couldn't find your product. Try using a different set of keywords."
+      );
+      return;
+    }
+
+    // Else if the next start index goes 0 or below, alert the user and return early (items are indexed starting at 1 in the API)
+    if(nextStartIndex <= 0) {
+      showAlert(
+        "No Prior Page",
+        "It looks like you're already on the first page of results."
+      );
+      return;
+    }
+    
+
+    // If valid, increment/decremet the pageNumIndex and then perform the next search query, adding the results to the next page
+    pageNumIndex = isForward ? pageNumIndex + 1 : pageNumIndex - 1
+    console.log("Total Items: ")
+    console.log(totalQueryResults)
+    itemList = this.updateFilteredResults(await this.searchProducts(this.state))  // Apply current filters/sort to new results
+
+    // Update state with next page of results. Note that the sorting and filters do not need to be reset, unlike a new search.
+    this.setState({ 
+      latestResults: itemList, 
+      unfilteredResults: itemList,
+      allAvailableCountries:      // Populate list with all available countries to select
+        [{key: 'Countries', 
+          value: 'Countries', 
+          children: this.countriesFromProducts(itemList)
+        }],
+      allAvailableCategories:     // Populate list with all available categories to select
+      [{key: 'Categories', 
+        value: 'Categories', 
+        children: this.categoriesFromProducts(itemList)
+      }],
+    })
+
+    // The previously selected Countries/Categories may not be available in the next page of results, so remove them
+    this.validateCountryCategoryChoices()
+  }       
 
   /*** Display Function ***/
   render() {
@@ -486,7 +668,7 @@ export default class SearchScreen extends React.Component {
             <Pressable
               style={styles.searchButtonStyle}
               onPressIn={async () => {
-                itemList = await searchProducts(this.state);
+                itemList = await this.searchProducts(this.state);
                 console.log("Item List:")
                 console.log(itemList)
                 if (itemList == null) {   // If itemList is null, alert the user and set it to an empty array before continuing
@@ -955,7 +1137,6 @@ export default class SearchScreen extends React.Component {
           ></ImageBackground>
         </View>
 
-
         {/* Horizontal line separator */}
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <View
@@ -968,71 +1149,133 @@ export default class SearchScreen extends React.Component {
           />
         </View>
 
-        {/* Holds all results of searched items. TODO: make flatlist view shorter. */}
-        <FlatList
-          data={itemList}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.id}
-          extraData={this.state}
-          testID="Test_SearchResults"
-        />
+        {/* Horizontal line separator's drop shadow */}
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <View
+            style={{
+              flex: 1,
+              height: 1,
+              borderColor: "#cccccc",
+              borderBottomWidth: 3,
+            }}
+          />
+        </View>
 
-        <View style={globalStyle.navBarContainer}>
-          <View style={globalStyle.buttons} testID="Test_NavigationBar">
-            <TouchableOpacity
-              onPress={() => this.props.pageChange(PAGE_ID.search)}
-              style={globalStyle.navButtonContainer}
-              accessibilityRole="menuitem"
+        {/* Search Results, Page Arrows, and Navigation Bar */}
+        <View>
+          {/* Holds all results of searched items. TODO: make flatlist view shorter. */}
+          <View style={{ height: "75%" }}>
+            <FlatList
+              data={itemList}
+              flex={6}
+              flexGrow={1}
+              renderItem={renderItem}
+              keyExtractor={(item) => item.id}
+              extraData={this.state}
+              accessible={true}
+              testID="Test_SearchResults"
+            />
+          </View>
+
+          {/* Horizontal line separator */}
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <View
+              style={{
+                flex: 1,
+                height: 1,
+                borderColor: "black",
+                borderBottomWidth: 10,
+              }}
+            />
+          </View>
+
+          {/* Page navigation buttons */}
+          <View style={{flex: 1, flexDirection: 'row', marginTop: 10, position: "absolute", bottom: 75, paddingVertical: 10}}>
+            <Pressable 
+              style={[globalStyle.headerButtonStyle, {paddingVertical: 10, flex: 2}]}
+              onPress={() => {this.navigateSearchResults(false)}}
+              disabled={itemList == null || itemList.length == 0}
+              testID="Test_PageBackButton"
             >
-              <Image
-                style={globalStyle.icon}
-                source={require("../assets/search.png")}
-                accessible={true}
-                accessibilityLabel="Magnifying Glass Icon"
-              />
-              <Text style={{ textAlign: "center" }}>Search</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => this.props.pageChange(PAGE_ID.cart)}
-              style={globalStyle.navButtonContainer}
-              accessibilityRole="menuitem"
+              <Text style={[globalStyle.headerButtonText, {fontSize: 30}]}>{'<'}</Text>
+            </Pressable>
+            <Pressable 
+              style={[globalStyle.headerButtonStyle, {paddingVertical: 10, flex: 1}]}
+              testID="Test_PageNumberButton"
+            > 
+              <Text style={[globalStyle.headerButtonText, {fontSize: 30}]}>{
+                            // If itemList was reset, simply display a single page for the empty results
+                            (itemList == null || itemList.length == 0) ? 1 : (pageNumIndex+1)   
+                          }
+              </Text> 
+            </Pressable>
+            <Pressable 
+              style={[globalStyle.headerButtonStyle, {paddingVertical: 10, flex: 2}]}
+              onPress={() => {this.navigateSearchResults(true)}}
+              disabled={itemList == null || itemList.length == 0}
+              testID="Test_PageForwardButton"
             >
-              <Image
-                style={globalStyle.icon}
-                source={require("../assets/cart.png")}
-                accessible={true}
-                accessibilityLabel="Shopping Cart Icon"
-              />
-              <Text style={{ textAlign: "center" }}>My Cart</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => this.props.pageChange(PAGE_ID.orders)}
-              style={globalStyle.navButtonContainer}
-              accessibilityRole="menuitem"
-            >
-              <Image
-                style={globalStyle.icon}
-                source={require("../assets/orders.png")}
-                accessible={true}
-                accessibilityLabel="Reciept Icon"
-              />
-              <Text style={{ textAlign: "center" }}>Orders</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => this.props.pageChange(PAGE_ID.settings)}
-              style={globalStyle.navButtonContainer}
-              accessibilityRole="menuitem"
-            >
-              <Image
-                style={globalStyle.icon}
-                source={require("../assets/gear.png")}
-                accessible={true}
-                accessibilityLabel="Gear Icon"
-              />
-              <Text style={{ textAlign: "center" }}>
-                {this.state.settingsOrLogIn}
-              </Text>
-            </TouchableOpacity>
+              <Text style={[globalStyle.headerButtonText, {fontSize: 30}]}>{'>'}</Text>
+            </Pressable>
+          </View>
+
+          <View style={[globalStyle.navBarContainer, {flex: 1}]}>
+            <View style={globalStyle.buttons} testID="Test_NavigationBar">
+              <TouchableOpacity
+                onPress={() => this.props.pageChange(PAGE_ID.search)}
+                style={globalStyle.navButtonContainer}
+                accessibilityRole="menuitem"
+              >
+                <Image
+                  style={globalStyle.icon}
+                  source={require("../assets/search.png")}
+                  accessible={true}
+                  accessibilityLabel="Magnifying Glass Icon"
+                />
+                <Text style={{ textAlign: "center" }}>Search</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => this.props.pageChange(PAGE_ID.cart)}
+                style={globalStyle.navButtonContainer}
+                accessibilityRole="menuitem"
+              >
+                <Image
+                  style={globalStyle.icon}
+                  source={require("../assets/cart.png")}
+                  accessible={true}
+                  accessibilityLabel="Shopping Cart Icon"
+                />
+                <Text style={{ textAlign: "center" }}>My Cart</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => this.props.pageChange(PAGE_ID.orders)}
+                style={globalStyle.navButtonContainer}
+                accessibilityRole="menuitem"
+              >
+                <Image
+                  style={globalStyle.icon}
+                  source={require("../assets/orders.png")}
+                  accessible={true}
+                  accessibilityLabel="Reciept Icon"
+                />
+                <Text style={{ textAlign: "center" }}>Orders</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => this.props.pageChange(PAGE_ID.settings)}
+                style={globalStyle.navButtonContainer}
+                accessibilityRole="menuitem"
+              >
+                <Image
+                  style={globalStyle.icon}
+                  source={require("../assets/gear.png")}
+                  accessible={true}
+                  accessibilityLabel="Gear Icon"
+                />
+                <Text style={{ textAlign: "center" }}>
+                  {this.state.settingsOrLogIn}
+                </Text>
+              </TouchableOpacity>
+            </View>  
           </View>
         </View>
       </SafeAreaView>
@@ -1050,89 +1293,6 @@ function validInput(inputText) {
   if (terms.length > 8) return false;
 
   return true;
-}
-
-// Input: class state. Returns JSON response if the API call is successful, null otherwise. TO-DO: Filter/sort results after fetch
-async function searchProducts(state) {
-  // Confirm input is valid before querying
-  itemList=[]
-  if (!validInput(state.input)) {
-    showAlert(
-      "Invalid Input",
-      "Input must be 3 characters or more, and have at most 8 words."
-    );
-    return null;
-  }
-
-  // Build query
-  let callURL = `https://api.kroger.com/v1/products?filter.term=${state.input}&filter.locationId=${state.location}&filter.fulfillment=dth`;
-
-  // Fetch results
-  let options = {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-      Authorization: "Bearer " + token,
-    },
-  };
-
-  let response = await fetch(callURL, options);
-  // Variable to hold the response from the Kroger API in a string
-  let responseJSON = await response.json();
-  console.log(responseJSON)
-  // If failed request, Alert the user and return null
-  if (!response.ok) {
-    let errorHeader =
-      "Error " + response.status.toString() + ": " + responseJSON.code;
-    showAlert(errorHeader, responseJSON.errors.reason);
-    return null;
-  }
-
-  // Iterates through responseJSON and stores items into itemList
-  for (let i = 0; i < responseJSON.data.length; i++) {
-    // Skip adding item if price accont be parsed.
-    if (responseJSON.data[i].items[0].price.promo === 0) {
-      continue;
-    }
-    // Add to array by index
-    itemList[itemIndex] = {
-      id: responseJSON.data[i].productId,
-      title: responseJSON.data[i].description,
-      price: responseJSON.data[i].items[0].price.promo,
-      standardPrice: responseJSON.data[i].items[0].price.regular,
-      unitPrice: responseJSON.data[i].items[0].price.regularPerUnitEstimate,
-      image: responseJSON.data[i].images[0].sizes[0].url,
-      images: null,
-      stock: null,  // Stock field is populated with the logic below
-      quantity: 1,
-      inCart: false,
-      countryOrigin: responseJSON.data[i].countryOrigin,
-      category: responseJSON.data[i].categories
-    };
-
-    // The stockLevel property is omitted when an item is out of stock, so catch for that case
-    try {
-      const stockLevel = responseJSON.data[i].items[0].inventory.stockLevel
-      if (stockLevel == "TEMPORARILY_OUT_OF_STOCK") {
-        itemList[itemIndex].stock = "Temp. Out"
-      }
-      else {
-        itemList[itemIndex].stock = stockLevel[0] + stockLevel.slice(1).toLocaleLowerCase()   // Proper capitalization, not ALL CAPS
-      }
-    } catch (missingPropError) {         // If stockLevel is unavailable, say so
-      itemList[itemIndex].stock = "N/A"
-    }
-
-    itemIndex++;
-  }
-  itemIndex = 0;
-
-  // Trim excess results in cases where the prior search returned more items than the current search
-  let numExcessItems = priorItemListLength - responseJSON.data.length
-  if (numExcessItems > 0) itemList.splice(responseJSON.data.length - 1, numExcessItems)
-  priorItemListLength = responseJSON.data.length
-
-  return itemList;
 }
 
 // Input: Strings for the alert's title and alert's message. Displays a simple, cancellable alert with the given title and message
