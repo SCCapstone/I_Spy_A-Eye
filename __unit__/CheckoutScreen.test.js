@@ -27,3 +27,8 @@ test("A three digit security code as input should have '***' be returned as the 
   const obfuscatedResult = replaceSecurityCodeWithAsterisks("123");
   expect(obfuscatedResult).toBe("***");
 });
+
+test("An empty string as the input should have '' be returned as the output", () => {
+    const obfuscatedResult = replaceSecurityCodeWithAsterisks("");
+    expect(obfuscatedResult).toBe("");
+  });

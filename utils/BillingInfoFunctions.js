@@ -6,6 +6,7 @@ import { Alert } from "react-native";
  */
 
 function nameIsValidOrEmpty(name) {
+  // 21 characters is the maximum amount that can be on a card.
   if (name.length <= 21) {
     return true;
   } else {
