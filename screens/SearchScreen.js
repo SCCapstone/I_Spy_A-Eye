@@ -118,6 +118,7 @@ const Item = ({ id, title, price, unitPrice, stock, quantity, image }) => (
           <Text style={{ color: 'white', fontSize: 19, fontWeight: 'bold' }} onPress={() => addToCart(id)}>Add to Cart</Text>
         </Pressable>
       </View>
+      <View style={{height: 27.5}}></View>
     </View>
   </Pressable>
 );
