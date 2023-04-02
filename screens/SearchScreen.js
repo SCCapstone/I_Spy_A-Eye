@@ -118,6 +118,7 @@ const Item = ({ id, title, price, unitPrice, stock, quantity, image }) => (
           <Text style={{ color: 'white', fontSize: 19, fontWeight: 'bold' }} onPress={() => addToCart(id)}>Add to Cart</Text>
         </Pressable>
       </View>
+      <View style={{height: 27.5}}></View>
     </View>
   </Pressable>
 );
@@ -1149,7 +1150,7 @@ export default class SearchScreen extends React.Component {
           />
         </View>
 
-        {/* Search Results, Page Arrows, and Navigation Bar */}
+        {/* Search Results and Page Arrows*/}
         <View>
           {/* Holds all results of searched items. TODO: make flatlist view shorter. */}
           <View style={{ height: "75%" }}>
@@ -1176,96 +1177,96 @@ export default class SearchScreen extends React.Component {
               }}
             />
           </View>
-
-          {/* Page navigation buttons */}
-          <View style={{flex: 1, flexDirection: 'row', marginTop: 10, position: "absolute", bottom: 75, paddingVertical: 10}}>
-            <Pressable 
-              style={[globalStyle.headerButtonStyle, {paddingVertical: 10, flex: 2}]}
-              onPress={() => {this.navigateSearchResults(false)}}
-              disabled={itemList == null || itemList.length == 0}
-              testID="Test_PageBackButton"
-            >
-              <Text style={[globalStyle.headerButtonText, {fontSize: 30}]}>{'<'}</Text>
-            </Pressable>
-            <Pressable 
-              style={[globalStyle.headerButtonStyle, {paddingVertical: 10, flex: 1}]}
-              testID="Test_PageNumberButton"
-            > 
-              <Text style={[globalStyle.headerButtonText, {fontSize: 30}]}>{
-                            // If itemList was reset, simply display a single page for the empty results
-                            (itemList == null || itemList.length == 0) ? 1 : (pageNumIndex+1)   
-                          }
-              </Text> 
-            </Pressable>
-            <Pressable 
-              style={[globalStyle.headerButtonStyle, {paddingVertical: 10, flex: 2}]}
-              onPress={() => {this.navigateSearchResults(true)}}
-              disabled={itemList == null || itemList.length == 0}
-              testID="Test_PageForwardButton"
-            >
-              <Text style={[globalStyle.headerButtonText, {fontSize: 30}]}>{'>'}</Text>
-            </Pressable>
-          </View>
-
-          <View style={[globalStyle.navBarContainer, {flex: 1}]}>
-            <View style={globalStyle.buttons} testID="Test_NavigationBar">
-              <TouchableOpacity
-                onPress={() => this.props.pageChange(PAGE_ID.search)}
-                style={globalStyle.navButtonContainer}
-                accessibilityRole="menuitem"
-              >
-                <Image
-                  style={globalStyle.icon}
-                  source={require("../assets/search.png")}
-                  accessible={true}
-                  accessibilityLabel="Magnifying Glass Icon"
-                />
-                <Text style={{ textAlign: "center" }}>Search</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => this.props.pageChange(PAGE_ID.cart)}
-                style={globalStyle.navButtonContainer}
-                accessibilityRole="menuitem"
-              >
-                <Image
-                  style={globalStyle.icon}
-                  source={require("../assets/cart.png")}
-                  accessible={true}
-                  accessibilityLabel="Shopping Cart Icon"
-                />
-                <Text style={{ textAlign: "center" }}>My Cart</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => this.props.pageChange(PAGE_ID.orders)}
-                style={globalStyle.navButtonContainer}
-                accessibilityRole="menuitem"
-              >
-                <Image
-                  style={globalStyle.icon}
-                  source={require("../assets/orders.png")}
-                  accessible={true}
-                  accessibilityLabel="Reciept Icon"
-                />
-                <Text style={{ textAlign: "center" }}>Orders</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => this.props.pageChange(PAGE_ID.settings)}
-                style={globalStyle.navButtonContainer}
-                accessibilityRole="menuitem"
-              >
-                <Image
-                  style={globalStyle.icon}
-                  source={require("../assets/gear.png")}
-                  accessible={true}
-                  accessibilityLabel="Gear Icon"
-                />
-                <Text style={{ textAlign: "center" }}>
-                  {this.state.settingsOrLogIn}
-                </Text>
-              </TouchableOpacity>
-            </View>  
-          </View>
         </View>
+
+        {/* Page navigation buttons */}
+        <View style={{flexDirection: 'row', marginTop: 10, position: 'absolute', bottom: 80, backgroundColor: '#FFF', padding: 5}}>
+          <Pressable 
+            style={[globalStyle.headerButtonStyle, {paddingVertical: 5, flex: 2}]}
+            onPress={() => {this.navigateSearchResults(false)}}
+            disabled={itemList == null || itemList.length == 0}
+            testID="Test_PageBackButton"
+          >
+            <Text style={[globalStyle.headerButtonText, {fontSize: 30}]}>{'<'}</Text>
+          </Pressable>
+          <Pressable 
+            style={[globalStyle.headerButtonStyle, {paddingVertical: 5, flex: 1}]}
+            testID="Test_PageNumberButton"
+          > 
+            <Text style={[globalStyle.headerButtonText, {fontSize: 30}]}>{
+                          // If itemList was reset, simply display a single page for the empty results
+                          (itemList == null || itemList.length == 0) ? 1 : (pageNumIndex+1)   
+                        }
+            </Text> 
+          </Pressable>
+          <Pressable 
+            style={[globalStyle.headerButtonStyle, {paddingVertical: 5, flex: 2}]}
+            onPress={() => {this.navigateSearchResults(true)}}
+            disabled={itemList == null || itemList.length == 0}
+            testID="Test_PageForwardButton"
+          >
+            <Text style={[globalStyle.headerButtonText, {fontSize: 30}]}>{'>'}</Text>
+          </Pressable>
+        </View>
+        <View style={[globalStyle.navBarContainer, {flex: 1}]}>
+          <SafeAreaView style={globalStyle.buttons} testID="Test_NavigationBar">
+            <TouchableOpacity
+              onPress={() => this.props.pageChange(PAGE_ID.search)}
+              style={globalStyle.navButtonContainer}
+              accessibilityRole="menuitem"
+            >
+              <Image
+                style={globalStyle.icon}
+                source={require("../assets/search.png")}
+                accessible={true}
+                accessibilityLabel="Magnifying Glass Icon"
+              />
+              <Text style={{ textAlign: "center" }}>Search</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => this.props.pageChange(PAGE_ID.cart)}
+              style={globalStyle.navButtonContainer}
+              accessibilityRole="menuitem"
+            >
+              <Image
+                style={globalStyle.icon}
+                source={require("../assets/cart.png")}
+                accessible={true}
+                accessibilityLabel="Shopping Cart Icon"
+              />
+              <Text style={{ textAlign: "center" }}>My Cart</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => this.props.pageChange(PAGE_ID.orders)}
+              style={globalStyle.navButtonContainer}
+              accessibilityRole="menuitem"
+            >
+              <Image
+                style={globalStyle.icon}
+                source={require("../assets/orders.png")}
+                accessible={true}
+                accessibilityLabel="Reciept Icon"
+              />
+              <Text style={{ textAlign: "center" }}>Orders</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => this.props.pageChange(PAGE_ID.settings)}
+              style={globalStyle.navButtonContainer}
+              accessibilityRole="menuitem"
+            >
+              <Image
+                style={globalStyle.icon}
+                source={require("../assets/gear.png")}
+                accessible={true}
+                accessibilityLabel="Gear Icon"
+              />
+              <Text style={{ textAlign: "center" }}>
+                {this.state.settingsOrLogIn}
+              </Text>
+            </TouchableOpacity>
+          </SafeAreaView>  
+        </View>
+        
       </SafeAreaView>
     );
   }
