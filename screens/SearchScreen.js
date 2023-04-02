@@ -1149,18 +1149,6 @@ export default class SearchScreen extends React.Component {
           />
         </View>
 
-        {/* Horizontal line separator's drop shadow */}
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <View
-            style={{
-              flex: 1,
-              height: 1,
-              borderColor: "#cccccc",
-              borderBottomWidth: 3,
-            }}
-          />
-        </View>
-
         {/* Search Results, Page Arrows, and Navigation Bar */}
         <View>
           {/* Holds all results of searched items. TODO: make flatlist view shorter. */}
