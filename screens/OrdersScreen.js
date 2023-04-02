@@ -11,6 +11,7 @@ import {
 import globalStyle from "../globalStyle";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { PAGE_ID } from "../utils/constants.js";
+import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
 
 class ListItem extends React.Component {
   render() {
@@ -20,7 +21,7 @@ class ListItem extends React.Component {
       <View>
         <Text style={{fontSize: 28, fontWeight: 'bold', textAlign: 'center', marginTop: 10}}>{item.title}</Text>
         <View style={{flexDirection: 'row', marginTop: 20, alignItems: 'center', justifyContent: 'space-between'}}>
-          <Text style={{backgroundColor: 'black', color: 'white', fontSize: 25, marginHorizontal: 20}}>${item.price}</Text>
+          <Text style={{color: 'black', fontSize: 25, marginHorizontal: 20}}>${item.price}</Text>
           <Text style={{fontSize: 25, marginRight: 20}}>Quantity: {item.quantity}</Text>
         </View>
 
@@ -42,7 +43,7 @@ export default class Page3 extends React.Component {
     super(props);
     this.state = {
       settingsOrLogIn: "",
-      orders: []
+      orders: [],
     };
   }
 
@@ -59,7 +60,7 @@ export default class Page3 extends React.Component {
       // grab data from local storage
       const orders = JSON.parse(await AsyncStorage.getItem("ordersScreen"))
       this.displayOrders()
-
+      
       if (orders != null) {
         this.setState({orders})
       }
@@ -78,29 +79,41 @@ export default class Page3 extends React.Component {
     }
   }
 
+  // displays orders on the screen
   displayOrders = async () => {
+    // for (let i = 0; i < this.state.orders; i++) {
+    //   let arrayItems = await AsyncStorage.getItem("orders")
+    //   arrayItems = JSON.parse(arrayItems)
+    //   if (arrayItems) {
+    //     let array = arrayItems
+    //   }
+    // }
     let arrayItems = await AsyncStorage.getItem("orders")
     arrayItems = JSON.parse(arrayItems)
     let array = arrayItems
     if (array) {
-      //await AsyncStorage.setItem("clearing", JSON.stringify(array))
       this.setState({orders: array})
     }
     console.log(this.state.orders)
   }
 
+  // clears order history
   removingOrders = async () => {
-    let ordersArray = await AsyncStorage.getItem("removeOrders")
-    ordersArray = JSON.parse(ordersArray)
-    this.setState({orders: ordersArray})
+    await AsyncStorage.removeItem("orders")
+    this.setState({orders: []})
   }
 
   render() {
     return (
       <SafeAreaView style={globalStyle.wholeScreen}>
         <View style={style.container}>
-          {/*Header*/}
-          <Text style={style.header}>Orders</Text>
+          <View style={{flexDirection: 'row'}}>
+            {/*Header*/}
+            <Text style={style.header}>Orders</Text>
+            <Pressable style={style.clearButton} onPress={() => this.removingOrders()}>
+              <Text style={style.clearButtonText}>Clear History</Text>
+            </Pressable>
+          </View>
 
           {/*Horizontal line*/}
           <View
@@ -118,6 +131,7 @@ export default class Page3 extends React.Component {
           />
 
           <FlatList
+            contentContainerStyle={{paddingBottom: 75}}
             data={this.state.orders}
             renderItem={({item, index}) =>
               <ListItem
@@ -192,7 +206,22 @@ const style = StyleSheet.create({
   header: {
     textAlign: "center",
     fontWeight: "bold",
-    fontSize: 45,
-    marginTop: 25,
+    fontSize: 40,
+    marginTop: 35,
+    marginLeft: 30
   },
+  clearButton: {
+    marginHorizontal: 100,
+    marginTop: 40,
+    marginBottom: 5,
+    backgroundColor: 'black',
+    borderRadius: 15,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+  },
+  clearButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 15,
+  }
 });

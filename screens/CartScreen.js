@@ -18,7 +18,7 @@ class ListItem extends React.Component {
 
         {/*Price, quantity, and remove button*/}
         <View style={{flexDirection: 'row', marginTop: 20, alignItems: 'center', justifyContent: 'space-between'}}>
-          <Text style={{backgroundColor: 'black', color: 'white', fontSize: 25, marginHorizontal: 20}}>${item.price}</Text>
+          <Text style={{color: 'black', fontSize: 25, marginHorizontal: 20}}>${item.price}</Text>
 
           <Pressable onPress={this.props.decrementValue}>
             <Text style={{fontWeight: 'bold', fontSize: 30}}>{'<'}</Text>
@@ -167,6 +167,11 @@ export default class CartScreen extends React.Component {
     this.props.pageChange(PAGE_ID.checkout)
   }
 
+  clearCart = async () => {
+    //await AsyncStorage.removeItem("product")
+    this.setState({products: []})
+  }
+
   render() {
     let deliveryPrice = 5
     let grandTotal = 0
@@ -188,7 +193,7 @@ export default class CartScreen extends React.Component {
           <Text style={{fontSize: 23, marginHorizontal: 20, marginBottom: 17}} testID="test_GroceryTextHeader">Grocery Total: ${this.addPrices()}</Text>
 
           <View style={{flexDirection: 'row'}}>
-            <Text style={{fontSize: 23, marginHorizontal: 20, marginRight: 30}} testID="test_DeliveryTextHeader">Delivery Price:${deliveryPrice}.00</Text>
+            <Text style={{fontSize: 23, marginHorizontal: 20, marginRight: 30}} testID="test_DeliveryTextHeader">Delivery Price: ${deliveryPrice}.00</Text>
 
             {/*Takes user to the checkout screen*/}
             <Pressable testID="test_BuyButtonHeader" style={style.button} onPress={() => this.buyButton()}>

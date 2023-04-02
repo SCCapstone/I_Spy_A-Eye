@@ -82,7 +82,7 @@ export default class CheckoutScreen extends React.Component {
     });
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     this.getDeliveryAddress();
     this.getBillingInfo();
     /**
@@ -112,8 +112,6 @@ export default class CheckoutScreen extends React.Component {
       if (orders) {
         await AsyncStorage.setItem("orders", JSON.stringify(orders))
       }
-      // await AsyncStorage.removeItem("product")
-      // this.setState({products: []})
       this.props.pageChange(PAGE_ID.orders);
     } else {
       alert("You haven't filled out all the required information to make a purchase.");
