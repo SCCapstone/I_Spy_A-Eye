@@ -1164,7 +1164,7 @@ export default class SearchScreen extends React.Component {
         {/* Search Results, Page Arrows, and Navigation Bar */}
         <View>
           {/* Holds all results of searched items. TODO: make flatlist view shorter. */}
-          <View style={{ height: "75%" }}>
+          <View style={{ height: "70%" }}>
             <FlatList
               data={itemList}
               flex={6}
@@ -1190,9 +1190,9 @@ export default class SearchScreen extends React.Component {
           </View>
 
           {/* Page navigation buttons */}
-          <View style={{flex: 1, flexDirection: 'row', marginTop: 10, position: "absolute", bottom: 75, paddingVertical: 10}}>
+          <View style={{flex: 1, flexDirection: 'row', marginTop: 10, paddingVertical: 10}}>
             <Pressable 
-              style={[globalStyle.headerButtonStyle, {paddingVertical: 10, flex: 2}]}
+              style={[globalStyle.headerButtonStyle, {paddingVertical: 10, flex: 2, height: 70}]}
               onPress={() => {this.navigateSearchResults(false)}}
               disabled={itemList == null || itemList.length == 0}
               testID="Test_PageBackButton"
@@ -1200,7 +1200,7 @@ export default class SearchScreen extends React.Component {
               <Text style={[globalStyle.headerButtonText, {fontSize: 30}]}>{'<'}</Text>
             </Pressable>
             <Pressable 
-              style={[globalStyle.headerButtonStyle, {paddingVertical: 10, flex: 1}]}
+              style={[globalStyle.headerButtonStyle, {paddingVertical: 10, flex: 1, height: 70}]}
               testID="Test_PageNumberButton"
             > 
               <Text style={[globalStyle.headerButtonText, {fontSize: 30}]}>{
@@ -1210,7 +1210,7 @@ export default class SearchScreen extends React.Component {
               </Text> 
             </Pressable>
             <Pressable 
-              style={[globalStyle.headerButtonStyle, {paddingVertical: 10, flex: 2}]}
+              style={[globalStyle.headerButtonStyle, {paddingVertical: 10, flex: 2, height: 70}]}
               onPress={() => {this.navigateSearchResults(true)}}
               disabled={itemList == null || itemList.length == 0}
               testID="Test_PageForwardButton"
@@ -1219,7 +1219,7 @@ export default class SearchScreen extends React.Component {
             </Pressable>
           </View>
 
-          <View style={[globalStyle.navBarContainer, {flex: 1}]}>
+          <View style={[globalStyle.navBarContainer]}>
             <View style={globalStyle.buttons} testID="Test_NavigationBar">
               <TouchableOpacity
                 onPress={() => this.props.pageChange(PAGE_ID.search)}
