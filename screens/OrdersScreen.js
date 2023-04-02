@@ -12,12 +12,39 @@ import {
 import globalStyle from "../globalStyle";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { PAGE_ID } from "../utils/constants.js";
+import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
+
+class ListItem extends React.Component {
+  render() {
+    const {item} = this.props
+
+    return(
+      <View>
+        <Text style={{fontSize: 28, fontWeight: 'bold', textAlign: 'center', marginTop: 10}}>{item.title}</Text>
+        <View style={{flexDirection: 'row', marginTop: 20, alignItems: 'center', justifyContent: 'space-between'}}>
+          <Text style={{color: 'black', fontSize: 25, marginHorizontal: 20}}>${item.price}</Text>
+          <Text style={{fontSize: 25, marginRight: 20}}>Quantity: {item.quantity}</Text>
+        </View>
+
+        {/*Horizontal line*/}
+        <View
+          style={{
+            borderBottomColor: 'black',
+            borderBottomWidth: 10,
+            marginTop: 20
+          }}
+        />
+      </View>
+    )
+  }
+}
 
 export default class Page3 extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       settingsOrLogIn: "",
+      orders: [],
     };
   }
 
@@ -31,18 +58,69 @@ export default class Page3 extends React.Component {
     });
   }
 
-  componentDidMount() {
+  // when component loads on the screen
+  componentDidMount = async () => {
     this.updateNavBarText();
+    try {
+      // grab data from local storage
+      const orders = JSON.parse(await AsyncStorage.getItem("ordersScreen"))
+      this.displayOrders()
+      
+      if (orders != null) {
+        this.setState({orders})
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  // invoked immediately after updating occurs (ex: removing)
+  // saving data
+  componentDidUpdate = async (prevProps, prevState) => {
+    // if the previous state changes are not the same as current state changes
+    if (prevState.length !== this.state.orders.length) {
+      // something did change, save everything in products to local storage
+      await AsyncStorage.setItem("ordersScreen", JSON.stringify(this.state.orders))
+    }
+  }
+
+  // displays orders on the screen
+  displayOrders = async () => {
+    // for (let i = 0; i < this.state.orders; i++) {
+    //   let arrayItems = await AsyncStorage.getItem("orders")
+    //   arrayItems = JSON.parse(arrayItems)
+    //   if (arrayItems) {
+    //     let array = arrayItems
+    //   }
+    // }
+    let arrayItems = await AsyncStorage.getItem("orders")
+    arrayItems = JSON.parse(arrayItems)
+    let array = arrayItems
+    if (array) {
+      this.setState({orders: array})
+    }
+    console.log(this.state.orders)
+  }
+
+  // clears order history
+  removingOrders = async () => {
+    await AsyncStorage.removeItem("orders")
+    this.setState({orders: []})
   }
 
   render() {
     return (
       <SafeAreaView style={globalStyle.wholeScreen}>
         <View style={style.container}>
-          {/*Header*/}
-          <Text style={style.header} accessibilityRole="header">
+          <View style={{flexDirection: 'row'}}>
+            {/*Header*/}
+            <Text style={style.header} accessibilityRole="header">
             Orders
           </Text>
+            <Pressable style={style.clearButton} onPress={() => this.removingOrders()}>
+              <Text style={style.clearButtonText}>Clear History</Text>
+            </Pressable>
+          </View>
 
         {/* This is the shadow of the horizontal line. The translate Y value comes from 
         the marginTop value and borderBottomWidth value of the horizontal line added 
@@ -71,70 +149,14 @@ export default class Page3 extends React.Component {
           />
 
           <FlatList
-            data={[
-              {
-                date: "October 12, 2022",
-                store: "Kroger - 1240 Blackberry Street, Columbia SC, 29132",
-                total: "$0.00",
-                status: "delivered",
-              },
-            ]}
-            renderItem={({ item }) => (
-              <View>
-                {/*List of orders*/}
-                <Text
-                  style={{
-                    fontWeight: "bold",
-                    fontSize: 20,
-                    marginHorizontal: 10,
-                  }}
-                >
-                  {item.date}
-                </Text>
-
-                <View style={{ flexDirection: "row" }}>
-                  <Text
-                    style={{
-                      fontWeight: "bold",
-                      fontSize: 20,
-                      marginHorizontal: 10,
-                    }}
-                  >
-                    Store:{" "}
-                  </Text>
-                  <Text style={{ flex: 1, fontSize: 20 }}>{item.store}</Text>
-                </View>
-
-                <View style={{ flexDirection: "row" }}>
-                  <Text style={{ fontSize: 20, marginHorizontal: 10 }}>
-                    Order Total:
-                  </Text>
-                  <Text style={{ fontSize: 20 }}>{item.total}</Text>
-                </View>
-
-                <View style={{ flexDirection: "row" }}>
-                  <Text
-                    style={{
-                      fontWeight: "bold",
-                      fontSize: 20,
-                      marginHorizontal: 10,
-                    }}
-                  >
-                    Status:
-                  </Text>
-                  <Text style={{ fontSize: 20 }}>{item.status}</Text>
-                </View>
-
-                {/*Horizontal line*/}
-                <View
-                  style={{
-                    borderBottomColor: "black",
-                    borderBottomWidth: 10,
-                    marginTop: 20,
-                  }}
-                />
-              </View>
-            )}
+            contentContainerStyle={{paddingBottom: 75}}
+            data={this.state.orders}
+            renderItem={({item, index}) =>
+              <ListItem
+                item={item}
+              />
+            }
+            keyExtractor={(item, index) => index.toString()}
           />
         </View>
 
@@ -208,7 +230,22 @@ const style = StyleSheet.create({
   header: {
     textAlign: "center",
     fontWeight: "bold",
-    fontSize: 45,
-    marginTop: 25,
+    fontSize: 40,
+    marginTop: 35,
+    marginLeft: 30
   },
+  clearButton: {
+    marginHorizontal: 100,
+    marginTop: 40,
+    marginBottom: 5,
+    backgroundColor: 'black',
+    borderRadius: 15,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+  },
+  clearButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 15,
+  }
 });

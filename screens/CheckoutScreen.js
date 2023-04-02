@@ -93,7 +93,7 @@ export default class CheckoutScreen extends React.Component {
     });
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     this.getDeliveryAddress();
     this.getBillingInfo();
     /**
@@ -105,7 +105,7 @@ export default class CheckoutScreen extends React.Component {
   }
 
   // Function to "make a purchase" if all info is filled out.
-  confirm = () => {
+  confirm = async () => {
     if (
       this.state.addressDelivery !== "" &&
       this.state.cityDelivery !== "" &&
@@ -117,6 +117,12 @@ export default class CheckoutScreen extends React.Component {
       this.state.securityCodeBilling !== ""
     ) {
       alert("Thank you for your purchase!");
+      let arrayItems = await AsyncStorage.getItem("product")
+      arrayItems = JSON.parse(arrayItems)
+      let orders = arrayItems
+      if (orders) {
+        await AsyncStorage.setItem("orders", JSON.stringify(orders))
+      }
       this.props.pageChange(PAGE_ID.orders);
     } else {
       alert(

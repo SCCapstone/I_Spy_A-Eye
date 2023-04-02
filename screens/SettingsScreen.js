@@ -139,14 +139,6 @@ export default class SettingsScreen extends React.Component {
           </Pressable>
           <Pressable
             style={globalStyle.wideButtonStyle}
-            accessibilityRole="button"
-          >
-            <Text style={globalStyle.wideButtonText}>
-              Clear Shopping History
-            </Text>
-          </Pressable>
-          <Pressable
-            style={globalStyle.wideButtonStyle}
             onPress={() => this.props.pageChange(PAGE_ID.location)}
             testID="Test_LocationChange"
           >

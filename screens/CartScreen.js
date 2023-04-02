@@ -4,11 +4,6 @@ import globalStyle from "../globalStyle"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { PAGE_ID } from "../utils/constants.js";
 
-/*
-  TODOS:
-    figure out how to prevent same item from being added to array (cart)
-*/
-
 class ListItem extends React.Component {
 
   render() {
@@ -16,14 +11,14 @@ class ListItem extends React.Component {
 
     return(
       <View>
-        {/*Item title, depends on what the user adds to the cart, allows user to go to the details screen*/}
+        {/*Item title, depends on what the user adds to the cart*/}
         <Pressable>
           <Text style={{fontSize: 28, fontWeight: 'bold', textAlign: 'center', marginTop: 10}}>{item.title}</Text>
         </Pressable>
 
         {/*Price, quantity, and remove button*/}
         <View style={{flexDirection: 'row', marginTop: 20, alignItems: 'center', justifyContent: 'space-between'}}>
-          <Text style={{backgroundColor: 'black', color: 'white', fontSize: 25, marginHorizontal: 20}}>${item.price}</Text>
+          <Text style={{color: 'black', fontSize: 25, marginHorizontal: 20}}>${item.price}</Text>
 
           <Pressable onPress={this.props.decrementValue}>
             <Text style={{fontWeight: 'bold', fontSize: 30}}>{'<'}</Text>
@@ -172,6 +167,15 @@ export default class CartScreen extends React.Component {
     return totalPrice
   }
 
+  buyButton = async () => {
+    this.props.pageChange(PAGE_ID.checkout)
+  }
+
+  clearCart = async () => {
+    //await AsyncStorage.removeItem("product")
+    this.setState({products: []})
+  }
+
   render() {
     let deliveryPrice = 5
     let grandTotal = 0
@@ -208,14 +212,14 @@ export default class CartScreen extends React.Component {
               style={{ fontSize: 23, marginHorizontal: 20, marginRight: 30 }}
               testID="test_DeliveryTextHeader"
             >
-              Delivery Price:${deliveryPrice}.00
+              Delivery Price: ${deliveryPrice}.00
             </Text>
 
             {/*Takes user to the checkout screen*/}
             <Pressable
               testID="test_BuyButtonHeader"
               style={style.button}
-              onPress={() => this.props.pageChange(5)}
+              onPress={() => this.buyButton()}
             >
               <Text style={style.buttonText}>Buy</Text>
             </Pressable>
