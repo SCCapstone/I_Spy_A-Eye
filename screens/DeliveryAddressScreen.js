@@ -60,11 +60,11 @@ export default class DeliveryAddress extends React.Component {
   }
 
   /**
-   * Function to update the current user's
-   * @param {*} addressInput
-   * @param {*} cityInput
-   * @param {*} zipCodeInput
-   * @param {*} stateInput
+   * Function to update the current user's deleivery address in Firestore.
+   * @param {*} addressInput the address of the current user
+   * @param {*} cityInput the city of the current user
+   * @param {*} zipCodeInput the zip code of the current user
+   * @param {*} stateInput the state of the current user
    */
   async saveDeliveryAddressFirestore(
     addressInput,
@@ -105,11 +105,14 @@ export default class DeliveryAddress extends React.Component {
   render() {
     return (
       <SafeAreaView style={globalStyle.wholeScreen}>
-        <Text style={globalStyle.headerText}>Delivery Address</Text>
+        <Text style={globalStyle.headerText} accessibilityRole="header">
+          Delivery Address
+        </Text>
         <Pressable
           style={globalStyle.smallButtonStyle}
           // Returns user back to previous page.
           onPress={() => this.returnToPreviousPage()}
+          accessibilityRole="button"
         >
           <Text style={globalStyle.smallButtonText}>&lt; Back</Text>
         </Pressable>
@@ -131,7 +134,7 @@ export default class DeliveryAddress extends React.Component {
             }
           />
           <View style={globalStyle.date_codes}>
-            <View style={globalStyle.date_codeContainter}>
+            <View style={globalStyle.date_codeContainter_left}>
               <Text style={globalStyle.paragraph}>Zip Code</Text>
               <TextInput
                 style={globalStyle.date_code}
@@ -143,11 +146,13 @@ export default class DeliveryAddress extends React.Component {
                 }
               />
             </View>
-            <View style={globalStyle.date_codeContainter}>
+            <View style={globalStyle.date_codeContainter_right}>
               <Text style={globalStyle.paragraph}>State</Text>
               <TextInput
                 style={globalStyle.date_code}
+                placeholder="Name or Abbreviation"
                 value={this.state.stateInput}
+                placeholderTextColor={"#000"}
                 onChangeText={(newStateInput) =>
                   this.setState({ stateInput: newStateInput })
                 }
@@ -164,6 +169,7 @@ export default class DeliveryAddress extends React.Component {
                 this.state.stateInput
               )
             }
+            accessibilityRole="button"
           >
             <Text style={globalStyle.wideButtonText}>Update</Text>
           </Pressable>

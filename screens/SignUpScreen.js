@@ -4,6 +4,7 @@ import globalStyle from "../globalStyle";
 import { firebaseAuth } from "../utils/firebase";
 import { newPasswordIsValid } from "../utils/SignUpScreenFunctions";
 import { PAGE_ID } from "../utils/constants";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default class SignUp extends React.Component {
   // Holds the values of the text input fields on this screen.
@@ -14,6 +15,13 @@ export default class SignUp extends React.Component {
       passwordInput: "",
       confirmPasswordInput: "",
     };
+  }
+
+  // Returns user back to previous screen.
+  async returnToPreviousPage() {
+    this.props.pageChange(
+      parseInt(await AsyncStorage.getItem("previousPage"), 10)
+    );
   }
 
   /**
@@ -30,7 +38,7 @@ export default class SignUp extends React.Component {
           const user = userCredentials.user;
           alert("You have successfully registered!");
           console.log(user.email, " successfully registered.");
-          this.props.pageChange(PAGE_ID.login);
+          this.props.pageChange(PAGE_ID.location);
         })
         .catch((error) => alert(error.message));
     }
@@ -39,10 +47,13 @@ export default class SignUp extends React.Component {
   render() {
     return (
       <SafeAreaView style={globalStyle.wholeScreen}>
-        <Text style={globalStyle.headerText}>Create an Account</Text>
+        <Text style={globalStyle.headerText} accessibilityRole="header">
+          Create an Account
+        </Text>
         <Pressable
           style={globalStyle.smallButtonStyle}
-          onPress={() => this.props.pageChange(PAGE_ID.login)}
+          onPress={() => this.returnToPreviousPage()}
+          accessibilityRole="button"
         >
           <Text style={globalStyle.smallButtonText}>&lt; Back</Text>
         </Pressable>
@@ -76,11 +87,12 @@ export default class SignUp extends React.Component {
         <Pressable
           style={globalStyle.wideButtonStyle}
           onPress={() => this.signUp(this.state)}
+          accessibilityRole="button"
         >
           <Text style={globalStyle.wideButtonText}>Sign Up</Text>
         </Pressable>
         <Text style={globalStyle.paragraph}>
-          Your password must be at least 8 characters long. it must contain an
+          Your password must be at least 8 characters long. It must contain an
           uppercase letter, a lowercase letter, a number, and a non-alphanumeric
           character.
         </Text>

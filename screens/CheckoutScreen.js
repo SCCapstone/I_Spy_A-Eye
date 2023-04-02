@@ -1,12 +1,17 @@
 import React from "react";
 import { PAGE_ID } from "../utils/constants";
 import {
+  showOnlyFourDigitsOfCardNumber,
+  replaceSecurityCodeWithAsterisks,
+} from "../utils/CheckoutScreenFunctions";
+import {
   View,
   Text,
   SafeAreaView,
   StyleSheet,
   Pressable,
   ScrollView,
+  ImageBackground,
 } from "react-native";
 import globalStyle from "../globalStyle";
 import firebase from "firebase";
@@ -55,7 +60,11 @@ export default class CheckoutScreen extends React.Component {
     });
   }
 
-  // Function to get the current user's billing info stored in Firestore.
+  /**
+   * Function to get the current user's billing info stored in Firestore.
+   * The card number text and the security code text will be obfuscated for
+   * displaying on this screen.
+   */
   async getBillingInfo() {
     let res = await firebase
       .firestore()
@@ -67,18 +76,20 @@ export default class CheckoutScreen extends React.Component {
         res._delegate._document.data.value.mapValue.fields.name.stringValue,
     });
     this.setState({
-      cardNumberBilling:
+      cardNumberBilling: showOnlyFourDigitsOfCardNumber(
         res._delegate._document.data.value.mapValue.fields.cardNumber
-          .stringValue,
+          .stringValue
+      ),
     });
     this.setState({
       expiryBilling:
         res._delegate._document.data.value.mapValue.fields.expiry.stringValue,
     });
     this.setState({
-      securityCodeBilling:
+      securityCodeBilling: replaceSecurityCodeWithAsterisks(
         res._delegate._document.data.value.mapValue.fields.securityCode
-          .stringValue,
+          .stringValue
+      ),
     });
   }
 
@@ -93,7 +104,7 @@ export default class CheckoutScreen extends React.Component {
     AsyncStorage.setItem("previousPage", "5");
   }
 
-  // Function to "make a purchase" if all info is filled out. 
+  // Function to "make a purchase" if all info is filled out.
   confirm = () => {
     if (
       this.state.addressDelivery !== "" &&
@@ -108,7 +119,9 @@ export default class CheckoutScreen extends React.Component {
       alert("Thank you for your purchase!");
       this.props.pageChange(PAGE_ID.orders);
     } else {
-      alert("You haven't filled out all the required information to make a purchase.");
+      alert(
+        "You haven't filled out all the required information to make a purchase."
+      );
     }
   };
 
@@ -118,7 +131,11 @@ export default class CheckoutScreen extends React.Component {
         <View style={style.container}>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             {/*Takes user back to the cart screen*/}
-            <Pressable onPress={() => this.props.pageChange(PAGE_ID.cart)}>
+            <Pressable
+              onPress={() => this.props.pageChange(PAGE_ID.cart)}
+              accessibilityLabel="Go Back"
+              accessibilityRole="button"
+            >
               <Text
                 style={{
                   fontWeight: "bold",
@@ -130,7 +147,9 @@ export default class CheckoutScreen extends React.Component {
                 {"<"}
               </Text>
             </Pressable>
-            <Text style={style.header}>Checkout</Text>
+            <Text style={style.header} accessibilityRole="header">
+              Checkout
+            </Text>
           </View>
 
           {/*Horizontal line*/}
@@ -141,7 +160,15 @@ export default class CheckoutScreen extends React.Component {
               marginTop: 20,
             }}
           />
-          <ScrollView>
+          {/* OverScroll being enabled ruins shadow effect */}
+          <ScrollView stickyHeaderIndices={[0]} overScrollMode="never">
+            <View style={{ height: 5 }}>
+              <ImageBackground
+                style={{ width: "100%", height: "100%" }}
+                source={require("../assets/shadow.png")}
+                imageStyle={{ resizeMode: "repeat" }}
+              ></ImageBackground>
+            </View>
             {/*The user can input the delivery address*/}
             <Text style={globalStyle.subHeaderText}>Delivery Address</Text>
             <Text style={globalStyle.paragraph}>
@@ -152,8 +179,9 @@ export default class CheckoutScreen extends React.Component {
               {this.state.zipCodeDelivery}
             </Text>
             <Pressable
-              style={globalStyle.headerButtonStyle}
+              style={style.mediumWidthButton}
               onPress={() => this.props.pageChange(PAGE_ID.delivery_address)}
+              accessibilityRole="button"
             >
               <Text style={globalStyle.headerButtonText}>Change</Text>
             </Pressable>
@@ -181,7 +209,7 @@ export default class CheckoutScreen extends React.Component {
               {this.state.expiryBilling}
             </Text>
             <Pressable
-              style={globalStyle.headerButtonStyle}
+              style={style.mediumWidthButton}
               onPress={() => this.props.pageChange(PAGE_ID.billing_info)}
             >
               <Text style={globalStyle.headerButtonText}>Change</Text>
@@ -227,16 +255,6 @@ const style = StyleSheet.create({
     marginTop: 25,
     marginHorizontal: 75,
   },
-  input: {
-    backgroundColor: "white",
-    width: 350,
-    borderColor: "black",
-    borderWidth: 1,
-    borderRadius: 5,
-    padding: 10,
-    margin: 10,
-    marginLeft: 25,
-  },
   date_code: {
     backgroundColor: "white",
     borderColor: "black",
@@ -268,4 +286,12 @@ const style = StyleSheet.create({
     marginRight: 8,
     marginBottom: 16,
   },
+  mediumWidthButton: {
+    backgroundColor: "#000",
+    borderRadius: 20,
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    marginHorizontal: 4,
+    maxWidth: "45%"
+  }
 });

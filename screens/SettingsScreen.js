@@ -8,6 +8,8 @@ import {
   Image,
   Pressable,
   ScrollView,
+  ImageBackground,
+  ToastAndroid,
 } from "react-native";
 import { SafeAreaView } from "react-native";
 import globalStyle from "../globalStyle";
@@ -24,6 +26,7 @@ export default class SettingsScreen extends React.Component {
     this.state = {
       settingsOrLogIn: "",
       currentEmail: "",
+      currentLocation: "",
       // This variable controls what radio button is currently selected.
       checked: "20",
     };
@@ -34,9 +37,14 @@ export default class SettingsScreen extends React.Component {
       firebase.firestore().collection("productsPerPage").doc(user.uid).set({
         number: productsPerPageInput,
       });
+      ToastAndroid.show("Saved!", 400);
     });
   }
 
+  /**
+   * Function to get the user's products per page setting stored in Firestore.
+   * The state of the radio buttons are updated from the retrieved value.
+   */
   async getProductsPerPage() {
     let res = await firebase
       .firestore()
@@ -49,21 +57,27 @@ export default class SettingsScreen extends React.Component {
     });
   }
 
+  /**
+   * Function to get the current user's email address and update the Text component
+   * displaying this info.
+   */
   async updateCurrentEmailState() {
     this.setState({
       currentEmail: `Signed in as: ${await AsyncStorage.getItem("userEmail")}`,
     });
   }
 
-  async updateNavBarText() {
+  async updateCurrentLocationState() {
     this.setState({
-      settingsOrLogIn: await AsyncStorage.getItem("SettingsOrLogIn"),
+      currentLocation: `Location: ${await AsyncStorage.getItem(
+        "selectedLocation"
+      )}`,
     });
   }
 
   componentDidMount() {
-    this.updateNavBarText();
     this.updateCurrentEmailState();
+    this.updateCurrentLocationState();
     /**
      * The Billing Address and Delivery Address screens have back buttons and can
      * be accessed from this screen and the Checkout screen. The previousPage
@@ -82,7 +96,9 @@ export default class SettingsScreen extends React.Component {
     const { checked } = this.state;
     return (
       <SafeAreaView style={globalStyle.wholeScreen}>
-        <Text style={globalStyle.headerText}>Settings</Text>
+        <Text style={globalStyle.headerText} accessibilityRole="header">
+          Settings
+        </Text>
         {/*Horizontal line*/}
         <View
           style={{
@@ -91,12 +107,24 @@ export default class SettingsScreen extends React.Component {
             marginTop: 20,
           }}
         />
-        <ScrollView>
-          <Text style={globalStyle.subHeaderText}>Personal:</Text>
+        {/* OverScroll being enabled ruins shadow effect */}
+        <ScrollView stickyHeaderIndices={[0]} overScrollMode="never">
+          <View style={{ height: 5 }}>
+            <ImageBackground
+              style={{ width: "100%", height: "100%" }}
+              source={require("../assets/shadow.png")}
+              imageStyle={{ resizeMode: "repeat" }}
+            ></ImageBackground>
+          </View>
+          <Text style={globalStyle.subHeaderText} accessibilityRole="header">
+            Personal:
+          </Text>
           <Text style={style.signedInText}>{this.state.currentEmail}</Text>
+          <Text style={style.signedInText}>{this.state.currentLocation}</Text>
           <Pressable
             style={globalStyle.wideButtonStyle}
             onPress={() => this.props.pageChange(PAGE_ID.delivery_address)}
+            accessibilityRole="button"
           >
             <Text style={globalStyle.wideButtonText}>
               Change Delivery Address
@@ -105,27 +133,38 @@ export default class SettingsScreen extends React.Component {
           <Pressable
             style={globalStyle.wideButtonStyle}
             onPress={() => this.props.pageChange(PAGE_ID.billing_info)}
+            accessibilityRole="button"
           >
             <Text style={globalStyle.wideButtonText}>Change Billing Info</Text>
           </Pressable>
-          <Pressable style={globalStyle.wideButtonStyle}>
+          <Pressable
+            style={globalStyle.wideButtonStyle}
+            accessibilityRole="button"
+          >
             <Text style={globalStyle.wideButtonText}>
               Clear Shopping History
             </Text>
           </Pressable>
           <Pressable
             style={globalStyle.wideButtonStyle}
+            onPress={() => this.props.pageChange(PAGE_ID.location)}
+            testID="Test_LocationChange"
+          >
+            <Text style={globalStyle.wideButtonText}>Change Location</Text>
+          </Pressable>
+          <Pressable
+            style={globalStyle.wideButtonStyle}
             onPress={() => this.signOut()}
+            accessibilityRole="button"
           >
             <Text style={globalStyle.wideButtonText}>Sign Out</Text>
           </Pressable>
-          <View style={globalStyle.wideButtonStyle}>
-            <OpenURLButton url={"https://google.com"}>Tutorial</OpenURLButton>
-          </View>
           <View style={{ minHeight: 24 }}></View>
-          <Text style={globalStyle.subHeaderText}>Other:</Text>
+          <Text style={globalStyle.subHeaderText} accessibilityRole="header">
+            Other:
+          </Text>
           <Text style={style.subSubHeaderText}>Search Results Per Page</Text>
-          <RadioButton.Group>
+          <RadioButton.Group accessibilityRole="radiogroup">
             <RadioButton.Item
               color="#000"
               uncheckedColor="#000"
@@ -135,6 +174,7 @@ export default class SettingsScreen extends React.Component {
               onPress={() => {
                 this.setState({ checked: "10" });
               }}
+              accessibilityRole="radio"
             />
             <RadioButton.Item
               color="#000"
@@ -145,6 +185,7 @@ export default class SettingsScreen extends React.Component {
               onPress={() => {
                 this.setState({ checked: "20" });
               }}
+              accessibilityRole="radio"
             />
             <RadioButton.Item
               color="#000"
@@ -155,6 +196,7 @@ export default class SettingsScreen extends React.Component {
               onPress={() => {
                 this.setState({ checked: "30" });
               }}
+              accessibilityRole="radio"
             />
           </RadioButton.Group>
           <Pressable
@@ -165,6 +207,9 @@ export default class SettingsScreen extends React.Component {
           >
             <Text style={globalStyle.smallButtonText}>Save</Text>
           </Pressable>
+          <View style={globalStyle.wideButtonStyle}>
+            <OpenURLButton url={"https://google.com"}>Tutorial</OpenURLButton>
+          </View>
           {/* Empty space so that the navbar doesn't cover the bottom of the settings page */}
           <View style={{ minHeight: 100 }}></View>
         </ScrollView>
@@ -173,52 +218,54 @@ export default class SettingsScreen extends React.Component {
             <TouchableOpacity
               onPress={() => this.props.pageChange(PAGE_ID.search)}
               style={globalStyle.navButtonContainer}
+              accessibilityRole="menuitem"
             >
               <Image
                 style={globalStyle.icon}
                 source={require("../assets/search.png")}
                 accessible={true}
-                accessibilityLabel={"Magnifying Glass Icon"}
+                accessibilityLabel="Magnifying Glass Icon"
               />
               <Text style={{ textAlign: "center" }}>Search</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => this.props.pageChange(PAGE_ID.cart)}
               style={globalStyle.navButtonContainer}
+              accessibilityRole="menuitem"
             >
               <Image
                 style={globalStyle.icon}
                 source={require("../assets/cart.png")}
                 accessible={true}
-                accessibilityLabel={"Shopping Cart Icon"}
+                accessibilityLabel="Shopping Cart Icon"
               />
               <Text style={{ textAlign: "center" }}>My Cart</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => this.props.pageChange(PAGE_ID.orders)}
               style={globalStyle.navButtonContainer}
+              accessibilityRole="menuitem"
             >
               <Image
                 style={globalStyle.icon}
                 source={require("../assets/orders.png")}
                 accessible={true}
-                accessibilityLabel={"Reciept Icon"}
+                accessibilityLabel="Reciept Icon"
               />
               <Text style={{ textAlign: "center" }}>Orders</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => this.props.pageChange(PAGE_ID.settings)}
               style={globalStyle.navButtonContainer}
+              accessibilityRole="menuitem"
             >
               <Image
                 style={globalStyle.icon}
                 source={require("../assets/gear.png")}
                 accessible={true}
-                accessibilityLabel={"Gear Icon"}
+                accessibilityLabel="Gear Icon"
               />
-              <Text style={{ textAlign: "center" }}>
-                {this.state.settingsOrLogIn}
-              </Text>
+              <Text style={{ textAlign: "center" }}>Settings</Text>
             </TouchableOpacity>
           </View>
         </View>
