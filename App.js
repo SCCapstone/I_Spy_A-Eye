@@ -9,7 +9,9 @@ import SettingsScreen from "./screens/SettingsScreen";
 import NotSignedInSettings from "./screens/NotSignedInSettingsScreen";
 import CheckoutScreen from "./screens/CheckoutScreen";
 import DeliveryAddress from "./screens/DeliveryAddressScreen";
+import LocationScreen from "./screens/LocationScreen"
 import BillingInfoScreen from "./screens/BillingInfoScreen";
+import ProductScreen from "./screens/ProductScreen"
 import base64 from "react-native-base64";
 import { CLIENT_ID, CLIENT_SECRET } from "@env";
 import firebase from "firebase";
@@ -95,11 +97,19 @@ export default class App extends React.Component {
         return (
           <Login pageChange={(pageNum) => this.setState({ page: pageNum })} />
         );
+      case PAGE_ID.product:
+        return (
+          <ProductScreen pageChange={(pageNum) => this.setState({ page: pageNum })} />
+        );
       case PAGE_ID.search:
         return (
           <SearchScreen
             pageChange={(pageNum) => this.setState({ page: pageNum })}
           />
+        );
+      case PAGE_ID.location:
+        return (
+          <LocationScreen pageChange={(pageNum) => this.setState({ page: pageNum })} />
         );
       case PAGE_ID.cart:
         return (

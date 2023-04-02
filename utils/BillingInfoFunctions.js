@@ -6,6 +6,7 @@ import { Alert } from "react-native";
  */
 
 function nameIsValidOrEmpty(name) {
+  // 21 characters is the maximum amount that can be on a card.
   if (name.length <= 21) {
     return true;
   } else {
@@ -68,11 +69,12 @@ function cardIsNotExpired(expiry) {
  * @returns true if expiry is valid or empty, else false.
  */
 function expiryIsValidOrEmpty(expiry) {
-  if (expiry.match("(0[1-9]|1[0-2])/[0-9][0-9]") || expiry.length === 0) {
-    if (cardIsNotExpired(expiry)) {
-      return true;
-    }
-  } else {
+  if (expiry.match("(0[1-9]|1[0-2])/[0-9][0-9]") && cardIsNotExpired(expiry)) {
+    return true;
+  } else if (expiry.length === 0) {
+    return true;
+  }
+   else if (!expiry.match("(0[1-9]|1[0-2])/[0-9][0-9]")) {
     Alert.alert("The expiry you inputed is formatted incorrectly.");
   }
   return false;

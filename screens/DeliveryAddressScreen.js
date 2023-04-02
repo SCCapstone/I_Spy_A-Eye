@@ -3,7 +3,7 @@ import {
   addressIsValidOrEmpty,
   cityIsValidOrEmpty,
   zipCodeIsValidOrEmpty,
-  stateIsValidOrEmpty
+  stateIsValidOrEmpty,
 } from "../utils/DeliveryAddressFunctions";
 import {
   Text,
@@ -11,6 +11,7 @@ import {
   SafeAreaView,
   TextInput,
   ScrollView,
+  View,
 } from "react-native";
 import globalStyle from "../globalStyle";
 import firebase from "firebase";
@@ -59,11 +60,11 @@ export default class DeliveryAddress extends React.Component {
   }
 
   /**
-   * Function to update the current user's
-   * @param {*} addressInput
-   * @param {*} cityInput
-   * @param {*} zipCodeInput
-   * @param {*} stateInput
+   * Function to update the current user's deleivery address in Firestore.
+   * @param {*} addressInput the address of the current user
+   * @param {*} cityInput the city of the current user
+   * @param {*} zipCodeInput the zip code of the current user
+   * @param {*} stateInput the state of the current user
    */
   async saveDeliveryAddressFirestore(
     addressInput,
@@ -104,13 +105,16 @@ export default class DeliveryAddress extends React.Component {
   render() {
     return (
       <SafeAreaView style={globalStyle.wholeScreen}>
-        <Text style={globalStyle.headerText}>Delivery Address</Text>
+        <Text style={globalStyle.headerText} accessibilityRole="header">
+          Delivery Address
+        </Text>
         <Pressable
-          style={globalStyle.backButtonStyle}
+          style={globalStyle.smallButtonStyle}
           // Returns user back to previous page.
           onPress={() => this.returnToPreviousPage()}
+          accessibilityRole="button"
         >
-          <Text style={globalStyle.backButtonText}>&lt; Back</Text>
+          <Text style={globalStyle.smallButtonText}>&lt; Back</Text>
         </Pressable>
         <ScrollView>
           <Text style={globalStyle.paragraph}>Street Address</Text>
@@ -129,25 +133,32 @@ export default class DeliveryAddress extends React.Component {
               this.setState({ cityInput: newCityInput })
             }
           />
-          <Text style={globalStyle.paragraph}>Zip Code</Text>
-          <TextInput
-            style={globalStyle.billingDeliveryInput}
-            placeholder="#####"
-            value={this.state.zipCodeInput}
-            placeholderTextColor={"#000"}
-            onChangeText={(newZipCodeInput) =>
-              this.setState({ zipCodeInput: newZipCodeInput })
-            }
-          />
-          <Text style={globalStyle.paragraph}>State</Text>
-          <TextInput
-            style={globalStyle.billingDeliveryInput}
-            value={this.state.stateInput}
-            onChangeText={(newStateInput) =>
-              this.setState({ stateInput: newStateInput })
-            }
-          />
-
+          <View style={globalStyle.date_codes}>
+            <View style={globalStyle.date_codeContainter_left}>
+              <Text style={globalStyle.paragraph}>Zip Code</Text>
+              <TextInput
+                style={globalStyle.date_code}
+                placeholder="#####"
+                value={this.state.zipCodeInput}
+                placeholderTextColor={"#000"}
+                onChangeText={(newZipCodeInput) =>
+                  this.setState({ zipCodeInput: newZipCodeInput })
+                }
+              />
+            </View>
+            <View style={globalStyle.date_codeContainter_right}>
+              <Text style={globalStyle.paragraph}>State</Text>
+              <TextInput
+                style={globalStyle.date_code}
+                placeholder="Name or Abbreviation"
+                value={this.state.stateInput}
+                placeholderTextColor={"#000"}
+                onChangeText={(newStateInput) =>
+                  this.setState({ stateInput: newStateInput })
+                }
+              />
+            </View>
+          </View>
           <Pressable
             style={globalStyle.wideButtonStyle}
             onPress={() =>
@@ -158,6 +169,7 @@ export default class DeliveryAddress extends React.Component {
                 this.state.stateInput
               )
             }
+            accessibilityRole="button"
           >
             <Text style={globalStyle.wideButtonText}>Update</Text>
           </Pressable>

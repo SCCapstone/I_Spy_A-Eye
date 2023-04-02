@@ -7,6 +7,7 @@ import {
   Image,
   SafeAreaView,
   FlatList,
+  ImageBackground
 } from "react-native";
 import globalStyle from "../globalStyle";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -47,6 +48,10 @@ export default class Page3 extends React.Component {
     };
   }
 
+  /**
+   * Function to change the text on the button with a gear on the navbar.
+   * Text can either be "Settings" or "Log In".
+   */
   async updateNavBarText() {
     this.setState({
       settingsOrLogIn: await AsyncStorage.getItem("SettingsOrLogIn"),
@@ -109,11 +114,30 @@ export default class Page3 extends React.Component {
         <View style={style.container}>
           <View style={{flexDirection: 'row'}}>
             {/*Header*/}
-            <Text style={style.header}>Orders</Text>
+            <Text style={style.header} accessibilityRole="header">
+            Orders
+          </Text>
             <Pressable style={style.clearButton} onPress={() => this.removingOrders()}>
               <Text style={style.clearButtonText}>Clear History</Text>
             </Pressable>
           </View>
+
+        {/* This is the shadow of the horizontal line. The translate Y value comes from 
+        the marginTop value and borderBottomWidth value of the horizontal line added 
+        together, plus the shadow height as well. The total of this value has 0.1 subtracted
+        from it so the shadow overlaps slightly with the black bar so that there isn't
+        a thin white line in the middle. */}
+        <View style={{ 
+          height: 5,
+          position: 'relative',
+          transform: [{translateY: 19.9}],}}
+        >
+          <ImageBackground
+            style={{ width: "100%", height: "100%" }}
+            source={require("../assets/shadow.png")}
+            imageStyle={{ resizeMode: "repeat" }}
+          ></ImageBackground>
+        </View>
 
           {/*Horizontal line*/}
           <View
@@ -121,12 +145,6 @@ export default class Page3 extends React.Component {
               borderBottomColor: "black",
               borderBottomWidth: 10,
               marginTop: 5,
-            }}
-          />
-          <View
-            style={{
-              borderBottomColor: "lightgrey",
-              borderBottomWidth: 5,
             }}
           />
 
@@ -144,53 +162,59 @@ export default class Page3 extends React.Component {
 
         <View style={globalStyle.navBarContainer}>
           <View style={globalStyle.buttons} testID="Test_NavigationBar">
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={() => this.props.pageChange(PAGE_ID.search)}
               style={globalStyle.navButtonContainer}
+              accessibilityRole="menuitem"
             >
               <Image
                 style={globalStyle.icon}
                 source={require("../assets/search.png")}
                 accessible={true}
-                accessibilityLabel={"Magnifying Glass Icon"}
+                accessibilityLabel="Magnifying Glass Icon"
               />
-              <Text style={{textAlign: "center"}}>Search</Text>
+              <Text style={{ textAlign: "center" }}>Search</Text>
             </TouchableOpacity>
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={() => this.props.pageChange(PAGE_ID.cart)}
               style={globalStyle.navButtonContainer}
+              accessibilityRole="menuitem"
             >
               <Image
                 style={globalStyle.icon}
                 source={require("../assets/cart.png")}
                 accessible={true}
-                accessibilityLabel={"Shopping Cart Icon"}
+                accessibilityLabel="Shopping Cart Icon"
               />
-              <Text style={{textAlign: "center"}}>My Cart</Text>
+              <Text style={{ textAlign: "center" }}>My Cart</Text>
             </TouchableOpacity>
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={() => this.props.pageChange(PAGE_ID.orders)}
               style={globalStyle.navButtonContainer}
+              accessibilityRole="menuitem"
             >
               <Image
                 style={globalStyle.icon}
                 source={require("../assets/orders.png")}
                 accessible={true}
-                accessibilityLabel={"Reciept Icon"}
+                accessibilityLabel="Reciept Icon"
               />
-              <Text style={{textAlign: "center"}}>Orders</Text>
+              <Text style={{ textAlign: "center" }}>Orders</Text>
             </TouchableOpacity>
-            <TouchableOpacity 
-              onPress={() => this.props.pageChange(PAGE_ID.settings)} 
+            <TouchableOpacity
+              onPress={() => this.props.pageChange(PAGE_ID.settings)}
               style={globalStyle.navButtonContainer}
+              accessibilityRole="menuitem"
             >
               <Image
                 style={globalStyle.icon}
                 source={require("../assets/gear.png")}
                 accessible={true}
-                accessibilityLabel={"Gear Icon"}
+                accessibilityLabel="Gear Icon"
               />
-              <Text style={{textAlign: "center"}}>{this.state.settingsOrLogIn}</Text>
+              <Text style={{ textAlign: "center" }}>
+                {this.state.settingsOrLogIn}
+              </Text>
             </TouchableOpacity>
           </View>
         </View>

@@ -3,7 +3,7 @@ import {
   nameIsValidOrEmpty,
   securityCodeIsValidOrEmpty,
   cardNumberIsValidOrEmpty,
-  expiryIsValidOrEmpty
+  expiryIsValidOrEmpty,
 } from "../utils/BillingInfoFunctions";
 import {
   View,
@@ -13,6 +13,7 @@ import {
   Pressable,
   TextInput,
   ScrollView,
+  ImageBackground,
 } from "react-native";
 import globalStyle from "../globalStyle";
 import firebase from "firebase";
@@ -109,7 +110,11 @@ export default class BillingInfoScreen extends React.Component {
       <SafeAreaView style={globalStyle.wholeScreen}>
         <View style={style.container}>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Pressable onPress={() => this.returnToPreviousPage()}>
+            <Pressable
+              onPress={() => this.returnToPreviousPage()}
+              accessibilityLabel="Go back"
+              accessibilityRole="button"
+            >
               <Text
                 style={{
                   fontWeight: "bold",
@@ -121,7 +126,9 @@ export default class BillingInfoScreen extends React.Component {
                 {"<"}
               </Text>
             </Pressable>
-            <Text style={style.header}>Billing Info</Text>
+            <Text style={style.header} accessibilityRole="header">
+              Billing Info
+            </Text>
           </View>
 
           {/*Horizontal line*/}
@@ -132,7 +139,15 @@ export default class BillingInfoScreen extends React.Component {
               marginTop: 20,
             }}
           />
-          <ScrollView>
+          {/* OverScroll being enabled ruins shadow effect */}
+          <ScrollView stickyHeaderIndices={[0]} overScrollMode="never">
+            <View style={{ height: 5 }}>
+              <ImageBackground
+                style={{ width: "100%", height: "100%" }}
+                source={require("../assets/shadow.png")}
+                imageStyle={{ resizeMode: "repeat" }}
+              ></ImageBackground>
+            </View>
             {/*The user can input billing information*/}
             <Text style={globalStyle.paragraph}>Name on Card</Text>
             <TextInput
@@ -154,25 +169,25 @@ export default class BillingInfoScreen extends React.Component {
               }
               value={this.state.cardNumberInput}
             />
-            <View style={{ flexDirection: "row" }}>
-              <View style={style.date_codeContainter}>
+            <View style={globalStyle.date_codes}>
+              <View style={globalStyle.date_codeContainter}>
                 <Text style={globalStyle.paragraph}>Expiry Date</Text>
                 <TextInput
                   placeholder="MM/YY"
                   placeholderTextColor={"#000"}
-                  style={style.date_code}
+                  style={globalStyle.date_code}
                   value={this.state.expiryInput}
                   onChangeText={(newExpiryInput) =>
                     this.setState({ expiryInput: newExpiryInput })
                   }
                 />
               </View>
-              <View style={style.date_codeContainter}>
+              <View style={globalStyle.date_codeContainter}>
                 <Text style={globalStyle.paragraph}>Security Code</Text>
                 <TextInput
                   placeholder="###"
                   placeholderTextColor={"#000"}
-                  style={style.date_code}
+                  style={globalStyle.date_code}
                   keyboardType={"numeric"}
                   value={this.state.securityCodeInput}
                   onChangeText={(newSecurityCodeInput) =>
@@ -192,6 +207,7 @@ export default class BillingInfoScreen extends React.Component {
                   this.state.securityCodeInput
                 )
               }
+              accessibilityRole="button"
             >
               <Text style={globalStyle.wideButtonText}>Update</Text>
             </Pressable>
@@ -212,22 +228,6 @@ const style = StyleSheet.create({
     fontSize: 45,
     marginTop: 25,
     marginHorizontal: 75,
-  },
-  date_code: {
-    paddingHorizontal: 25,
-    borderWidth: 7,
-    borderRadius: 20,
-    paddingVertical: 5,
-    fontWeight: "bold",
-    fontSize: 18,
-    maxHeight: 60,
-    minHeight: 50,
-  },
-  date_codeContainter: {
-    marginLeft: 8,
-    marginRight: 8,
-    minWidth: "40%",
-    maxWidth: "40%",
   },
   confirmButton: {
     backgroundColor: "black",

@@ -57,9 +57,9 @@ const globalStyle = StyleSheet.create({
     marginTop: 8,
   },
   subHeaderText: {
-    fontWeight: "bold", 
+    fontWeight: "bold",
     fontSize: 30,
-    marginLeft: 8
+    marginLeft: 8,
   },
   inputContainer: {
     borderWidth: 7,
@@ -80,7 +80,7 @@ const globalStyle = StyleSheet.create({
     marginLeft: 8,
     marginRight: 8,
   },
-  backButtonStyle: {
+  smallButtonStyle: {
     backgroundColor: "#000",
     borderRadius: 20,
     paddingHorizontal: 8,
@@ -89,7 +89,7 @@ const globalStyle = StyleSheet.create({
     maxWidth: 110,
     marginLeft: 8,
   },
-  backButtonText: {
+  smallButtonText: {
     textAlignVertical: "center",
     color: "#fff",
     fontSize: 20,
@@ -131,7 +131,39 @@ const globalStyle = StyleSheet.create({
     marginLeft: 8,
     marginRight: 8,
   },
-
+  date_code: {
+    paddingHorizontal: 25,
+    borderWidth: 7,
+    borderRadius: 20,
+    paddingVertical: 5,
+    fontWeight: "bold",
+    fontSize: 18,
+    maxHeight: 60,
+    minHeight: 50,
+  },
+  date_codeContainter: {
+    marginLeft: 8,
+    marginRight: 8,
+    minWidth: "45%",
+    maxWidth: "45%",
+  },
+  date_codeContainter_right: {
+    marginLeft: 8,
+    marginRight: 8,
+    minWidth: "60%",
+    maxWidth: "60%",
+  },
+  date_codeContainter_left: {
+    marginLeft: 8,
+    marginRight: 8,
+    minWidth: "35%",
+    maxWidth: "35%",
+  },
+  date_codes: {
+    flexDirection: "row",
+    justifyContent: "center",
+    justifyContent: "space-evenly",
+  },
 });
 
 export default globalStyle;

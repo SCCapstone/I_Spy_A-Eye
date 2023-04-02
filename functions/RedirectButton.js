@@ -1,6 +1,7 @@
 import React, {useCallback} from 'react';
-import {Alert, Button, Linking, StyleSheet, View} from 'react-native';
+import {Alert, Button, Linking, StyleSheet, View,Text} from 'react-native';
 import globalStyle from '../globalStyle';
+import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 
 function OpenURLButton({url, children}) {
   const handlePress = useCallback(async () => {
@@ -16,7 +17,11 @@ function OpenURLButton({url, children}) {
     }
   }, [url]);
 
-  return <Button color='black' title={children} onPress={handlePress} />;
+  return (
+  <Pressable color='black' onPress={handlePress}>
+    <Text style={globalStyle.wideButtonText}>{children}</Text>
+  </Pressable>
+  );
 };
 
 export {OpenURLButton};

@@ -26,13 +26,33 @@ function cityIsValidOrEmpty(city) {
   }
 }
 
-function zipCodeIsValidOrEmpty(zipCode) {
-  if (zipCode.length === 0 || zipCode.length === 5) {
-    return true;
-  } else {
-    Alert.alert("Zip codes must be five digits long.");
+function zipCodeIsNotBanned(zipCodeString) {
+  let zipCodeInt = parseInt(zipCodeString, 10);
+  if (
+    // Hawaiian zip code range
+    (zipCodeInt >= 96701 && zipCodeInt <= 96898) ||
+    // Alaskan zip code range
+    (zipCodeInt >= 99501 && zipCodeInt <= 99950)
+  ) {
+    Alert.alert(
+      "Unfortunately, we can't deliver groceries to your zip code. Sorry."
+    );
     return false;
   }
+  return true;
+}
+
+function zipCodeIsValidOrEmpty(zipCode) {
+  if (zipCode.length === 0) {
+    return true;
+  } else if (zipCode.length === 5) {
+    if (zipCodeIsNotBanned(zipCode)) {
+      return true;
+    }
+  } else if (zipCode.length !== 5) {
+    Alert.alert("Zip codes must be five digits long.");
+  }
+  return false;
 }
 
 function stateIsValidOrEmpty(state) {
@@ -149,7 +169,9 @@ function stateIsValidOrEmpty(state) {
     state === "AK" ||
     state === "HI"
   ) {
-    Alert.alert("Unfortunately, we can't deliver groceries to your state. Sorry.");
+    Alert.alert(
+      "Unfortunately, we can't deliver groceries to your state. Sorry."
+    );
   } else {
     Alert.alert("You didn't enter a valid state.");
   }

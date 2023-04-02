@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, View, StyleSheet, TouchableOpacity, Image, Pressable, FlatList, TextInput, SafeAreaView } from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity, Image, Pressable, FlatList, TextInput, SafeAreaView, ImageBackground } from "react-native";
 import globalStyle from "../globalStyle"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { PAGE_ID } from "../utils/constants.js";
@@ -58,6 +58,10 @@ export default class CartScreen extends React.Component {
     }
   }
 
+  /**
+   * Function to change the text on the button with a gear on the navbar.
+   * Text can either be "Settings" or "Log In".
+   */
   async updateNavBarText() {
     this.setState({
       settingsOrLogIn: await AsyncStorage.getItem("SettingsOrLogIn")
@@ -188,47 +192,82 @@ export default class CartScreen extends React.Component {
       <SafeAreaView style={globalStyle.wholeScreen}>
         <View style={style.container}>
           {/*Header*/}
-          <Text style={style.header} testID="test_CartTextHeader">Cart</Text>
+          <Text
+            style={style.header}
+            testID="test_CartTextHeader"
+            accessibilityRole="header"
+          >
+            Cart
+          </Text>
 
-          <Text style={{fontSize: 23, marginHorizontal: 20, marginBottom: 17}} testID="test_GroceryTextHeader">Grocery Total: ${this.addPrices()}</Text>
+          <Text
+            style={{ fontSize: 23, marginHorizontal: 20, marginBottom: 17 }}
+            testID="test_GroceryTextHeader"
+          >
+            Grocery Total: ${this.addPrices()}
+          </Text>
 
-          <View style={{flexDirection: 'row'}}>
-            <Text style={{fontSize: 23, marginHorizontal: 20, marginRight: 30}} testID="test_DeliveryTextHeader">Delivery Price: ${deliveryPrice}.00</Text>
+          <View style={{ flexDirection: "row" }}>
+            <Text
+              style={{ fontSize: 23, marginHorizontal: 20, marginRight: 30 }}
+              testID="test_DeliveryTextHeader"
+            >
+              Delivery Price: ${deliveryPrice}.00
+            </Text>
 
             {/*Takes user to the checkout screen*/}
-            <Pressable testID="test_BuyButtonHeader" style={style.button} onPress={() => this.buyButton()}>
+            <Pressable
+              testID="test_BuyButtonHeader"
+              style={style.button}
+              onPress={() => this.buyButton()}
+            >
               <Text style={style.buttonText}>Buy</Text>
             </Pressable>
           </View>
 
-          <Text style={{fontSize: 23, marginHorizontal: 20}} testID="test_GrandTotalHeader">Grand Total:     ${grandTotal}</Text>
+          <Text
+            style={{ fontSize: 23, marginHorizontal: 20 }}
+            testID="test_GrandTotalHeader"
+          >
+            Grand Total: ${grandTotal}
+          </Text>
+        {/* This is the shadow of the horizontal line. The translate Y value comes from 
+        the marginTop value and borderBottomWidth value of the horizontal line added 
+        together, plus the shadow height as well. The total of this value has 0.1 subtracted
+        from it so the shadow overlaps slightly with the black bar so that there isn't
+        a thin white line in the middle. */}
+        <View style={{ 
+          height: 5,
+          position: 'relative',
+          transform: [{translateY: 34.9}],}}
+        >
+          <ImageBackground
+            style={{ width: "100%", height: "100%" }}
+            source={require("../assets/shadow.png")}
+            imageStyle={{ resizeMode: "repeat" }}
+          ></ImageBackground>
+        </View>
 
           {/*Horizontal line*/}
           <View
             style={{
-              borderBottomColor: 'black',
+              borderBottomColor: "black",
               borderBottomWidth: 10,
-              marginTop: 20
-            }}
-          />
-          <View
-            style={{
-              borderBottomColor: 'lightgrey',
-              borderBottomWidth: 5
+              marginTop: 20,
             }}
           />
 
           <FlatList
-            contentContainerStyle={{paddingBottom: 75}}
+            contentContainerStyle={{ paddingBottom: 75 }}
             data={this.state.products}
-            renderItem={({item, index}) =>
-              <ListItem 
+            renderItem={({ item, index }) => (
+              <ListItem
                 item={item}
                 decrementValue={() => this.decrementValue(item.id)}
                 incrementValue={() => this.incrementValue(item.id)}
                 removeProduct={() => this.removeProduct(item.id)}
               />
-            }
+            )}
             keyExtractor={(item) => item.id}
             testID="test_ItemsInCart"
           />
@@ -236,53 +275,59 @@ export default class CartScreen extends React.Component {
 
         <View style={globalStyle.navBarContainer}>
           <View style={globalStyle.buttons} testID="Test_NavigationBar">
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={() => this.props.pageChange(PAGE_ID.search)}
               style={globalStyle.navButtonContainer}
+              accessibilityRole="menuitem"
             >
               <Image
                 style={globalStyle.icon}
                 source={require("../assets/search.png")}
                 accessible={true}
-                accessibilityLabel={"Magnifying Glass Icon"}
+                accessibilityLabel="Magnifying Glass Icon"
               />
-              <Text style={{textAlign: "center"}}>Search</Text>
+              <Text style={{ textAlign: "center" }}>Search</Text>
             </TouchableOpacity>
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={() => this.props.pageChange(PAGE_ID.cart)}
               style={globalStyle.navButtonContainer}
+              accessibilityRole="menuitem"
             >
               <Image
                 style={globalStyle.icon}
                 source={require("../assets/cart.png")}
                 accessible={true}
-                accessibilityLabel={"Shopping Cart Icon"}
+                accessibilityLabel="Shopping Cart Icon"
               />
-              <Text style={{textAlign: "center"}}>My Cart</Text>
+              <Text style={{ textAlign: "center" }}>My Cart</Text>
             </TouchableOpacity>
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={() => this.props.pageChange(PAGE_ID.orders)}
               style={globalStyle.navButtonContainer}
+              accessibilityRole="menuitem"
             >
               <Image
                 style={globalStyle.icon}
                 source={require("../assets/orders.png")}
                 accessible={true}
-                accessibilityLabel={"Reciept Icon"}
+                accessibilityLabel="Reciept Icon"
               />
-              <Text style={{textAlign: "center"}}>Orders</Text>
+              <Text style={{ textAlign: "center" }}>Orders</Text>
             </TouchableOpacity>
-            <TouchableOpacity 
-              onPress={() => this.props.pageChange(PAGE_ID.settings)} 
+            <TouchableOpacity
+              onPress={() => this.props.pageChange(PAGE_ID.settings)}
               style={globalStyle.navButtonContainer}
+              accessibilityRole="menuitem"
             >
               <Image
                 style={globalStyle.icon}
                 source={require("../assets/gear.png")}
                 accessible={true}
-                accessibilityLabel={"Gear Icon"}
+                accessibilityLabel="Gear Icon"
               />
-              <Text style={{textAlign: "center"}}>{this.state.settingsOrLogIn}</Text>
+              <Text style={{ textAlign: "center" }}>
+                {this.state.settingsOrLogIn}
+              </Text>
             </TouchableOpacity>
           </View>
         </View>

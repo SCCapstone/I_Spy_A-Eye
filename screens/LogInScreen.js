@@ -7,8 +7,7 @@ import { firebaseAuth } from "../utils/firebase";
 import firebase from "firebase";
 require("firebase/auth");
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {OpenURLButton} from '../functions/RedirectButton'
-
+import { OpenURLButton } from "../functions/RedirectButton";
 
 /**
  * This is the first screen users will see when they start the app. Users can login
@@ -22,18 +21,29 @@ export default class Login extends React.Component {
     this.state = {
       emailInput: "",
       passwordInput: "",
+      location: ""
     };
+  }
+
+  async updateCurrentLocationState() {
+    this.setState({
+      location: `${await AsyncStorage.getItem("locationID")}`,
+    });
   }
 
   // Function to redirect users to search screen if they are already signed in.
   componentDidMount() {
+    this.updateCurrentLocationState();
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         var userID = user.uid;
         AsyncStorage.setItem("userID", userID);
         AsyncStorage.setItem("userEmail", user.email);
         console.log(`Current user ID: ${userID}`);
-        this.props.pageChange(PAGE_ID.search);
+        if(this.location!="")
+          this.props.pageChange(PAGE_ID.search);
+        else
+          this.props.pageChange(PAGE_ID.location);
       } else {
         console.log("No user is logged in.");
         AsyncStorage.setItem("userID", "none");
@@ -41,6 +51,13 @@ export default class Login extends React.Component {
         AsyncStorage.setItem("SettingsOrLogIn", "Log In");
       }
     });
+
+    /**
+     * The sign up screen has a back button and that screen can be accessed
+     * from this screen and the Not Signed In Settings screen. The previousPage
+     * variable will allow those screens to determine which screen to go back to.
+     */
+    AsyncStorage.setItem("previousPage", "0");
   }
 
   /**
@@ -61,7 +78,7 @@ export default class Login extends React.Component {
         // Determins what text to render in Navbar
         AsyncStorage.setItem("SettingsOrLogIn", "Settings");
         console.log(`Current user ID: ${userID}`);
-        this.props.pageChange(PAGE_ID.search);
+        this.props.pageChange(PAGE_ID.location);
       })
       .catch((error) => alert(error.message));
   }
@@ -69,7 +86,9 @@ export default class Login extends React.Component {
   render() {
     return (
       <SafeAreaView style={globalStyle.wholeScreen}>
-        <Text style={globalStyle.headerText}>I Spy Shopper</Text>
+        <Text style={globalStyle.headerText} accessibilityRole="header">
+          I Spy Shopper
+        </Text>
         <TextInput
           style={globalStyle.wideInputContainer}
           placeholder="Email"
@@ -94,6 +113,7 @@ export default class Login extends React.Component {
           style={globalStyle.wideButtonStyle}
           onPress={() => this.login(this.state)}
           testID="Test_LogInButton"
+          accessibilityRole="button"
         >
           <Text style={globalStyle.wideButtonText}>Log In</Text>
         </Pressable>
@@ -101,20 +121,22 @@ export default class Login extends React.Component {
           style={globalStyle.wideButtonStyle}
           onPress={() => this.props.pageChange(PAGE_ID.sign_up)}
           testID="Test_SignUpButton"
+          accessibilityRole="button"
         >
           <Text style={globalStyle.wideButtonText}>Sign Up</Text>
         </Pressable>
         <Pressable
           style={globalStyle.wideButtonStyle}
-          onPress={() => this.props.pageChange(PAGE_ID.search)}
+          onPress={() => this.props.pageChange(PAGE_ID.location)}
           testID="Test_SignInSkip"
+          accessibilityRole="button"
         >
           <Text style={globalStyle.wideButtonText}>
             Continue Without Signing in
           </Text>
         </Pressable>
-        <View style={globalStyle.wideButtonStyle} >
-          <OpenURLButton url={'https://google.com'}>Tutorial</OpenURLButton>
+        <View style={globalStyle.wideButtonStyle}>
+          <OpenURLButton url={"https://google.com"}>Tutorial</OpenURLButton>
         </View>
       </SafeAreaView>
     );
