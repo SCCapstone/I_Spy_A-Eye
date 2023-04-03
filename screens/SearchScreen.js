@@ -539,6 +539,7 @@ export default class SearchScreen extends React.Component {
       itemList[itemIndex] = {
         id: responseJSON.data[i].productId,
         title: responseJSON.data[i].description,
+        image: responseJSON.data[i].images[0].sizes[0].url,
         price: responseJSON.data[i].items[0].price.promo,
         standardPrice: responseJSON.data[i].items[0].price.regular,
         unitPrice: responseJSON.data[i].items[0].price.regularPerUnitEstimate,

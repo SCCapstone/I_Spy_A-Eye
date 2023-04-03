@@ -136,7 +136,7 @@ export default class Login extends React.Component {
           </Text>
         </Pressable>
         <View style={globalStyle.wideButtonStyle}>
-          <OpenURLButton url={"https://google.com"}>Tutorial</OpenURLButton>
+          <OpenURLButton url={"https://youtu.be/DwAJMdrL24c"}>Tutorial</OpenURLButton>
         </View>
       </SafeAreaView>
     );

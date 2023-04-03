@@ -200,7 +200,7 @@ export default class SettingsScreen extends React.Component {
             <Text style={globalStyle.smallButtonText}>Save</Text>
           </Pressable>
           <View style={globalStyle.wideButtonStyle}>
-            <OpenURLButton url={"https://google.com"}>Tutorial</OpenURLButton>
+            <OpenURLButton url={"https://youtu.be/DwAJMdrL24c"}>Tutorial</OpenURLButton>
           </View>
           {/* Empty space so that the navbar doesn't cover the bottom of the settings page */}
           <View style={{ minHeight: 100 }}></View>
