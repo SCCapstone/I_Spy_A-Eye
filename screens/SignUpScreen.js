@@ -39,6 +39,13 @@ export default class SignUp extends React.Component {
           alert("You have successfully registered!");
           console.log(user.email, " successfully registered.");
           this.props.pageChange(PAGE_ID.location);
+          /**
+           * Determines what text to render for the gear button on the navbar. This
+           * call to AsyncStorage is also called when the user logs in. This call
+           * is also here since the User is doesn't go back to the log in screen
+           * untill after signing out and logging back in.
+           */
+          AsyncStorage.setItem("SettingsOrLogIn", "Settings");
         })
         .catch((error) => alert(error.message));
     }

@@ -47,7 +47,7 @@ export default class Login extends React.Component {
       } else {
         console.log("No user is logged in.");
         AsyncStorage.setItem("userID", "none");
-        // Determines what text to render for the navbar
+        // Determines what text to render for the gear button on the navbar.
         AsyncStorage.setItem("SettingsOrLogIn", "Log In");
       }
     });
