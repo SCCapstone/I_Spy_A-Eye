@@ -526,8 +526,13 @@ export default class SearchScreen extends React.Component {
       return null;
     }
 
-    // Grab and update the total number of results
-    totalQueryResults = responseJSON.meta.pagination.total
+    // Grab and update the total number of results; if failure, return early (Alert will be sent out outside of the method)
+    try {
+      totalQueryResults = responseJSON.meta.pagination.total
+    }
+    catch (err) {
+      return null;
+    }
 
     // Iterates through responseJSON and stores items into itemList
     for (let i = 0; i < responseJSON.data.length; i++) {
@@ -726,7 +731,16 @@ export default class SearchScreen extends React.Component {
             <Pressable
               style={globalStyle.headerButtonStyle}
               testID="Test_FilterButton"
-              onPress={() => { this.setState({ isFilterMenuOpen: !this.state.isSortMenuOpen }); {/* Toggle sort submenu on press */ } }}
+              onPress={() => { 
+                // If there are no search results, Alert the user and prevent the sort menu from opening
+                if(itemList == null || itemList.length == 0) {
+                  showAlert(
+                    "Empty Search Results",
+                    "There are no current search results. Try finding some products first before filtering them."
+                  );
+                  return;
+                }
+                this.setState({ isFilterMenuOpen: !this.state.isSortMenuOpen }); {/* Toggle sort submenu on press */ } }}
             >
               <Text style={globalStyle.headerButtonText}>Filter</Text>
             </Pressable>
@@ -751,7 +765,20 @@ export default class SearchScreen extends React.Component {
                       // Change style depending on if the filter is applied
                       style={[styles.sortSubmenuButton, this.state.filters.selectedCountries.length > 0 ? styles.sortSubmenuButtonActive : styles.sortSubmenuButtonDefault]}
                       testID="Test_FilterCountryButton"
-                      onPress={() => { this.setState({ isFilterCountryMenuOpen: !this.state.isFilterCountryMenuOpen }); {/* Toggle sort submenu on press */ } }}
+                      onPress={() => { 
+                        // Check if there are countries to filter through. If not, Alert the user and end early
+                        if(this.state.allAvailableCountries[0].children.length == 0) {
+                          showAlert(
+                            "No Country Data",
+                            "The current page of search results is either empty or has no country data to filter by. "
+                          );
+                          return;
+                        }
+
+                        // Toggle sort submenu on press
+                        this.setState({ isFilterCountryMenuOpen: !this.state.isFilterCountryMenuOpen });  
+                        }
+                      }
                     >
                       <Text style={[styles.sortButtonText, this.state.filters.selectedCountries.length > 0 ? styles.sortButtonTextActive : styles.sortButtonTextDefault]}>Country</Text>
                       <Modal
@@ -842,6 +869,15 @@ export default class SearchScreen extends React.Component {
                       testID="Test_FilterInStockButton"
                       onPress={
                         () => {
+                          // If there are no search results, Alert the user and stop early
+                          if(itemList == null || itemList.length == 0) {
+                            showAlert(
+                              "Empty Search Results",
+                              "There are no current search results. Try finding some products first before applying this filter."
+                            );
+                            return;
+                          }
+
                           // If filter is already applied, deactivate it and update the results to account for it
                           if (this.state.filters.inStock) {
                             this.setState((prevState) => {
@@ -881,6 +917,15 @@ export default class SearchScreen extends React.Component {
                       testID="Test_FilterOnSaleButton"
                       onPress={
                         () => {
+                          // If there are no search results, Alert the user and stop early
+                          if(itemList == null || itemList.length == 0) {
+                            showAlert(
+                              "Empty Search Results",
+                              "There are no current search results. Try finding some products first before applying this filter."
+                            );
+                            return;
+                          }
+
                           // If filter is already applied, deactivate it and update the results to account for it
                           if (this.state.filters.onSale) {
                             this.setState((prevState) => {
@@ -914,7 +959,20 @@ export default class SearchScreen extends React.Component {
                       // Change style depending on if the filter is applied
                       style={[styles.sortSubmenuButton, this.state.filters.selectedCategories.length > 0 ? styles.sortSubmenuButtonActive : styles.sortSubmenuButtonDefault]}
                       testID="Test_FilterCategoryButton"
-                      onPress={() => { this.setState({ isFilterCategoryMenuOpen: !this.state.isFilterCategoryMenuOpen }); {/* Toggle submenu on press */ } }}
+                      onPress={() => { 
+                         // Check if there are categories to filter through. If not, Alert the user and end early
+                         if(this.state.allAvailableCategories[0].children.length == 0) {
+                          showAlert(
+                            "No Category Data",
+                            "The current page of search results is either empty or has no category data to filter by. "
+                          );
+                          return;
+                        }
+
+                        // Toggle submenu on press
+                        this.setState({ isFilterCategoryMenuOpen: !this.state.isFilterCategoryMenuOpen }); 
+                        }
+                      }
                     >
                       <Text style={[styles.sortButtonText, this.state.filters.selectedCategories.length > 0 ? styles.sortButtonTextActive : styles.sortButtonTextDefault]}>Category</Text>
                       <Modal
@@ -1006,7 +1064,17 @@ export default class SearchScreen extends React.Component {
             <Pressable
               style={globalStyle.headerButtonStyle}
               testID="Test_SortButton"
-              onPress={() => { this.setState({ isSortMenuOpen: !this.state.isSortMenuOpen }); {/* Toggle sort submenu on press */ } }}
+              onPress={() => { 
+                // If there are no search results, Alert the user and prevent the sort menu from opening
+                if(itemList == null || itemList.length == 0) {
+                  showAlert(
+                    "Empty Search Results",
+                    "There are no current search results. Try finding some products first before sorting them."
+                  );
+                  return;
+                }
+                this.setState({ isSortMenuOpen: !this.state.isSortMenuOpen }); {/* Toggle sort submenu on press */ } 
+              }}
             >
               <Text style={globalStyle.headerButtonText}>Sort</Text>
             </Pressable>
