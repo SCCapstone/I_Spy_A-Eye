@@ -39,7 +39,7 @@ a {
   z-index: -5;
   margin-right: 5%;
   margin-left: 5%;
-  margin-bottom: 20%;
+  margin-bottom: 112px;
 }
 .card {
   width: 540px;
@@ -102,5 +102,10 @@ a {
   .cards {
     margin-right: 2%;
     margin-left: 2%;
+  }
+  .card img {
+    height: 280px;
+    margin-right: 4px;
+    margin-left: 4px;
   }
 }
