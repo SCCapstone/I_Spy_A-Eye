@@ -15,12 +15,18 @@ h1 {
   top: 0;
   margin-top: 0;
   text-align: center;
-  font-size: 40px;
-  padding-bottom: calc(var(--borderWidth) * 2);
-  padding-top: calc(var(--borderWidth) * 2);
+  font-size: 42px;
+  padding-bottom: 14px;
+  padding-top: 14px;
   border-bottom: var(--borderWidth) solid #000;
   background-color: #fff;
   box-shadow: var(--shadow);
+}
+h2 {
+  font-size: 36px;
+  margin-top: 14px;
+  margin-bottom: var(--borderWidth);
+  text-align: center;
 }
 h3 {
   font-size: 30px;
@@ -31,6 +37,25 @@ h3 {
 a {
   color: #000;
   font-weight: bold;
+}
+.main-content {
+  width: 720px;
+  margin: auto;
+  padding-bottom: 28px;
+}
+.main-content p {
+  white-space: normal;
+  font-size: 18px;
+  text-align: justify;
+}
+.main-content iframe {
+  width: 100%;
+  height: 440px;
+  margin: auto;
+}
+.divider {
+  border-bottom: var(--borderWidth) solid #000;
+  box-shadow: var(--shadow);
 }
 .cards {
   display: flex;
@@ -43,18 +68,18 @@ a {
 }
 .card {
   width: 540px;
-  padding: calc(var(--borderWidth) * 4);
-  margin: calc(var(--borderWidth) * 2);
+  padding: 28px;
+  margin: 14px;
   background-color: #fdfdfd;
-  border-radius: calc(var(--borderWidth) * 2);
+  border-radius: 14px;
   border: var(--borderWidth) solid #000;
   box-shadow: 0 0.2px 0.2px #0000000a, 0 0.5px 0.5px #0000000f, 0 0.9px 0.9px #00000012, 0 1.6px 1.6px #00000015, 0 2.9px 2.9px #0000001a, 0 7px 7px #00000024;
   z-index: 2;
 }
 .card img {
   height: 300px;
-  margin-right: calc(var(--borderWidth) * 2);
-  margin-left: calc(var(--borderWidth) * 2);
+  margin-right: 14px;
+  margin-left: 14px;
   box-shadow: 0px 2px 2px 0px #0000001f, 0 0.25px #00000015, 0 0.5px 3px #00000027;
 }
 .card p {
@@ -93,6 +118,15 @@ a {
   margin: auto;
   width: 46px;
   transform: translateY(3.5px);
+}
+@media only screen and (max-width: 800px) {
+  .main-content p {
+    margin: 14px;
+    font-size: 17px;
+  }
+  .main-content  {
+    width: 100%;
+  }
 }
 @media only screen and (max-width: 600px) {
   #bottomNav {
