@@ -16,7 +16,7 @@ function nameIsValidOrEmpty(name) {
 }
 
 function securityCodeIsValidOrEmpty(securityCode) {
-  if (securityCode.length === 0 || securityCode.length === 3) {
+  if (securityCode.length === 0 || securityCode.match("[0-9][0-9][0-9]")) {
     return true;
   } else {
     Alert.alert("Security codes must be three digits long.");
@@ -25,7 +25,12 @@ function securityCodeIsValidOrEmpty(securityCode) {
 }
 
 function cardNumberIsValidOrEmpty(cardNumber) {
-  if (cardNumber.length === 0 || cardNumber.length === 16) {
+  if (
+    cardNumber.length === 0 ||
+    cardNumber.match(
+      "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]"
+    )
+  ) {
     return true;
   } else {
     Alert.alert("Card numbers must be 16 digits long.");
@@ -73,8 +78,7 @@ function expiryIsValidOrEmpty(expiry) {
     return true;
   } else if (expiry.length === 0) {
     return true;
-  }
-   else if (!expiry.match("(0[1-9]|1[0-2])/[0-9][0-9]")) {
+  } else if (!expiry.match("(0[1-9]|1[0-2])/[0-9][0-9]")) {
     Alert.alert("The expiry you inputed is formatted incorrectly.");
   }
   return false;
