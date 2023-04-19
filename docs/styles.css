@@ -76,6 +76,19 @@ a {
   box-shadow: 0 0.2px 0.2px #0000000a, 0 0.5px 0.5px #0000000f, 0 0.9px 0.9px #00000012, 0 1.6px 1.6px #00000015, 0 2.9px 2.9px #0000001a, 0 7px 7px #00000024;
   z-index: 2;
 }
+.small-card {
+  width: 130px;
+  padding: 28px;
+  margin: 14px;
+  background-color: #fdfdfd;
+  border-radius: 14px;
+  border: var(--borderWidth) solid #000;
+  box-shadow: 0 0.2px 0.2px #0000000a, 0 0.5px 0.5px #0000000f, 0 0.9px 0.9px #00000012, 0 1.6px 1.6px #00000015, 0 2.9px 2.9px #0000001a, 0 7px 7px #00000024;
+  z-index: 2;
+}
+.small-card img {
+  width: 100%;
+}
 .card img {
   height: 300px;
   margin-right: 14px;
