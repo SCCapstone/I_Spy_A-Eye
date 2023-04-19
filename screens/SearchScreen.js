@@ -733,7 +733,7 @@ export default class SearchScreen extends React.Component {
               testID="Test_FilterButton"
               onPress={() => { 
                 // If there are no search results, Alert the user and prevent the sort menu from opening
-                if(itemList == null || itemList.length == 0) {
+                if(this.state.latestResults == null || this.state.latestResults.length == 0) {
                   showAlert(
                     "Empty Search Results",
                     "There are no current search results. Try finding some products first before filtering them."
@@ -1066,7 +1066,7 @@ export default class SearchScreen extends React.Component {
               testID="Test_SortButton"
               onPress={() => { 
                 // If there are no search results, Alert the user and prevent the sort menu from opening
-                if(itemList == null || itemList.length == 0) {
+                if(this.state.latestResults == null || this.state.latestResults.length == 0) {
                   showAlert(
                     "Empty Search Results",
                     "There are no current search results. Try finding some products first before sorting them."
@@ -1103,7 +1103,8 @@ export default class SearchScreen extends React.Component {
                           this.setState({
                             sort: "Lowest Price",
                             latestResults: itemList.sort(this.sortPriceAsc),
-                            unfilteredResults: itemList.sort(this.sortPriceAsc)
+                            unfilteredResults: itemList.sort(this.sortPriceAsc),
+                            isSortMenuOpen: false
                           })
                         }
                       }
@@ -1121,6 +1122,7 @@ export default class SearchScreen extends React.Component {
                             sort: "Highest Price",
                             latestResults: itemList.sort(this.sortPriceDesc),
                             unfilteredResults: itemList.sort(this.sortPriceDesc),
+                            isSortMenuOpen: false
                           })
                         }
                       }
@@ -1137,7 +1139,8 @@ export default class SearchScreen extends React.Component {
                           this.setState({
                             sort: "A-Z",
                             latestResults: itemList.sort(this.sortAlpha),
-                            unfilteredResults: itemList.sort(this.sortAlpha)
+                            unfilteredResults: itemList.sort(this.sortAlpha),
+                            isSortMenuOpen: false
                           })
                         }
                       }
@@ -1154,7 +1157,8 @@ export default class SearchScreen extends React.Component {
                           this.setState({
                             sort: "Z-A",
                             latestResults: itemList.sort(this.sortAlphaReverse),
-                            unfilteredResults: itemList.sort(this.sortAlphaReverse)
+                            unfilteredResults: itemList.sort(this.sortAlphaReverse),
+                            isSortMenuOpen: false
                           })
                         }
                       }
@@ -1173,7 +1177,8 @@ export default class SearchScreen extends React.Component {
                           this.setState({
                             sort: "Unit Price",
                             unfilteredResults: itemList.sort(this.sortUnitPrice),
-                            latestResults: itemList.sort(this.sortUnitPrice)
+                            latestResults: itemList.sort(this.sortUnitPrice),
+                            isSortMenuOpen: false
                           })
                         }
                       }
