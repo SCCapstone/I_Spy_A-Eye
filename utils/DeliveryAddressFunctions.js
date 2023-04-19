@@ -178,10 +178,22 @@ function stateIsValidOrEmpty(state) {
   return false;
 }
 
+/**
+ * Function to check if a state can contain a user entered zip code and also check wether
+ * the state field is empty, or zip code field is empty, or both fields are empty.
+ * @param {*} state The inputted state to check.
+ * @param {*} zipCode the inputted zip code to check.
+ * @returns true if one or both of the state and zip code fields are empty or the zip code
+ * belongs to a state. Otherwise, returns false.
+ */
 function zipCodeBelongsToState(state, zipCode) {
 if ((state === "" && zipCode !== "") || (state !== "" && zipCode === "") || (state === "" && zipCode === "")) {
   return true;
 }
+/**
+ * Most of the code below was generated with "Validate Zip Belongs to State.ipynb" in the
+ * CodeGeneration folder. The code below has been modified from the generated output.
+ */
 else if ((state === "Alaska" || state === "AK") && zipCode >= 99501 && zipCode <= 99950) {return true;}
 else if ((state === "Alabama" || state === "AL") && zipCode >= 35004 && zipCode <= 36925) {return true;}
 else if ((state === "Arkansas" || state === "AR") && zipCode >= 71601 && zipCode <= 72959) {return true;}
