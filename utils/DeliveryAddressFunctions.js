@@ -107,6 +107,7 @@ function stateIsValidOrEmpty(state) {
     state === "Virginia" ||
     state === "Washington" ||
     state === "Washington DC" ||
+    state === "Dist of Columbia" ||
     state === "West Virginia" ||
     state === "Wisconsin" ||
     state === "Wyoming" ||
@@ -203,9 +204,9 @@ else if ((state === "California" || state === "CA") && zipCode >= 90001 && zipCo
 else if ((state === "Colorado" || state === "CO") && zipCode >= 80001 && zipCode <= 81658) {return true;}
 else if ((state === "Connecticut" || state === "CT") && zipCode >= 6001 && zipCode <= 6389) {return true;}
 else if ((state === "Connecticut" || state === "CT") && zipCode >= 6401 && zipCode <= 6928) {return true;}
-else if ((state === "Dist of Columbia" || state === "DC") && zipCode >= 20001 && zipCode <= 20039) {return true;}
-else if ((state === "Dist of Columbia" || state === "DC") && zipCode >= 20042 && zipCode <= 20599) {return true;}
-else if ((state === "Dist of Columbia" || state === "DC") && zipCode >= 20799 && zipCode <= 20799) {return true;}
+else if ((state ==="Washington DC" || state === "Dist of Columbia" || state === "DC") && zipCode >= 20001 && zipCode <= 20039) {return true;}
+else if ((state ==="Washington DC" || state === "Dist of Columbia" || state === "DC") && zipCode >= 20042 && zipCode <= 20599) {return true;}
+else if ((state ==="Washington DC" || state === "Dist of Columbia" || state === "DC") && zipCode >= 20799 && zipCode <= 20799) {return true;}
 else if ((state === "Delaware" || state === "DE") && zipCode >= 19701 && zipCode <= 19980) {return true;}
 else if ((state === "Florida" || state === "FL") && zipCode >= 32004 && zipCode <= 34997) {return true;}
 else if ((state === "Georgia" || state === "GA") && zipCode >= 30001 && zipCode <= 31999) {return true;}
@@ -247,7 +248,6 @@ else if ((state === "Oklahoma" || state === "OK") && zipCode >= 73001 && zipCode
 else if ((state === "Oklahoma" || state === "OK") && zipCode >= 73401 && zipCode <= 74966) {return true;}
 else if ((state === "Oregon" || state === "OR") && zipCode >= 97001 && zipCode <= 97920) {return true;}
 else if ((state === "Pennsylvania" || state === "PA") && zipCode >= 15001 && zipCode <= 19640) {return true;}
-else if ((state === "Puerto Rico" || state === "PR") && zipCode >= 0 && zipCode <= 0) {return true;}
 else if ((state === "Rhode Island" || state === "RI") && zipCode >= 2801 && zipCode <= 2940) {return true;}
 else if ((state === "South Carolina" || state === "SC") && zipCode >= 29001 && zipCode <= 29948) {return true;}
 else if ((state === "South Dakota" || state === "SD") && zipCode >= 57001 && zipCode <= 57799) {return true;}
