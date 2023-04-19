@@ -1,5 +1,9 @@
 import "react-native";
-import { addressIsValidOrEmpty, zipCodeIsValidOrEmpty } from "../utils/DeliveryAddressFunctions";
+import {
+  addressIsValidOrEmpty,
+  zipCodeIsValidOrEmpty,
+  zipCodeBelongsToState,
+} from "../utils/DeliveryAddressFunctions";
 
 test("Addresses must contain a digit as the first character. Otherwise, they aren't valid.", () => {
   const validaddress = addressIsValidOrEmpty("Ten Street");
@@ -39,4 +43,29 @@ test("Hawaiian zip code should be invalid", () => {
 test("Alaskan zip code should be invalid", () => {
   const validzipcode = zipCodeIsValidOrEmpty("99501");
   expect(validzipcode).toBe(false);
+});
+
+test("23456 should belong to Virginia", () => {
+  const zipCodeBelongs = zipCodeBelongsToState("Virginia", 23456);
+  expect(zipCodeBelongs).toBe(true);
+});
+
+test("23456 should not belong to South Carolina", () => {
+  const zipCodeBelongs = zipCodeBelongsToState("South Carolina", 23456);
+  expect(zipCodeBelongs).toBe(false);
+});
+
+test("A state can be empty ", () => {
+  const zipCodeBelongs = zipCodeBelongsToState("", 23456);
+  expect(zipCodeBelongs).toBe(true);
+});
+
+test("A zip code can be empty ", () => {
+  const zipCodeBelongs = zipCodeBelongsToState("AK", "");
+  expect(zipCodeBelongs).toBe(true);
+});
+
+test("Both the zip code and state can be empty ", () => {
+  const zipCodeBelongs = zipCodeBelongsToState("", "");
+  expect(zipCodeBelongs).toBe(true);
 });

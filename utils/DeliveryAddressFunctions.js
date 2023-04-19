@@ -26,6 +26,10 @@ function cityIsValidOrEmpty(city) {
   }
 }
 
+/**
+ * There are no Kroger stores in Hawaii or Alaska. Also no  one can
+ * drive accross states to those places obviously.
+ */
 function zipCodeIsNotBanned(zipCodeString) {
   let zipCodeInt = parseInt(zipCodeString, 10);
   if (
@@ -45,11 +49,11 @@ function zipCodeIsNotBanned(zipCodeString) {
 function zipCodeIsValidOrEmpty(zipCode) {
   if (zipCode.length === 0) {
     return true;
-  } else if (zipCode.length === 5) {
+  } else if (zipCode.match("[0-9][0-9][0-9][0-9][0-9]")) {
     if (zipCodeIsNotBanned(zipCode)) {
       return true;
     }
-  } else if (zipCode.length !== 5) {
+  } else {
     Alert.alert("Zip codes must be five digits long.");
   }
   return false;
@@ -638,7 +642,7 @@ function zipCodeBelongsToState(state, zipCode) {
     return true;
   } else {
     Alert.alert(
-      "The Zip code you entered does not belong to the state you entered."
+      "The zip code you entered does not belong to the state you entered."
     );
     return false;
   }
