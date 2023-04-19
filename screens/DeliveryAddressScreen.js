@@ -4,6 +4,7 @@ import {
   cityIsValidOrEmpty,
   zipCodeIsValidOrEmpty,
   stateIsValidOrEmpty,
+  zipCodeBelongsToState
 } from "../utils/DeliveryAddressFunctions";
 import {
   Text,
@@ -81,7 +82,8 @@ export default class DeliveryAddress extends React.Component {
       addressIsValidOrEmpty(addressInput) &&
       cityIsValidOrEmpty(cityInput) &&
       zipCodeIsValidOrEmpty(zipCodeInput) &&
-      stateIsValidOrEmpty(stateInput)
+      stateIsValidOrEmpty(stateInput) &&
+      zipCodeBelongsToState(stateInput, zipCodeInput)
     ) {
       firebase.auth().onAuthStateChanged(function (user) {
         firebase.firestore().collection("delivery").doc(user.uid).set({
