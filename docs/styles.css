@@ -34,9 +34,17 @@ h3 {
   margin-bottom: var(--borderWidth);
   text-align: center;
 }
+.name {
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: var(--borderWidth);
+  margin-bottom: var(--borderWidth);
+  text-align: center;
+}
 a {
   color: #000;
   font-weight: bold;
+  text-decoration: none;
 }
 .main-content {
   width: 720px;
@@ -77,7 +85,7 @@ a {
   z-index: 2;
 }
 .small-card {
-  width: 130px;
+  width: 150px;
   padding: 28px;
   margin: 14px;
   background-color: #fdfdfd;
