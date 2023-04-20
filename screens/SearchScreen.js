@@ -140,7 +140,8 @@ const renderItem = ({ id, item, price, unitPrice, stock, quantity }) => (
 );
 
 addToCart = async (itemID) => {
-  for (let i = 0; i < itemList.length; i++) { // loop through item list array
+  // loop through item list array
+  for (let i = 0; i < itemList.length; i++) {
     // if array is not empty and has item(s) already in there
     if (itemList[i].id == itemID) {
       let itemArray = await AsyncStorage.getItem("product")
@@ -148,8 +149,12 @@ addToCart = async (itemID) => {
       if (itemArray) {
         let array = itemArray
         // checks to make sure you can't add the same item twice (checks by id)
-        if (!(array.filter(item => item.id === itemList[i].id).length > 0)) { // if id is not in array, then push
+        // if id is not in array, then push
+        if (!(array.filter(item => item.id === itemList[i].id).length > 0)) {
+          // adds item to array
           array.push(itemList[i])
+          // provides feedback to user when button is pressed
+          ToastAndroid.show("Added to Cart!", 400);
         }
 
         try {
@@ -161,7 +166,10 @@ addToCart = async (itemID) => {
       } else { // if array is empty, adds the first item to array
         let array = []
         if (itemList[i].id == itemID) {
+          // adds item to array
           array.push(itemList[i])
+          // provides feedback to user when button is pressed
+          ToastAndroid.show("Added to Cart!", 400);
 
           try {
             await AsyncStorage.setItem("product", JSON.stringify(array))
