@@ -163,8 +163,7 @@ export default class CartScreen extends React.Component {
     this.state.products.forEach((item) => {
       totalPrice += item.quantity * item.price
     })
-    Math.round(totalPrice * 100) / 100
-    return totalPrice
+    return Math.round(totalPrice * 100) / 100
   }
 
   buyButton = async () => {
@@ -185,7 +184,7 @@ export default class CartScreen extends React.Component {
       grandTotal = 0
     } else {
       // otherwise give the price
-     grandTotal = this.addPrices() + deliveryPrice
+      grandTotal = Math.round((this.addPrices() + deliveryPrice) * 100) / 100
     }
 
     return (
