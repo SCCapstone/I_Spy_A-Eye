@@ -39,11 +39,8 @@ export default class Login extends React.Component {
         var userID = user.uid;
         AsyncStorage.setItem("userID", userID);
         AsyncStorage.setItem("userEmail", user.email);
-        console.log(`Current user ID: ${userID}`);
-        if(this.location!="")
-          this.props.pageChange(PAGE_ID.search);
-        else
-          this.props.pageChange(PAGE_ID.location);
+        console.log(`Current user ID: ${userID}`); 
+        this.props.pageChange(PAGE_ID.location);
       } else {
         console.log("No user is logged in.");
         AsyncStorage.setItem("userID", "none");
