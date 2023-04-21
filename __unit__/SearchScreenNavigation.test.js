@@ -73,3 +73,55 @@ test("validateCountryCategoryChoices should remove currently selected categories
     console.log(Search.state.filters.selectedCategories)
     expect(Search.state.filters.selectedCategories).toEqual(["Candy", "Fruit"])
 })
+
+// Test if page navigation forwards works after clearing the search page
+test("navigateSearchResults should return any valid next page of results if the search bar was cleared before navigating (forward)", () => {
+    const Search = new SearchScreen()
+    Search.state.input = "fish"
+    Search.state.location = "01400376"
+    Search.searchProducts(Search.state)
+    Search.state.input = ""
+    Search.navigateSearchResults(true)      // true to navigate a page ahead
+    let results = Search.state.latestResults
+    expect(results).not.toBeUndefined()
+})
+
+// Test if page navigation backwards works after clearing the search page
+test("navigateSearchResults should return any valid prior page of results if the search bar was cleared before navigating (backwards)", () => {
+    const Search = new SearchScreen()
+    Search.state.input = "fish"
+    Search.state.location = "01400376"
+    Search.searchProducts(Search.state)
+    Search.navigateSearchResults(true)      // true to navigate a page ahead
+    Search.navigateSearchResults(true)      // true to navigate a page ahead
+    Search.state.input = ""
+    Search.navigateSearchResults(false)      // true to navigate a page ahead
+    let results = Search.state.latestResults
+    expect(results).not.toBeUndefined()
+})
+
+// Test if page navigation forwards works fore the current product after entering a different search term in the search bar 
+test("navigateSearchResults should return any valid next page of results for the current search even if the search bar has a new search term (forward)", () => {
+    const Search = new SearchScreen()
+    Search.state.input = "fish"
+    Search.state.location = "01400376"
+    Search.searchProducts(Search.state)
+    Search.state.input = "donut"
+    Search.navigateSearchResults(true)      // true to navigate a page ahead
+    let results = Search.state.latestResults
+    expect(results).not.toBeUndefined()
+})
+
+// Test if page navigation backwards works fore the current product after entering a different search term in the search bar 
+test("navigateSearchResults should return any valid prior page of results for the current search even if the search bar has a new search term (backwards)", () => {
+    const Search = new SearchScreen()
+    Search.state.input = "fish"
+    Search.state.location = "01400376"
+    Search.searchProducts(Search.state)
+    Search.navigateSearchResults(true)      // true to navigate a page ahead
+    Search.navigateSearchResults(true)      // true to navigate a page ahead
+    Search.state.input = "donut"
+    Search.navigateSearchResults(false)      // true to navigate a page ahead
+    let results = Search.state.latestResults
+    expect(results).not.toBeUndefined()
+})

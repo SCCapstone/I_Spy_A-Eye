@@ -200,7 +200,8 @@ export default class SearchScreen extends React.Component {
     // Set up default state for search bar input
     this.state = {
       settingsOrLogIn: "",
-      input: "",
+      input: "",                  // Input to the search bar
+      priorInput: "",             // Last saved input to the search bar
       location: " ",
       filters: {
         selectedCountries: [],
@@ -218,6 +219,7 @@ export default class SearchScreen extends React.Component {
       changePage:"false",
       latestResults: [],
       unfilteredResults: [],      // A copy of the latest results in case filters are cleared (saves)
+      isNewSearch: true,          // Tracks whether the called search is a fresh search (true) or page navigation of the current search
     };
   }
 
@@ -485,15 +487,16 @@ export default class SearchScreen extends React.Component {
   }
 
   /*** Search Products ***/
-  // Input: class state. Returns array of items if the API call is successful, null otherwise.
+  // Input: class state. Returns array of items if the API call is successful, or an empty array otherwise.
   async searchProducts(searchState) {
-    // Confirm input is valid before querying
-    if (!validInput(searchState.input)) {
+    // Confirm input is valid before querying. Note that there's no need to validate priorInput
+    // explicitly as all input must pass this check.
+    if (!validInput(searchState.input) && searchState.isNewSearch) {
       showAlert(
         "Invalid Input",
         "Input must be 3 characters or more, and have at most 8 words."
       );
-      return null;
+      return [];
     }
 
     // Update number of items to display per result page if there's a discrepancy
@@ -501,8 +504,13 @@ export default class SearchScreen extends React.Component {
     let storedItemsPerPage = parseInt(settingsScreenInst.state.checked)
     if(itemsPerPage != storedItemsPerPage) itemsPerPage = storedItemsPerPage 
 
+    // Determine query input based on whether it's a new search
+    console.log("Input: " + searchState.input)
+    console.log("Prior: " + searchState.priorInput)
+    let queryInput = searchState.isNewSearch ? searchState.input : searchState.priorInput
+
     // Build query
-    let callURL = `https://api.kroger.com/v1/products?filter.term=${searchState.input}&filter.limit=${itemsPerPage}&filter.start=${(itemsPerPage*pageNumIndex)+1}
+    let callURL = `https://api.kroger.com/v1/products?filter.term=${queryInput}&filter.limit=${itemsPerPage}&filter.start=${(itemsPerPage*pageNumIndex)+1}
                     &filter.locationId=${searchState.location}&filter.fulfillment=dth`;
 
     // Fetch results
@@ -518,12 +526,12 @@ export default class SearchScreen extends React.Component {
     // Variable to hold the response from the Kroger API in a string
     let responseJSON = await response.json();
 
-    // If failed request, Alert the user and return null
+    // If failed request, Alert the user and return no results
     if (!response.ok) {
       let errorHeader =
         "Error " + response.status.toString() + ": " + responseJSON.code;
       showAlert(errorHeader, responseJSON.errors.reason);
-      return null;
+      return [];
     }
 
     // Grab and update the total number of results; if failure, return early (Alert will be sent out outside of the method)
@@ -531,7 +539,7 @@ export default class SearchScreen extends React.Component {
       totalQueryResults = responseJSON.meta.pagination.total
     }
     catch (err) {
-      return null;
+      return [];
     }
 
     // Iterates through responseJSON and stores items into itemList
@@ -581,6 +589,7 @@ export default class SearchScreen extends React.Component {
   }
 
   /*** Result Page Navigation ***/
+
   // Input: Boolean. Output: If isForward is true, navigate forward one page in the results. Otherwise, navigate backwards one page.
   async navigateSearchResults(isForward) {
     let nextStartIndex;
@@ -674,35 +683,49 @@ export default class SearchScreen extends React.Component {
             {/* Search Button */}
             <Pressable
               style={styles.searchButtonStyle}
-              onPressIn={async () => {
-                itemList = await this.searchProducts(this.state);
-                console.log("Item List:")
-                console.log(itemList)
-                if (itemList == null) {   // If itemList is null, alert the user and set it to an empty array before continuing
-                  showAlert(
-                    "No Products Found",
-                    "Try using different keywords and/or a different set of filters."
-                  );
-                  itemList = []
+              onPressIn={ () => {
+                  // Update state before calling search (to signal that it's a new search)
+                  this.setState({
+                    isNewSearch: true,
+                  },
+                  async () => {
+                    itemList = await this.searchProducts(this.state)
+
+                    console.log("Item List:")
+                    console.log(itemList)
+                    
+                    // If itemList is empty, alert the user
+                    if(itemList == []) {   
+                      showAlert(
+                        "No Products Found",
+                        "Try using different keywords and/or a different set of filters."
+                      );
+                    }
+                    // Else if itemList is null, then the input was invalid. Set itemList to an empty array and move on
+                    if(itemList == null) itemList = []
+
+                    // Update state with results, empty or otherwise
+                    this.setState({
+                      priorInput: this.state.input,
+                      latestResults: itemList,
+                      unfilteredResults: itemList,
+                      sort: null,                 // Reset applied sort 
+                      allAvailableCountries:      // Populate list with all available countries to select
+                        [{
+                          key: 'Countries',
+                          value: 'Countries',
+                          children: this.countriesFromProducts(itemList)
+                        }],
+                      allAvailableCategories:     // Populate list with all available categories to select
+                        [{
+                          key: 'Categories',
+                          value: 'Categories',
+                          children: this.categoriesFromProducts(itemList)
+                        }],
+                    })
+                  })
                 }
-                this.setState({
-                  latestResults: itemList,
-                  unfilteredResults: itemList,
-                  sort: null,                 // Reset applied sort 
-                  allAvailableCountries:      // Populate list with all available countries to select
-                    [{
-                      key: 'Countries',
-                      value: 'Countries',
-                      children: this.countriesFromProducts(itemList)
-                    }],
-                  allAvailableCategories:     // Populate list with all available categories to select
-                    [{
-                      key: 'Categories',
-                      value: 'Categories',
-                      children: this.categoriesFromProducts(itemList)
-                    }],
-                })
-              }}
+              }
               // Set new results and update the list of countries those results are
               onPressOut={() => {
                 this.setState({             // Reset filters upon new search
@@ -1257,7 +1280,11 @@ export default class SearchScreen extends React.Component {
         <View style={{flexDirection: 'row', marginTop: 10, position: 'absolute', bottom: 80, backgroundColor: '#FFF', padding: 5}}>
           <Pressable 
             style={[globalStyle.headerButtonStyle, {paddingVertical: 5, flex: 2}]}
-            onPress={() => {this.navigateSearchResults(false)}}
+            onPress={() => {
+                // Update state before calling navigation (to signal that it's not a new search)
+                this.setState({isNewSearch: false}, () => this.navigateSearchResults(false))
+              }
+            }
             disabled={itemList == null || itemList.length == 0}
             testID="Test_PageBackButton"
           >
@@ -1275,7 +1302,11 @@ export default class SearchScreen extends React.Component {
           </Pressable>
           <Pressable 
             style={[globalStyle.headerButtonStyle, {paddingVertical: 5, flex: 2}]}
-            onPress={() => {this.navigateSearchResults(true)}}
+            onPress={() => {
+              // Update state before calling navigation (to signal that it's not a new search)
+                this.setState({isNewSearch: false}, () => this.navigateSearchResults(true))
+              }
+            }
             disabled={itemList == null || itemList.length == 0}
             testID="Test_PageForwardButton"
           >
