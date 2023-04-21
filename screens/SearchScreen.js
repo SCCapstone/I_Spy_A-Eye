@@ -25,9 +25,6 @@ import SettingsScreen from "./SettingsScreen.js";
 // Holds data of all items
 var itemList = [];
 
-// Json file that holds respose query for produce. Is shown automatically without the user searching. 
-const produce = require("./produce.json");
-
 // Used for indexing itemList array when items are added to it.
 var itemIndex = 0;
 
@@ -40,29 +37,6 @@ var itemsPerPage = parseInt(settingsScreenInst.state.checked)     // Used for tr
 var pageNumIndex = 0           // Used for tracking the current page of items in the query
 var totalQueryResults = 0;     // Used for tracking to total number of results from a query
 
-// Add items to itemList from produce.json.
-for (let i = 0; i < produce.data.length; i++) {
-  // If price cannot be parsed from json item, it will not be added to itemList.
-  if (produce.data[i].items[0].price.promo == 0) {
-    continue;
-  }
-  // Add to array by index
-  itemList[itemIndex] = {
-    id: produce.data[i].productId,
-    title: produce.data[i].description,
-    // TODO: figure out how to better parse JSON array so that price is not 0
-    price: produce.data[i].items[0].price.promo,
-    // TODO: remove placeholder
-    unitPrice: 0,
-    // TODO: remove placeholder
-    stock: "Low",
-    quantity: 1,
-    inCart: false,
-    countryOrigin: produce.data[i].countryOrigin,
-    category: produce.data[i].categories
-  };
-  itemIndex++;
-}
 // Reset to 0 so this var can be used again in adding different items to itemList when user searches.
 itemIndex = 0;
 
@@ -505,8 +479,6 @@ export default class SearchScreen extends React.Component {
     if(itemsPerPage != storedItemsPerPage) itemsPerPage = storedItemsPerPage 
 
     // Determine query input based on whether it's a new search
-    console.log("Input: " + searchState.input)
-    console.log("Prior: " + searchState.priorInput)
     let queryInput = searchState.isNewSearch ? searchState.input : searchState.priorInput
 
     // Build query
