@@ -1088,7 +1088,7 @@ export default class SearchScreen extends React.Component {
               >
                 <View style={styles.sortSubmenuDesign} testID="Test_SortSubmenu">
                   {/* Sorting Option Buttons */}
-                  <View style={[globalStyle.headerButtonText, { flex: 1, flexWrap: "wrap", flexDirection: "row" }]}>
+                  <View style={[globalStyle.headerButtonText, { flex: 0, flexWrap: "wrap", flexDirection: "row", justifyContent: "center"}]}>
                     {/* Sort Lowest Price */}
                     <Pressable
                       style={[styles.sortSubmenuButton, this.state.sort == 'Lowest Price' ? styles.sortSubmenuButtonActive : styles.sortSubmenuButtonDefault]}
@@ -1104,7 +1104,7 @@ export default class SearchScreen extends React.Component {
                         }
                       }
                     >
-                      <Text style={[styles.buttonText, this.state.sort == 'Lowest Price' ? styles.sortButtonTextActive : styles.sortButtonTextDefault]}>Lowest Price</Text>
+                      <Text style={[styles.buttonText, this.state.sort == 'Lowest Price' ? styles.sortButtonTextActive : styles.sortButtonTextDefault, { fontSize: 18 }]}>Lowest Price</Text>
                     </Pressable>
 
                     {/* Sort Highest Price */}
@@ -1122,7 +1122,7 @@ export default class SearchScreen extends React.Component {
                         }
                       }
                     >
-                      <Text style={[styles.buttonText, this.state.sort == 'Highest Price' ? styles.sortButtonTextActive : styles.sortButtonTextDefault, { fontSize: 19 }]}>Highest Price</Text>
+                      <Text style={[styles.buttonText, this.state.sort == 'Highest Price' ? styles.sortButtonTextActive : styles.sortButtonTextDefault, { fontSize: 18 }]}>Highest Price</Text>
                     </Pressable>
 
                     {/* Sort A-Z (Alphabetically) */}
@@ -1433,7 +1433,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderWidth: 10,
     justifyContent: "center",
-    height: "25%",
+    height: "30%",
     width: "90%",
     flexWrap: "wrap",
   },
