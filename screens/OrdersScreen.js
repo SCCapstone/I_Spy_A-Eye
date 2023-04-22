@@ -86,13 +86,6 @@ export default class Page3 extends React.Component {
 
   // displays orders on the screen
   displayOrders = async () => {
-    // for (let i = 0; i < this.state.orders; i++) {
-    //   let arrayItems = await AsyncStorage.getItem("orders")
-    //   arrayItems = JSON.parse(arrayItems)
-    //   if (arrayItems) {
-    //     let array = arrayItems
-    //   }
-    // }
     let arrayItems = await AsyncStorage.getItem("orders")
     arrayItems = JSON.parse(arrayItems)
     let array = arrayItems
@@ -117,9 +110,15 @@ export default class Page3 extends React.Component {
             <Text style={style.header} accessibilityRole="header">
             Orders
           </Text>
-            <Pressable style={style.clearButton} onPress={() => this.removingOrders()}>
-              <Text style={style.clearButtonText}>Clear History</Text>
-            </Pressable>
+            {
+              this.state.orders.length > 0
+              &&
+              (
+                <Pressable style={style.clearButton} onPress={() => this.removingOrders()}>
+                  <Text style={style.clearButtonText}>Clear History</Text>
+                </Pressable>
+              )
+            }
           </View>
 
         {/* This is the shadow of the horizontal line. The translate Y value comes from 
