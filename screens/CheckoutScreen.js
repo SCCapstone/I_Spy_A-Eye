@@ -123,6 +123,8 @@ export default class CheckoutScreen extends React.Component {
       if (orders) {
         await AsyncStorage.setItem("orders", JSON.stringify(orders))
       }
+      // removing the products array from local storage
+      await AsyncStorage.removeItem("product")
       this.props.pageChange(PAGE_ID.orders);
     } else {
       alert(

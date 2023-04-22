@@ -75,6 +75,7 @@ export default class CartScreen extends React.Component {
       // grab data from local storage
       const products = JSON.parse(await AsyncStorage.getItem("cart"))
       this.addProduct()
+      this.clearCart()
 
       // if products is not empty
       if (products !== null) {
@@ -100,6 +101,7 @@ export default class CartScreen extends React.Component {
       let arrayItems = await AsyncStorage.getItem("product")
       arrayItems = JSON.parse(arrayItems)
       let array = arrayItems
+      // loop through array
       for (let i = 0; i < array.length; i++) {
         if (array[i].id == productID) {
           array[i].quantity--
@@ -170,9 +172,15 @@ export default class CartScreen extends React.Component {
     this.props.pageChange(PAGE_ID.checkout)
   }
 
+  // clears the cart when user purchases items
   clearCart = async () => {
-    //await AsyncStorage.removeItem("product")
-    this.setState({products: []})
+    // checking if the key exists
+    let items = await AsyncStorage.getItem("product")
+    // if it doesn't exist
+    if (items === null) {
+      // set the products array to be empty
+      this.setState({products: []})
+    }
   }
 
   render() {
