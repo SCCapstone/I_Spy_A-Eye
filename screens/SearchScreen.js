@@ -37,9 +37,6 @@ var itemsPerPage = parseInt(settingsScreenInst.state.checked)     // Used for tr
 var pageNumIndex = 0           // Used for tracking the current page of items in the query
 var totalQueryResults = 0;     // Used for tracking to total number of results from a query
 
-// Reset to 0 so this var can be used again in adding different items to itemList when user searches.
-itemIndex = 0;
-
 // Template view for each item in flatlist.
 const Item = ({ id, title, price, unitPrice, stock, quantity, image }) => (
   <Pressable onPress={() => {AsyncStorage.setItem("productID",id)
@@ -513,6 +510,10 @@ export default class SearchScreen extends React.Component {
     catch (err) {
       return [];
     }
+
+    // Reset itemIndex and itemList for a fresh set of results (whether it's a new search or a page navigation)
+    itemIndex = 0
+    itemList = []
 
     // Iterates through responseJSON and stores items into itemList
     for (let i = 0; i < responseJSON.data.length; i++) {
