@@ -46,7 +46,7 @@ const Item = ({ id, title, price, unitPrice, stock, quantity, image }) => (
                             AsyncStorage.setItem("productStock",stock)
                             AsyncStorage.setItem("productImage",image)
                             AsyncStorage.setItem("isSelectedItem",'true')
-                            ToastAndroid.show(`${title} selected press details to see more info`, 1000);
+                            showAlert(`${title} selected press details to see more info`);
   }}>
     <View style={styles.item}>
       <Text style={styles.title}>{title}</Text>
@@ -234,11 +234,6 @@ export default class SearchScreen extends React.Component {
     this.updateCurrentLocationState();
     this.productScreen();
     this.changingPage();
-  }
-
-
-  moving = () => {
-    this.props.pageChange(PAGE_ID.product);
   }
 
   /*** Filtering Functions ***/
