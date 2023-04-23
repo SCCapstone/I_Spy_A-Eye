@@ -230,6 +230,7 @@ export default class SearchScreen extends React.Component {
     this.updateCurrentLocationState();
     this.productScreen();
     this.changingPage();
+    itemList=[];
   }
 
   /*** Filtering Functions ***/
@@ -469,7 +470,7 @@ export default class SearchScreen extends React.Component {
     }
     return localItemsPerPage
   }
-
+  
   // Input: class state. Returns array of items if the API call is successful, or an empty array otherwise.
   async searchProducts(searchState) {
     // Confirm input is valid before querying. Note that there's no need to validate priorInput
@@ -481,6 +482,13 @@ export default class SearchScreen extends React.Component {
       );
       return [];
     }
+
+    AsyncStorage.setItem("productID","")
+    AsyncStorage.setItem("productName","")
+    AsyncStorage.setItem("productPrice","")
+    AsyncStorage.setItem("productUnitPrice","")
+    AsyncStorage.setItem("productStock","")
+    AsyncStorage.setItem("productImage","")
 
     // Get the number of items to display per page, based on user (default to 10 if error/not signed in)
     itemsPerPage = await this.getItemsPerPage()
