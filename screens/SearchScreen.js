@@ -20,7 +20,6 @@ import SectionedMultiSelect from 'react-native-sectioned-multi-select';
 import globalStyle from "../globalStyle";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { PAGE_ID } from "../utils/constants.js";
-import SettingsScreen from "./SettingsScreen.js";
 
 // Holds data of all items
 var itemList = [];
@@ -28,12 +27,8 @@ var itemList = [];
 // Used for indexing itemList array when items are added to it.
 var itemIndex = 0;
 
-// Used for trimming the itemList to the exact number of elements needed to display the results
-var priorItemListLength = 0;
-
-// Variables for handling pagination of results
-let settingsScreenInst = new SettingsScreen()   
-var itemsPerPage = parseInt(settingsScreenInst.state.checked)     // Used for tracking the user specified (or default) number of products per page
+// Used for tracking the user specified (or default) number of products per page
+var itemsPerPage = 10          // Default value of number of items per page
 var pageNumIndex = 0           // Used for tracking the current page of items in the query
 var totalQueryResults = 0;     // Used for tracking to total number of results from a query
 
@@ -99,7 +94,8 @@ const renderItem = ({ id, item, price, unitPrice, stock, quantity }) => (
     <Item
       id={item.id}
       title={item.title}
-      price={item.price}
+      // Display promo price (item.price) if available, otherwise display regular price (item.standardPrice)
+      price={!(item.price == 0 || item.price > item.standardPrice) ? item.price : item.standardPrice}
       // Display unitPrice only if it's not arbitrary or null or undefined
       unitPrice={item.unitPrice == Number.MAX_SAFE_INTEGER || item.unitPrice == null ? " " : `$${item.unitPrice} per Oz`}
       stock={item.stock}
@@ -458,6 +454,19 @@ export default class SearchScreen extends React.Component {
   }
 
   /*** Search Products ***/
+  // Returns the locally stored number of items per page (integer), defaulting to 10 if an error occurs 
+  // during storage or retrieval.
+  async getItemsPerPage() {
+    let localItemsPerPage
+    try {
+      localItemsPerPage = parseInt(await AsyncStorage.getItem('itemsPerPage'))
+    } catch (err) {
+      ToastAndroid.show("Couldn't Retrieve Items Per Page, Using Default", 400);
+      localItemsPerPage = 10
+    }
+    return localItemsPerPage
+  }
+
   // Input: class state. Returns array of items if the API call is successful, or an empty array otherwise.
   async searchProducts(searchState) {
     // Confirm input is valid before querying. Note that there's no need to validate priorInput
@@ -470,10 +479,9 @@ export default class SearchScreen extends React.Component {
       return [];
     }
 
-    // Update number of items to display per result page if there's a discrepancy
-    let settingsScreenInst = new SettingsScreen()  
-    let storedItemsPerPage = parseInt(settingsScreenInst.state.checked)
-    if(itemsPerPage != storedItemsPerPage) itemsPerPage = storedItemsPerPage 
+    // Get the number of items to display per page, based on user (default to 10 if error/not signed in)
+    itemsPerPage = await this.getItemsPerPage()
+    console.log("Items Per Page: " + itemsPerPage)
 
     // Determine query input based on whether it's a new search
     let queryInput = searchState.isNewSearch ? searchState.input : searchState.priorInput
@@ -517,10 +525,6 @@ export default class SearchScreen extends React.Component {
 
     // Iterates through responseJSON and stores items into itemList
     for (let i = 0; i < responseJSON.data.length; i++) {
-      // Skip adding item if price accont be parsed.
-      if (responseJSON.data[i].items[0].price.promo === 0) {
-        continue;
-      }
       // Add to array by index
       itemList[itemIndex] = {
         id: responseJSON.data[i].productId,
@@ -552,11 +556,6 @@ export default class SearchScreen extends React.Component {
       itemIndex++;
     }
     itemIndex = 0;
-
-    // Trim excess results in cases where the prior search returned more items than the current search
-    let numExcessItems = priorItemListLength - responseJSON.data.length
-    if(numExcessItems > 0) itemList.splice(responseJSON.data.length - 1, numExcessItems)
-    priorItemListLength = responseJSON.data.length
 
     return itemList;
   }
@@ -594,8 +593,7 @@ export default class SearchScreen extends React.Component {
 
     // If valid, increment/decremet the pageNumIndex and then perform the next search query, adding the results to the next page
     pageNumIndex = isForward ? pageNumIndex + 1 : pageNumIndex - 1
-    console.log("Total Items: ")
-    console.log(totalQueryResults)
+    console.log("Total Items: " + totalQueryResults)
     itemList = this.updateFilteredResults(await this.searchProducts(this.state))  // Apply current filters/sort to new results
 
     // Update state with next page of results. Note that the sorting and filters do not need to be reset, unlike a new search.
@@ -662,10 +660,13 @@ export default class SearchScreen extends React.Component {
                     isNewSearch: true,
                   },
                   async () => {
+                    // Reset page number index to first page before searching
+                    pageNumIndex = 0
+
                     itemList = await this.searchProducts(this.state)
 
-                    console.log("Item List:")
-                    console.log(itemList)
+                    //console.log("Item List:")
+                    //console.log(itemList)
                     
                     // If itemList is empty, alert the user
                     if(itemList == []) {   
