@@ -54,7 +54,24 @@ export default class SettingsScreen extends React.Component {
     this.setState({
       checked:
         res._delegate._document.data.value.mapValue.fields.number.stringValue,
-    });
+    });  
+  }
+
+  /**
+   * Function to get the user's products per page setting stored in Firestore.
+   * The state of the radio buttons are updated from the retrieved value.
+   */
+  async storeProductsPerPageLocally() {
+    try {
+      let res = await firebase
+      .firestore()
+      .collection("productsPerPage")
+      .doc(await AsyncStorage.getItem("userID"))
+      .get();
+      await AsyncStorage.setItem('itemsPerPage', res._delegate._document.data.value.mapValue.fields.number.stringValue)
+    } catch (err) {
+      ToastAndroid.show("Error With Saving Locally, Using Default", 400);
+    }
   }
 
   /**
@@ -85,9 +102,11 @@ export default class SettingsScreen extends React.Component {
      */
     AsyncStorage.setItem("previousPage", "4");
     this.getProductsPerPage();
+    this.storeProductsPerPageLocally();
   }
 
-  signOut() {
+  async signOut() {
+    await AsyncStorage.setItem('itemsPerPage', '10');   // Set local itemsPerPage to 10 on sign out
     deAuthUser();
     this.props.pageChange(PAGE_ID.login);
   }
@@ -208,7 +227,11 @@ export default class SettingsScreen extends React.Component {
         <View style={globalStyle.navBarContainer}>
           <View style={globalStyle.buttons} testID="Test_NavigationBar">
             <TouchableOpacity
-              onPress={() => this.props.pageChange(PAGE_ID.search)}
+              onPress={() => {
+                this.storeProductsPerPageLocally();   // Update itemsPerPage before switching
+                this.props.pageChange(PAGE_ID.search)
+                }
+              }
               style={globalStyle.navButtonContainer}
               accessibilityRole="menuitem"
             >
@@ -221,7 +244,11 @@ export default class SettingsScreen extends React.Component {
               <Text style={{ textAlign: "center" }}>Search</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => this.props.pageChange(PAGE_ID.cart)}
+              onPress={() =>  {
+                this.storeProductsPerPageLocally();   // Update itemsPerPage before switching
+                this.props.pageChange(PAGE_ID.cart)
+                }
+              }
               style={globalStyle.navButtonContainer}
               accessibilityRole="menuitem"
             >
@@ -234,7 +261,11 @@ export default class SettingsScreen extends React.Component {
               <Text style={{ textAlign: "center" }}>My Cart</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => this.props.pageChange(PAGE_ID.orders)}
+              onPress={() => {
+                this.storeProductsPerPageLocally();   // Update itemsPerPage before switching
+                this.props.pageChange(PAGE_ID.orders)
+                }
+              }
               style={globalStyle.navButtonContainer}
               accessibilityRole="menuitem"
             >
@@ -247,7 +278,11 @@ export default class SettingsScreen extends React.Component {
               <Text style={{ textAlign: "center" }}>Orders</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => this.props.pageChange(PAGE_ID.settings)}
+              onPress={() => {
+                this.storeProductsPerPageLocally();   // Update itemsPerPage before switching
+                this.props.pageChange(PAGE_ID.settings)
+                }
+              }
               style={globalStyle.navButtonContainer}
               accessibilityRole="menuitem"
             >
