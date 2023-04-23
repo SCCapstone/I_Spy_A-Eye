@@ -32,6 +32,8 @@ var itemsPerPage = 10          // Default value of number of items per page
 var pageNumIndex = 0           // Used for tracking the current page of items in the query
 var totalQueryResults = 0;     // Used for tracking to total number of results from a query
 
+var buttonOn = false;
+
 // Template view for each item in flatlist.
 const Item = ({ id, title, price, unitPrice, stock, quantity, image }) => (
   <Pressable onPress={() => {AsyncStorage.setItem("productID",id)
@@ -41,6 +43,8 @@ const Item = ({ id, title, price, unitPrice, stock, quantity, image }) => (
                             AsyncStorage.setItem("productStock",stock)
                             AsyncStorage.setItem("productImage",image)
                             AsyncStorage.setItem("isSelectedItem",'true')
+                            buttonOn=true;
+                            console.log(buttonOn)
                             showAlert(`${title} selected press details to see more info`);
   }}>
     <View style={styles.item}>
@@ -1199,7 +1203,7 @@ export default class SearchScreen extends React.Component {
               </TouchableOpacity>
             </Modal>
             {/* Scan Button */}
-            <Pressable style={globalStyle.headerButtonStyle} disabled={this.state.StoreID=="" ? true: false} onPress={() => this.props.pageChange(PAGE_ID.product)}testID="Test_ScanButton">
+            <Pressable style={globalStyle.headerButtonStyle} disabled={buttonOn==false ? false: true} onPress={() => this.props.pageChange(PAGE_ID.product)}testID="Test_ScanButton">
               <Text style={globalStyle.headerButtonText}>Details</Text>
             </Pressable>
           </View>
