@@ -99,7 +99,7 @@ const renderItem = ({ id, item, price, unitPrice, stock, quantity }) => (
       id={item.id}
       title={item.title}
       // Display promo price (item.price) if available, otherwise display regular price (item.standardPrice)
-      price={!(item.price == 0 || item.price > item.standardPrice) ? item.price : item.standardPrice}
+      price={item.standardPrice}
       // Display unitPrice only if it's not arbitrary or null or undefined
       unitPrice={item.unitPrice == Number.MAX_SAFE_INTEGER || item.unitPrice == null ? " " : `$${item.unitPrice} per Oz`}
       stock={item.stock}
@@ -426,12 +426,12 @@ export default class SearchScreen extends React.Component {
   /*** Sorting Functions ***/
   // Input: Two product objects. Returns an integer based on lowest price comparison (price ascending).
   sortPriceAsc(p1, p2) {
-    return p1.price - p2.price;   // Negative value means p1 is cheaper. Positive means p2 is cheaper. 0 means equal price.
+    return p1.standardPrice - p2.standardPrice;   // Negative value means p1 is cheaper. Positive means p2 is cheaper. 0 means equal price.
   }
 
   // Input: Two product objects. Returns an integer based on highest price comparison (price descending).
   sortPriceDesc(p1, p2) {
-    return p2.price - p1.price;   // Negative value means p2 is cheaper. Positive means p1 is cheaper. 0 means equal price.
+    return p2.standardPrice - p1.standardPrice;   // Negative value means p2 is cheaper. Positive means p1 is cheaper. 0 means equal price.
   }
 
   // Input: Two product objects. Returns an integer based on an alphabetical comparison by product name.
@@ -468,6 +468,7 @@ export default class SearchScreen extends React.Component {
     let localItemsPerPage
     try {
       localItemsPerPage = parseInt(await AsyncStorage.getItem('itemsPerPage'))
+      if(isNaN(localItemsPerPage)) localItemsPerPage = 10
     } catch (err) {
       ToastAndroid.show("Couldn't Retrieve Items Per Page, Using Default", 400);
       localItemsPerPage = 10
