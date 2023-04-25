@@ -427,12 +427,12 @@ export default class SearchScreen extends React.Component {
   /*** Sorting Functions ***/
   // Input: Two product objects. Returns an integer based on lowest price comparison (price ascending).
   sortPriceAsc(p1, p2) {
-    return p1.standardPrice - p2.standardPrice;   // Negative value means p1 is cheaper. Positive means p2 is cheaper. 0 means equal price.
+    return p1.price - p2.price;   // Negative value means p1 is cheaper. Positive means p2 is cheaper. 0 means equal price.
   }
 
   // Input: Two product objects. Returns an integer based on highest price comparison (price descending).
   sortPriceDesc(p1, p2) {
-    return p2.standardPrice - p1.standardPrice;   // Negative value means p2 is cheaper. Positive means p1 is cheaper. 0 means equal price.
+    return p2.price - p1.price;   // Negative value means p2 is cheaper. Positive means p1 is cheaper. 0 means equal price.
   }
 
   // Input: Two product objects. Returns an integer based on an alphabetical comparison by product name.
@@ -488,9 +488,7 @@ export default class SearchScreen extends React.Component {
       );
       return [];
     }
-    
-    this.hasSearched=true;
-
+    this.hasSearched=true
     AsyncStorage.setItem("productID","")
     AsyncStorage.setItem("productName","")
     AsyncStorage.setItem("productPrice","")
@@ -571,6 +569,9 @@ export default class SearchScreen extends React.Component {
       } catch(missingPropError) {         // If stockLevel is unavailable, say so
         itemList[itemIndex].stock = "N/A"
       }
+
+      if(itemList[itemIndex].price==0||itemList[itemIndex].price==null)
+        itemList[itemIndex].price=responseJSON.data[i].items[0].price.regular
       
       itemIndex++;
     }
